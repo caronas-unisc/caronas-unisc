@@ -68,8 +68,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                 // Quando o usuário for criado, termina a activity de registro
                 // TO-DO:
-                // - Fazer a API retornar um token de login
-                // - Gravar este token em algum lugar no Android: http://developer.android.com/training/basics/data-storage/shared-preferences.html
+                // - Gravar o token retornado em algum lugar no Android: http://developer.android.com/training/basics/data-storage/shared-preferences.html
                 // - Enviar usuário para tela de usuário logado (ainda não foi desenvolvida)
                 RegisterActivity.this.finish();
             }
