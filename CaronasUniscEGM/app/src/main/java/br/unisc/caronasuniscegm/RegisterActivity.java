@@ -3,6 +3,7 @@ package br.unisc.caronasuniscegm;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +23,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Map;
+
+import br.unisc.caronasuniscegm.rest.RestErrorHandler;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -84,8 +88,20 @@ public class RegisterActivity extends AppCompatActivity {
                 Log.d("CaronasUNISC-Register", "Erro");
 
                 if (volleyError.networkResponse != null) {
-                    // TO-DO: Verificar se o status é 422. Se for, fazer um parse no JSON
-                    // para pegar as mensagens de erro que vieram do servidor.
+                    String errorMessage = null;
+
+                    try {
+                        errorMessage = RestErrorHandler.getValidationsErrorMessages(getFieldNames(),
+                                volleyError);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (errorMessage != null) {
+                        showAlert(errorMessage);
+                    } else {
+                        showAlert(getResources().getString(R.string.service_unavailable));
+                    }
 
                     Log.d("CaronasUNISC-Register",
                             "Status: " + volleyError.networkResponse.statusCode);
@@ -118,12 +134,12 @@ public class RegisterActivity extends AppCompatActivity {
         builder.setMessage(message);
         builder.setCancelable(true);
         builder.setPositiveButton(getResources().getString(R.string.ok),
-            new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.cancel();
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
                 }
-            }
         );
 
         AlertDialog alert = builder.create();
@@ -138,6 +154,15 @@ public class RegisterActivity extends AppCompatActivity {
     private void hideProgressDialog() {
         pd.dismiss();
         pd = null;
+    }
+
+    private Map<String, String> getFieldNames() {
+        Resources resources = getResources();
+        Map<String, String> fieldNames = new HashMap<String, String>();
+        fieldNames.put("name", resources.getString(R.string.field_name));
+        fieldNames.put("email", resources.getString(R.string.field_email));
+        fieldNames.put("password", resources.getString(R.string.field_password));
+        return fieldNames;
     }
 
 }
