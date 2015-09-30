@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Caronas UNISC</string>
+    <string name="register">Register</string>
+    <string name="login">Log in</string>
+    <string name="title_activity_register">Register</string>
+    <string name="field_name">Name</string>
+    <string name="field_email">E-mail</string>
+    <string name="field_password">Password</string>
+    <string name="please_wait">Please wait</string>
+</resources>
