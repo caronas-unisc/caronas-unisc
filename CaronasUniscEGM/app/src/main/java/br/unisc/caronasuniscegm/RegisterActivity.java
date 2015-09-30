@@ -1,6 +1,8 @@
 package br.unisc.caronasuniscegm;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -68,7 +70,8 @@ public class RegisterActivity extends AppCompatActivity {
 
                 // Quando o usuário for criado, termina a activity de registro
                 // TO-DO:
-                // - Gravar o token retornado em algum lugar no Android: http://developer.android.com/training/basics/data-storage/shared-preferences.html
+                // - Fazer a API retornar um token de login
+                // - Gravar este token em algum lugar no Android: http://developer.android.com/training/basics/data-storage/shared-preferences.html
                 // - Enviar usuário para tela de usuário logado (ainda não foi desenvolvida)
                 RegisterActivity.this.finish();
             }
@@ -89,7 +92,7 @@ public class RegisterActivity extends AppCompatActivity {
                     Log.d("CaronasUNISC-Register",
                             "Response body:\n" + new String(volleyError.networkResponse.data));
                 } else {
-                    // TO-DO: Mostrar mensagem de "Serviço indisponível. Tente novamente mais tarde."
+                    showAlert(getResources().getString(R.string.service_unavailable));
                     Log.d("CaronasUNISC-Register", volleyError.toString());
                 }
 
@@ -98,12 +101,33 @@ public class RegisterActivity extends AppCompatActivity {
         };
 
         // Envia requisição
+        String url = USERS_API_ENDPOINT;
+        if (name == "[ErrorTest]")
+            url = "https://unexisting-app-123.com/";
+
         showProgressDialog();
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, USERS_API_ENDPOINT,
-                requestJson, successListener, errorListener);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, requestJson,
+                successListener, errorListener);
 
         RequestQueue queue = Volley.newRequestQueue(RegisterActivity.this);
         queue.add(request);
+    }
+
+    private void showAlert(String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(message);
+        builder.setCancelable(true);
+        builder.setPositiveButton(getResources().getString(R.string.ok),
+            new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+                }
+            }
+        );
+
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     private void showProgressDialog() {

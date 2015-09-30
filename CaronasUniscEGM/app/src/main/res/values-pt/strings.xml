@@ -8,4 +8,6 @@
     <string name="field_email">E-mail</string>
     <string name="field_password">Senha</string>
     <string name="please_wait">Por favor aguarde</string>
+    <string name="service_unavailable">Serviço indisponível. Tente novamente mais tarde.</string>
+    <string name="ok">OK</string>
 </resources>

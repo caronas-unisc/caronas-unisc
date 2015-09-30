@@ -7,4 +7,6 @@
     <string name="field_email">E-mail</string>
     <string name="field_password">Password</string>
     <string name="please_wait">Please wait</string>
+    <string name="service_unavailable">Service Unavailable. Try again later.</string>
+    <string name="ok">OK</string>
 </resources>
