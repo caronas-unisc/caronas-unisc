@@ -30,7 +30,6 @@ import br.unisc.caronasuniscegm.rest.ApiEndpoints;
 public class LoginActivity extends AppCompatActivity {
 
     private ProgressDialog pd;
-    private final String SESSIONS_API_ENDPOINT = "https://caronas-unisc.herokuapp.com/api/v1/users";
     private final String LOG_TAG = "CaronasUNISC-Login";
 
     @Override
