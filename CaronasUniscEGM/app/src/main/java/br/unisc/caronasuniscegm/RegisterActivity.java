@@ -2,7 +2,10 @@ package br.unisc.caronasuniscegm;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -71,13 +74,7 @@ public class RegisterActivity extends AppCompatActivity {
                 Log.d("CaronasUNISC-Register", "Sucesso");
                 Log.d("CaronasUNISC-Register", responseJson.toString());
                 hideProgressDialog();
-
-                // Quando o usuário for criado, termina a activity de registro
-                // TO-DO:
-                // - Fazer a API retornar um token de login
-                // - Gravar este token em algum lugar no Android: http://developer.android.com/training/basics/data-storage/shared-preferences.html
-                // - Enviar usuário para tela de usuário logado (ainda não foi desenvolvida)
-                RegisterActivity.this.finish();
+                authenticate(responseJson);
             }
         };
 
@@ -163,6 +160,27 @@ public class RegisterActivity extends AppCompatActivity {
         fieldNames.put("email", resources.getString(R.string.field_email));
         fieldNames.put("password", resources.getString(R.string.field_password));
         return fieldNames;
+    }
+
+    private void authenticate(JSONObject json) {
+        try {
+            JSONObject session = json.getJSONObject("session");
+            String token = session.getString("token");
+
+            // Guarda token nas Shared Preferences
+            SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key),
+                    Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(getString(R.string.preference_session_token), token);
+            editor.commit();
+
+            // Vai para a activity de usuário logado
+            Intent intent = new Intent(this, LoggedInTemporaryActivity.class);
+            startActivity(intent);
+            finish();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 }
