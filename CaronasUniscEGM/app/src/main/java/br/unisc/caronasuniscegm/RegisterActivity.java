@@ -34,6 +34,7 @@ import br.unisc.caronasuniscegm.rest.RestErrorHandler;
 public class RegisterActivity extends AppCompatActivity {
 
     private ProgressDialog pd;
+    private final String LOG_TAG = "CaronasUNISC-Register";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,14 +66,14 @@ public class RegisterActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        Log.d("CaronasUNISC-Register", requestJson.toString());
+        Log.d(LOG_TAG, requestJson.toString());
 
         // Resposta de sucesso
         Response.Listener<JSONObject> successListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject responseJson) {
-                Log.d("CaronasUNISC-Register", "Sucesso");
-                Log.d("CaronasUNISC-Register", responseJson.toString());
+                Log.d(LOG_TAG, "Success");
+                Log.d(LOG_TAG, responseJson.toString());
                 hideProgressDialog();
                 authenticate(responseJson);
             }
@@ -82,7 +83,7 @@ public class RegisterActivity extends AppCompatActivity {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                Log.d("CaronasUNISC-Register", "Erro");
+                Log.d(LOG_TAG, "Error");
 
                 if (volleyError.networkResponse != null) {
                     String errorMessage = null;
@@ -100,13 +101,11 @@ public class RegisterActivity extends AppCompatActivity {
                         showAlert(getResources().getString(R.string.service_unavailable));
                     }
 
-                    Log.d("CaronasUNISC-Register",
-                            "Status: " + volleyError.networkResponse.statusCode);
-                    Log.d("CaronasUNISC-Register",
-                            "Response body:\n" + new String(volleyError.networkResponse.data));
+                    Log.d(LOG_TAG, "Status: " + volleyError.networkResponse.statusCode);
+                    Log.d(LOG_TAG, "Response body:\n" + new String(volleyError.networkResponse.data));
                 } else {
                     showAlert(getResources().getString(R.string.service_unavailable));
-                    Log.d("CaronasUNISC-Register", volleyError.toString());
+                    Log.d(LOG_TAG, volleyError.toString());
                 }
 
                 hideProgressDialog();
@@ -116,7 +115,7 @@ public class RegisterActivity extends AppCompatActivity {
         // Envia requisição
         showProgressDialog();
 
-        String url = (name == "[ErrorTest]") ? "https://unexisting-app-123.com/" : ApiEndpoints.USERS;
+        String url = name.equals("[ErrorTest]") ? ApiEndpoints.INVALID_ENDPOINT_TEST : ApiEndpoints.USERS;
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, requestJson,
                 successListener, errorListener);
 

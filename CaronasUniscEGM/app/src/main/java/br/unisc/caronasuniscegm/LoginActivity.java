@@ -94,7 +94,7 @@ public class LoginActivity extends AppCompatActivity {
         // Envia requisição
         showProgressDialog();
 
-        String url = email.equals("[ErrorTest]") ? "https://unexisting-app-123.com/" : ApiEndpoints.SESSIONS;
+        String url = email.equals("[ErrorTest]") ? ApiEndpoints.INVALID_ENDPOINT_TEST : ApiEndpoints.SESSIONS;
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, requestJson,
                 successListener, errorListener);
 
