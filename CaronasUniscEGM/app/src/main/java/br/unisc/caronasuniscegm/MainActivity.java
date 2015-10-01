@@ -36,4 +36,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void loginButtonClick(View view) {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
 }
