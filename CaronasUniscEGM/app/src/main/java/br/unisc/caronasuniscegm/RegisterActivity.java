@@ -28,12 +28,12 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import br.unisc.caronasuniscegm.rest.ApiEndpoints;
 import br.unisc.caronasuniscegm.rest.RestErrorHandler;
 
 public class RegisterActivity extends AppCompatActivity {
 
     private ProgressDialog pd;
-    private final String USERS_API_ENDPOINT = "https://caronas-unisc.herokuapp.com/api/v1/users";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,11 +114,9 @@ public class RegisterActivity extends AppCompatActivity {
         };
 
         // Envia requisição
-        String url = USERS_API_ENDPOINT;
-        if (name == "[ErrorTest]")
-            url = "https://unexisting-app-123.com/";
-
         showProgressDialog();
+
+        String url = (name == "[ErrorTest]") ? "https://unexisting-app-123.com/" : ApiEndpoints.USERS;
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, requestJson,
                 successListener, errorListener);
 
