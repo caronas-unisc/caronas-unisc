@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -75,12 +76,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError volleyError) {
                 Log.d(LOG_TAG, "Erro");
 
-                // O Volley não preenche a propriedade networkResponse quando o status HTTP
-                // é 401, em vez disso ele retorna um NoConnectionError. Mais detalhes aqui:
-                // http://stackoverflow.com/questions/22948006/http-status-code-in-android-volley-when-error-networkresponse-is-null
-                // TO-DO: Tentar uma solução melhor, tentando extender o JsonObjectRequest igual
-                // a resposta do @Rperryng sugere.
-                if (volleyError instanceof NoConnectionError) {
+                if (volleyError instanceof AuthFailureError) {
                     showAlert(getString(R.string.incorrect_credentials));
                 } else {
                     showAlert(getResources().getString(R.string.service_unavailable));
