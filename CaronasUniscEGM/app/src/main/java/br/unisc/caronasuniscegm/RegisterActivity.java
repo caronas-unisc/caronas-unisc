@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
@@ -50,10 +51,24 @@ public class RegisterActivity extends AppCompatActivity {
         CheckBox giveRideCheckbox = (CheckBox)findViewById(R.id.giveRideCheckbox);
         CheckBox receiveRideCheckbox = (CheckBox)findViewById(R.id.receiveRideCheckbox);
 
-        makeRegistrationRequest(registerNameEditText.getText().toString(),
-                registerEmailEditText.getText().toString(),
-                registerPasswordEditText.getText().toString(), giveRideCheckbox.isChecked(),
-                receiveRideCheckbox.isChecked());
+        EditText[] fieldsToValidate = { registerNameEditText, registerEmailEditText,
+                registerPasswordEditText };
+
+        if (!validateEmptyFields(fieldsToValidate))
+            return;
+
+        String name = registerNameEditText.getText().toString();
+        String email = registerEmailEditText.getText().toString();
+        String password = registerPasswordEditText.getText().toString();
+        boolean giveRide = giveRideCheckbox.isChecked();
+        boolean receiveRide = receiveRideCheckbox.isChecked();
+
+        if (!giveRide && !receiveRide) {
+            showAlert(getString(R.string.register_intention_required));
+            return;
+        }
+
+        makeRegistrationRequest(name, email, password, giveRide, receiveRide);
     }
 
     private void makeRegistrationRequest(String name, String email, String password,
@@ -165,6 +180,19 @@ public class RegisterActivity extends AppCompatActivity {
         fieldNames.put("email", resources.getString(R.string.field_email));
         fieldNames.put("password", resources.getString(R.string.field_password));
         return fieldNames;
+    }
+
+    private boolean validateEmptyFields(EditText[] editTexts) {
+        for (EditText editText : editTexts) {
+            if (editText.getText().toString().isEmpty()) {
+                editText.requestFocusFromTouch();
+                InputMethodManager lManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                lManager.showSoftInput(editText, 0);
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private void authenticate(JSONObject json) {

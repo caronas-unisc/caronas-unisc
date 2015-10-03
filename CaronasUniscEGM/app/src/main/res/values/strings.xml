@@ -21,4 +21,5 @@
     <string name="register_intention">I intend to use the app for:</string>
     <string name="give_ride">Giving ride</string>
     <string name="receive_ride">Receiving ride</string>
+    <string name="register_intention_required">Select if you want to give or receive ride, or both.</string>
 </resources>
