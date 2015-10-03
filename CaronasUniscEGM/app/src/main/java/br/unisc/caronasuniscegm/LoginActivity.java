@@ -130,13 +130,19 @@ public class LoginActivity extends AppCompatActivity {
 
     private void authenticate(JSONObject json) {
         try {
-            String token = json.getString("token");
-
-            // Guarda token nas Shared Preferences
             SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key),
                     Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
+
+            // Guarda token nas Shared Preferences
+            JSONObject session = json.getJSONObject("session");
+            String token = session.getString("token");
             editor.putString(getString(R.string.preference_session_token), token);
+
+            // Guarda objeto do usuário nas Shared Preferences
+            JSONObject userJson = json.getJSONObject("user");
+            editor.putString(getString(R.string.preference_user_object), userJson.toString());
+
             editor.commit();
 
             // Vai para a activity de usuário logado

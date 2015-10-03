@@ -11,6 +11,8 @@
     <string name="service_unavailable">Serviço indisponível. Tente novamente mais tarde.</string>
     <string name="title_activity_login">Login</string>
     <string name="ok">OK</string>
+    <string name="title_activity_logged_in_temporary">Olá</string>
+    <string name="welcome_with_name">Olá %1$s</string>
     <string name="incorrect_credentials">Credenciais incorretas</string>
     <string name="register_intention">Eu pretendo usar o app para:</string>
     <string name="give_ride">Dar carona</string>

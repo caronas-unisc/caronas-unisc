@@ -10,12 +10,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import br.unisc.caronasuniscegm.rest.User;
+
 public class LoggedInTemporaryActivity extends AppCompatActivity {
+
+    private User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logged_in_temporary);
+
+        this.currentUser = User.getCurrent(this);
+        setActionBarMessage();
     }
 
     @Override
@@ -54,6 +61,14 @@ public class LoggedInTemporaryActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private void setActionBarMessage() {
+        if (currentUser == null)
+            return;
+
+        String welcomeMessage = getString(R.string.welcome_with_name, currentUser.getName());
+        getSupportActionBar().setTitle(welcomeMessage);
     }
 
 }
