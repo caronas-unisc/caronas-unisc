@@ -5,16 +5,30 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import java.util.HashMap;
+
+import br.unisc.caronasuniscegm.rest.ApiEndpoints;
 import br.unisc.caronasuniscegm.rest.User;
 
 public class LoggedInTemporaryActivity extends AppCompatActivity {
 
     private User currentUser;
+    private final String LOG_TAG = "CaronasUNISC-LoggedIn";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,16 +62,40 @@ public class LoggedInTemporaryActivity extends AppCompatActivity {
     }
 
     public void logout(View view) {
+        // Remove os dados do usuário das SharedPreferences
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key),
                 Context.MODE_PRIVATE);
+        String token = sharedPref.getString(getString(R.string.preference_session_token), null);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.remove(getString(R.string.preference_session_token));
+        editor.remove(getString(R.string.preference_user_object));
         editor.commit();
 
-        Toast.makeText(this, "Logout", Toast.LENGTH_LONG).show();
+        // Destrói a sessão no servidor
+        Response.Listener<String> successListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d(LOG_TAG, "OK");
+            }
+        };
 
-        // TO-DO: chamar método de logout na API para destruir sessão
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(LOG_TAG, "Erro");
+                Log.d(LOG_TAG, error.toString());
+            }
+        };
 
+        String url = ApiEndpoints.SESSIONS + "/" + token;
+        StringRequest request = new StringRequest(Request.Method.DELETE, url, successListener,
+                errorListener);
+        request.setRetryPolicy(new DefaultRetryPolicy(ApiEndpoints.TIMEOUT,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(request);
+
+        // Volta para a activity principal
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
