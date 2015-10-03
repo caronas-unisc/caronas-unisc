@@ -64,7 +64,7 @@ public class RegisterActivity extends AppCompatActivity {
         boolean receiveRide = receiveRideCheckbox.isChecked();
 
         if (!giveRide && !receiveRide) {
-            showAlert(getString(R.string.register_intention_required));
+            showAlert(getString(R.string.register_ride_intention_required));
             return;
         }
 
