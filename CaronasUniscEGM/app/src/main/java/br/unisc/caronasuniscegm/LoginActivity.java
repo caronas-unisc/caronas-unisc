@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -93,6 +94,8 @@ public class LoginActivity extends AppCompatActivity {
         String url = email.equals("[ErrorTest]") ? ApiEndpoints.INVALID_ENDPOINT_TEST : ApiEndpoints.SESSIONS;
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, requestJson,
                 successListener, errorListener);
+        request.setRetryPolicy(new DefaultRetryPolicy(ApiEndpoints.TIMEOUT,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(request);
