@@ -31,6 +31,8 @@ import br.unisc.caronasuniscegm.rest.ApiEndpoints;
 
 public class LoginActivity extends AppCompatActivity {
 
+    public final static String EXTRA_EMAIL = "br.unisc.caronasuniscegm.EMAIL";
+
     private ProgressDialog pd;
     private final String LOG_TAG = "CaronasUNISC-Login";
 
@@ -38,6 +40,13 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+    }
+
+    public void resetPassword(View view) {
+        EditText loginEmailEditText = (EditText)findViewById(R.id.loginEmailEditText);
+        Intent intent = new Intent(this, ResetPasswordActivity.class);
+        intent.putExtra(EXTRA_EMAIL, loginEmailEditText.getText().toString());
+        startActivityForResult(intent, 0);
     }
 
     public void authenticate(View view) {
@@ -151,6 +160,19 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            String email = data.getStringExtra(EXTRA_EMAIL);
+
+            EditText loginEmailEditText = (EditText) findViewById(R.id.loginEmailEditText);
+            loginEmailEditText.setText(email);
+
+            EditText loginPasswordEditText = (EditText) findViewById(R.id.loginPasswordEditText);
+            loginPasswordEditText.requestFocus();
         }
     }
 

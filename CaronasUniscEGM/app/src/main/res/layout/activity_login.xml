@@ -40,7 +40,16 @@
         android:onClick="authenticate"
         android:layout_below="@+id/loginPasswordEditText"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reset_password"
+        android:id="@+id/buttonResetPassword"
+        android:onClick="resetPassword"
+        android:layout_below="@+id/loginPasswordEditText"
         android:layout_alignRight="@+id/loginPasswordEditText"
         android:layout_alignEnd="@+id/loginPasswordEditText" />
+
 </RelativeLayout>

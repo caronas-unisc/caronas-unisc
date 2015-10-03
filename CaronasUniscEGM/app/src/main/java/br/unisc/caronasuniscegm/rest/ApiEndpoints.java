@@ -7,5 +7,6 @@ public class ApiEndpoints {
     public static final String USERS = "https://caronas-unisc.herokuapp.com/api/v1/users";
     public static final String SESSIONS = "https://caronas-unisc.herokuapp.com/api/v1/sessions";
     public static final String SESSION_INFO = "https://caronas-unisc.herokuapp.com/api/v1/sessions/info";
+    public static final String PASSWORD_RESETS = "https://caronas-unisc.herokuapp.com/api/v1/password_resets";
 
 }

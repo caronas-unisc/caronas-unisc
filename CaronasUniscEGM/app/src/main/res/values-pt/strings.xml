@@ -19,4 +19,7 @@
     <string name="give_ride">Dar carona</string>
     <string name="receive_ride">Receber carona</string>
     <string name="register_ride_intention_required">Selecione se você quer dar ou receber carona, ou ambos.</string>
+    <string name="reset_password">Redefinir senha</string>
+    <string name="title_activity_reset_password">Redefinir senha</string>
+    <string name="reset_password_email_sent">Um e-mail de redefinição de senha foi enviado para %1$s</string>
 </resources>

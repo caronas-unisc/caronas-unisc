@@ -25,4 +25,7 @@
     <string name="give_ride">Giving ride</string>
     <string name="receive_ride">Receiving ride</string>
     <string name="register_ride_intention_required">Select if you want to give or receive ride, or both.</string>
+    <string name="reset_password">Reset password</string>
+    <string name="title_activity_reset_password">Reset password</string>
+    <string name="reset_password_email_sent">A password reset email was sent to %1$s</string>
 </resources>
