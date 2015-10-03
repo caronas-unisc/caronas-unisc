@@ -18,4 +18,7 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_login">Login</string>
     <string name="incorrect_credentials">Incorrect credentials</string>
+    <string name="register_intention">I intend to use the app for:</string>
+    <string name="give_ride">Giving ride</string>
+    <string name="receive_ride">Receiving ride</string>
 </resources>

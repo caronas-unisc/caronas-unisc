@@ -10,11 +10,11 @@ import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -30,6 +30,7 @@ import java.util.Map;
 
 import br.unisc.caronasuniscegm.rest.ApiEndpoints;
 import br.unisc.caronasuniscegm.rest.RestErrorHandler;
+import br.unisc.caronasuniscegm.rest.RideIntention;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -46,13 +47,17 @@ public class RegisterActivity extends AppCompatActivity {
         EditText registerNameEditText = (EditText)findViewById(R.id.registerNameEditText);
         EditText registerEmailEditText = (EditText)findViewById(R.id.registerEmailEditText);
         EditText registerPasswordEditText = (EditText)findViewById(R.id.registerPasswordEditText);
+        CheckBox giveRideCheckbox = (CheckBox)findViewById(R.id.giveRideCheckbox);
+        CheckBox receiveRideCheckbox = (CheckBox)findViewById(R.id.receiveRideCheckbox);
 
         makeRegistrationRequest(registerNameEditText.getText().toString(),
                 registerEmailEditText.getText().toString(),
-                registerPasswordEditText.getText().toString());
+                registerPasswordEditText.getText().toString(), giveRideCheckbox.isChecked(),
+                receiveRideCheckbox.isChecked());
     }
 
-    private void makeRegistrationRequest(String name, String email, String password) {
+    private void makeRegistrationRequest(String name, String email, String password,
+                                         boolean giveRide, boolean receiveRide) {
         // Monta objeto JSON
         JSONObject userJson = new JSONObject();
         JSONObject requestJson = new JSONObject();
@@ -61,6 +66,7 @@ public class RegisterActivity extends AppCompatActivity {
             userJson.put("name", name);
             userJson.put("email", email);
             userJson.put("password", password);
+            userJson.put("ride_intention", RideIntention.getValue(giveRide, receiveRide));
             requestJson.put("user", userJson);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -118,6 +124,8 @@ public class RegisterActivity extends AppCompatActivity {
         String url = name.equals("[ErrorTest]") ? ApiEndpoints.INVALID_ENDPOINT_TEST : ApiEndpoints.USERS;
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, requestJson,
                 successListener, errorListener);
+        request.setRetryPolicy(new DefaultRetryPolicy(ApiEndpoints.TIMEOUT,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         RequestQueue queue = Volley.newRequestQueue(RegisterActivity.this);
         queue.add(request);
