@@ -4,13 +4,13 @@
     <string name="register">Registre-se</string>
     <string name="login">Faça login</string>
     <string name="logout">Sair</string>
-    <string name="title_activity_register">Registrar</string>
+    <string name="title_activity_register">Registrar no Caronas UNISC</string>
     <string name="field_name">Nome</string>
     <string name="field_email">E-mail</string>
     <string name="field_password">Senha</string>
     <string name="please_wait">Por favor aguarde</string>
     <string name="service_unavailable">Serviço indisponível. Tente novamente mais tarde.</string>
-    <string name="title_activity_login">Login</string>
+    <string name="title_activity_login">Login no Caronas UNISC</string>
     <string name="ok">OK</string>
     <string name="title_activity_logged_in_temporary">Olá</string>
     <string name="welcome_with_name">Olá %1$s</string>
@@ -20,6 +20,6 @@
     <string name="receive_ride">Receber carona</string>
     <string name="register_ride_intention_required">Selecione se você quer dar ou receber carona, ou ambos.</string>
     <string name="reset_password">Redefinir senha</string>
-    <string name="title_activity_reset_password">Redefinir senha</string>
+    <string name="title_activity_reset_password">Redefinir senha do Caronas UNISC</string>
     <string name="reset_password_email_sent">Um e-mail de redefinição de senha foi enviado para %1$s</string>
 </resources>
