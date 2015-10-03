@@ -21,6 +21,7 @@
         android:layout_alignParentEnd="true"
         android:textColor="#ffffff"
         android:textSize="40dp"
+        android:paddingTop="20dp"
         android:gravity="center" />
 
     <Button
