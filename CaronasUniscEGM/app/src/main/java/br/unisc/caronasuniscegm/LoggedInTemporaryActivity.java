@@ -54,6 +54,12 @@ public class LoggedInTemporaryActivity extends AppCompatActivity {
             return true;
         }
 
+        if (id == R.id.action_map) {
+            Intent intent = new Intent(this, AddPlaceActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

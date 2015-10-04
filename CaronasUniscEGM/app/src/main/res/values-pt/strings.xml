@@ -22,4 +22,5 @@
     <string name="reset_password">Redefinir senha</string>
     <string name="title_activity_reset_password">Redefinir senha do Caronas UNISC</string>
     <string name="reset_password_email_sent">Um e-mail de redefinição de senha foi enviado para %1$s</string>
+    <string name="title_activity_add_place">AddPlaceActivity</string>
 </resources>

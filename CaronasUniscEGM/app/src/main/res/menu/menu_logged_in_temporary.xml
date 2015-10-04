@@ -2,6 +2,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="br.unisc.caronasuniscegm.LoggedInTemporaryActivity">
+    <item android:id="@+id/action_map" android:title="Teste Mapa"
+        android:orderInCategory="100" app:showAsAction="never" />
     <item android:id="@+id/action_logout" android:title="@string/logout"
         android:orderInCategory="100" app:showAsAction="never" />
 </menu>

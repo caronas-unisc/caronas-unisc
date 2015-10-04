@@ -28,4 +28,5 @@
     <string name="reset_password">Reset password</string>
     <string name="title_activity_reset_password">Reset password</string>
     <string name="reset_password_email_sent">A password reset email was sent to %1$s</string>
+    <string name="title_activity_add_place">AddPlaceActivity</string>
 </resources>
