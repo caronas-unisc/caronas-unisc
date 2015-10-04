@@ -1,12 +1,25 @@
 package br.unisc.caronasuniscegm;
 
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.List;
+import java.util.Locale;
 
 public class AddPlaceActivity extends FragmentActivity {
 
@@ -60,6 +73,16 @@ public class AddPlaceActivity extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        try {
+            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            double lat = location.getLatitude();
+            double lng = location.getLongitude();
+            mMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title("Marker"));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 18.0f));
+        } catch (SecurityException ex) {
+
+        }
     }
 }
