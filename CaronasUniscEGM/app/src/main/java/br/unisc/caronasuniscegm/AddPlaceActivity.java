@@ -73,7 +73,8 @@ public class AddPlaceActivity extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mMap.setMyLocationEnabled(true);
+        /*LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         try {
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -83,6 +84,6 @@ public class AddPlaceActivity extends FragmentActivity {
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 18.0f));
         } catch (SecurityException ex) {
 
-        }
+        }*/
     }
 }
