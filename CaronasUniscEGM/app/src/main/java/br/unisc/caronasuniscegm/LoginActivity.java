@@ -47,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ResetPasswordActivity.class);
         intent.putExtra(EXTRA_EMAIL, loginEmailEditText.getText().toString());
         startActivityForResult(intent, 0);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     public void authenticate(View view) {
