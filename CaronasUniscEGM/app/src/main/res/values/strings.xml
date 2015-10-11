@@ -29,4 +29,20 @@
     <string name="title_activity_reset_password">Reset password</string>
     <string name="reset_password_email_sent">A password reset email was sent to %1$s</string>
     <string name="title_activity_add_place">AddPlaceActivity</string>
+    <string name="title_activity_agenda">Agenda</string>
+    <string name="title_activity_configure_ride">Configure a Ride</string>
+    <string name="action_previous">Previous</string>
+    <string name="action_next">Next</string>
+    <string name="action_finish">Finish</string>
+    <string name="config_ride">Configure a ride</string>
+    <string name="field_morning">Morning</string>
+    <string name="field_afternoon">Afternoon</string>
+    <string name="field_night">Night</string>
+    <string name="field_monday">Monday</string>
+    <string name="field_tuesday">Tuesday</string>
+    <string name="field_wednesday">Wednesday</string>
+    <string name="field_thursday">Thursday</string>
+    <string name="field_friday">Friday</string>
+
+
 </resources>

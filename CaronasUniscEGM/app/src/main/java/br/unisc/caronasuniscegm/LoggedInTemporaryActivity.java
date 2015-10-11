@@ -3,24 +3,19 @@ package br.unisc.caronasuniscegm;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
-import java.util.HashMap;
 
 import br.unisc.caronasuniscegm.rest.ApiEndpoints;
 import br.unisc.caronasuniscegm.rest.User;
@@ -56,6 +51,12 @@ public class LoggedInTemporaryActivity extends AppCompatActivity {
 
         if (id == R.id.action_map) {
             Intent intent = new Intent(this, AddPlaceActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
+        if (id == R.id.action_agenda) {
+            Intent intent = new Intent(this, AgendaActivity.class);
             startActivity(intent);
             return true;
         }

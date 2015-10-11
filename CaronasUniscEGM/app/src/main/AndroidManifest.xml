@@ -67,6 +67,16 @@
             android:name=".AddPlaceActivity"
             android:label="@string/title_activity_add_place" >
         </activity>
+        <activity
+            android:name=".AgendaActivity"
+            android:label="@string/title_activity_agenda" >
+        </activity>
+        <activity
+            android:name=".ConfigureRideActivity"
+            android:label="@string/title_activity_configure_ride"
+            android:configChanges="orientation|screenSize">
+        </activity>
+
     </application>
 
 </manifest>

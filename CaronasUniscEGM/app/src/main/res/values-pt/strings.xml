@@ -23,4 +23,13 @@
     <string name="title_activity_reset_password">Redefinir senha do Caronas UNISC</string>
     <string name="reset_password_email_sent">Um e-mail de redefinição de senha foi enviado para %1$s</string>
     <string name="title_activity_add_place">AddPlaceActivity</string>
+    <string name="title_activity_agenda">Agenda</string>
+    <string name="title_activity_configure_ride">Configure a carona</string>
+    <string name="action_previous">Anterior</string>
+    <string name="action_next">Proxima</string>
+    <string name="action_finish">Salvar</string>
+    <string name="config_ride">Configurar carona</string>
+    <string name="morning">Morning</string>
+    <string name="field_afternoon">Afternoon</string>
+    <string name="field_monday">Monday</string>
 </resources>
