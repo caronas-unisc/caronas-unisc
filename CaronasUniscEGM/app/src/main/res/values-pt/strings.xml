@@ -9,7 +9,7 @@
     <string name="field_email">E-mail</string>
     <string name="field_password">Senha</string>
     <string name="please_wait">Por favor aguarde</string>
-    <string name="service_unavailable">Serviço indisponível. Tente novamente mais tarde.</string>
+    <string name="service_unavailable">Servidor indisponível. Verifique sua conexão com a internet.</string>
     <string name="title_activity_login">Login no Caronas UNISC</string>
     <string name="ok">OK</string>
     <string name="title_activity_logged_in_temporary">Olá</string>
