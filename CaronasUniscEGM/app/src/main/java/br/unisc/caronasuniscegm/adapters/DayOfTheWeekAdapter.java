@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -41,7 +42,7 @@ public class DayOfTheWeekAdapter extends ArrayAdapter<String> {
 
             holder = new DataHolder();
             holder.txtDayOfTheWeek = (TextView) row.findViewById(R.id.txtDayOfTheWeek);
-            holder.radioDayOfTheWeek = (RadioButton) row.findViewById(R.id.radioDayOfTheWeek);
+            holder.checkboxDayOfTheWeek = (CheckBox) row.findViewById(R.id.checkboxDayOfTheWeek);
 
             row.setTag(holder);
         }
@@ -66,6 +67,6 @@ public class DayOfTheWeekAdapter extends ArrayAdapter<String> {
     static class DataHolder
     {
         TextView txtDayOfTheWeek;
-        RadioButton radioDayOfTheWeek;
+        CheckBox checkboxDayOfTheWeek;
     }
 }

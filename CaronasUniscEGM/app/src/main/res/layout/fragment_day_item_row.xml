@@ -10,8 +10,8 @@
         android:orientation="horizontal" >
 
 
-        <RadioButton
-            android:id="@+id/radioDayOfTheWeek"
+        <CheckBox
+            android:id="@+id/checkboxDayOfTheWeek"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 

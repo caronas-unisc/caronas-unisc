@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -41,7 +42,7 @@ public class PeriodAdapter extends ArrayAdapter<String> {
 
             holder = new DataHolder();
             holder.txtPeriod = (TextView) row.findViewById(R.id.txtPeriod);
-            holder.radioPeriod = (RadioButton) row.findViewById(R.id.checkboxPeriod);
+            holder.checkboxPeriod = (CheckBox) row.findViewById(R.id.checkboxPeriod);
 
             row.setTag(holder);
         }
@@ -66,6 +67,6 @@ public class PeriodAdapter extends ArrayAdapter<String> {
     static class DataHolder
     {
         TextView txtPeriod;
-        RadioButton radioPeriod;
+        CheckBox checkboxPeriod;
     }
 }
