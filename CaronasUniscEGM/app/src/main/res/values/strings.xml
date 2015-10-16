@@ -43,6 +43,7 @@
     <string name="field_wednesday">Wednesday</string>
     <string name="field_thursday">Thursday</string>
     <string name="field_friday">Friday</string>
+    <string name="btn_add_place">Add place</string>
 
 
 </resources>

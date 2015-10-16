@@ -4,11 +4,13 @@ package br.unisc.caronasuniscegm;
  * Created by MateusFelipe on 11/10/2015.
  */
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -37,6 +39,14 @@ public class ScreenSlidePageFragment extends Fragment {
     private ListView mPeriodListview;
     private PeriodAdapter mPeriodAdapter;
     private List<String> mPeriodList;
+
+    private Button mBtnAddPlace;
+
+    private Double latitude;
+    private Double longitude;
+    private String address;
+
+    static final int PICK_LOCATION_REQUEST = 1;  // The request code
 
     /**
      * Factory method for this fragment class. Constructs a new fragment for the given page number.
@@ -69,18 +79,25 @@ public class ScreenSlidePageFragment extends Fragment {
             case 0:
                 // Inflate the layout containing a title and body text.
                 rootView = (ViewGroup) inflater
+                        .inflate(R.layout.fragment_choose_places, container, false);
+
+                configureChoosePlace(rootView);
+                break;
+            case 1:
+                // Inflate the layout containing a title and body text.
+                rootView = (ViewGroup) inflater
                         .inflate(R.layout.fragment_day, container, false);
 
                 configureChooseDay( rootView );
                 break;
-            case 1:
+            case 2:
                 // Inflate the layout containing a title and body text.
                 rootView = (ViewGroup) inflater
                         .inflate(R.layout.fragment_period, container, false);
 
                 configureChoosePeriod(rootView);
                 break;
-            case 2:
+            case 3:
                 // Inflate the layout containing a title and body text.
                 rootView = (ViewGroup) inflater
                         .inflate(R.layout.fragment_select_location, container, false);
@@ -90,6 +107,40 @@ public class ScreenSlidePageFragment extends Fragment {
                 break;
         }
         return rootView;
+    }
+
+    private void configureChoosePlace(ViewGroup rootView) {
+
+        mBtnAddPlace = (Button) rootView.findViewById( R.id.btnAddPlace );
+
+        mBtnAddPlace.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity().getApplicationContext(), AddPlaceActivity.class);
+                startActivityForResult(intent, PICK_LOCATION_REQUEST);
+            }
+        });
+
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == PICK_LOCATION_REQUEST) {
+            // Make sure the request was successful
+            if (resultCode == getActivity().RESULT_OK) {
+                latitude = data.getExtras().getDouble("latitude");
+                longitude = data.getExtras().getDouble("longitude");
+                address = data.getExtras().getString("address");
+
+                ConfigureRideActivity configureRideActivity =
+                        (ConfigureRideActivity)  getActivity();
+                configureRideActivity.setLatitude(latitude);
+                configureRideActivity.setLongitude(longitude);
+                configureRideActivity.setAddress(address);
+
+            }
+        }
     }
 
     private void configureChoosePeriod(ViewGroup rootView) {
@@ -152,5 +203,7 @@ public class ScreenSlidePageFragment extends Fragment {
     public int getPageNumber() {
         return mPageNumber;
     }
+
+    public Double getLatitude(){ return this.latitude; }
 
 }

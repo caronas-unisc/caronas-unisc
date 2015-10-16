@@ -3,6 +3,7 @@ package br.unisc.caronasuniscegm;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -176,6 +177,12 @@ public class AddPlaceActivity extends FragmentActivity {
 
                     markerLayout.setVisibility(View.GONE);
 
+                    Intent returnIntent = new Intent();
+                    returnIntent.putExtra("latitude",mStartRideMarker.getPosition().latitude);
+                    returnIntent.putExtra("longitude",mStartRideMarker.getPosition().longitude);
+                    returnIntent.putExtra("address", Address.getText().toString());
+                    setResult(RESULT_OK, returnIntent);
+                    finish();
 
                 } catch (Exception e) {
                 }
