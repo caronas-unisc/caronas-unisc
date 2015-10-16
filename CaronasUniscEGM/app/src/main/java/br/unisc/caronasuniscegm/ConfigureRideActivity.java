@@ -178,15 +178,16 @@ public class ConfigureRideActivity extends AppCompatActivity {
         showProgressDialog();
 
         String url = ApiEndpoints.RIDE_AVAIABILITIES + "/2015-05-10/night";
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, requestJson,
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, requestJson,
                 successListener, errorListener){
             @Override
-            public HashMap<String, String> getParams() {
+            public HashMap<String, String> getHeaders() {
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put("Authentication-Token", token);
                 return params;
             }
         };
+
         request.setRetryPolicy(new DefaultRetryPolicy(ApiEndpoints.TIMEOUT,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
@@ -197,7 +198,7 @@ public class ConfigureRideActivity extends AppCompatActivity {
     private String getToken() {
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key),
                 Context.MODE_PRIVATE);
-        return sharedPref.getString("token", "");
+        return sharedPref.getString(getString(R.string.preference_session_token), "");
     }
 
     /**
