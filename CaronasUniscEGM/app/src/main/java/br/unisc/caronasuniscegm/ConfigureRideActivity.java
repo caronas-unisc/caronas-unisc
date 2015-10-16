@@ -13,8 +13,10 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -29,6 +31,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 
 import br.unisc.caronasuniscegm.rest.ApiEndpoints;
 
@@ -52,9 +55,12 @@ public class ConfigureRideActivity extends AppCompatActivity {
     /**
      * The pager adapter, which provides the pages to the view pager widget.
      */
-    private PagerAdapter mPagerAdapter;
+    private ScreenSlidePagerAdapter mPagerAdapter;
     private Double longitude;
     private String address;
+
+    private List<String> selectedPeriodList;
+    private List<String> selectedDayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +145,18 @@ public class ConfigureRideActivity extends AppCompatActivity {
     }
 
     private void addRideIntention() {
+
+        ScreenSlidePageFragment page0 = (ScreenSlidePageFragment) mPagerAdapter.getRegisteredFragment(0);
+        ScreenSlidePageFragment page1 = (ScreenSlidePageFragment) mPagerAdapter.getRegisteredFragment(1);
+        ScreenSlidePageFragment page2 = (ScreenSlidePageFragment) mPagerAdapter.getRegisteredFragment(2);
+
+        this.latitude = page0.getLatitude();
+        this.longitude = page0.getLongitude();
+        this.address = page0.getAddress();
+
+        this.selectedDayList = page1.getSelectedDays();
+        this.selectedPeriodList = page2.getSelectedPeriods();
+
         // Monta objeto JSON
         JSONObject requestJson = new JSONObject();
         JSONObject rideIntention = new JSONObject();
@@ -151,7 +169,7 @@ public class ConfigureRideActivity extends AppCompatActivity {
             rideIntention.put("starting_location_address", this.address);
             rideIntention.put("starting_location_latitude", this.latitude);
             rideIntention.put("starting_location_longitude", this.longitude);
-                requestJson.put("ride_availability", rideIntention);
+            requestJson.put("ride_availability", rideIntention);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -174,25 +192,32 @@ public class ConfigureRideActivity extends AppCompatActivity {
             }
         };
 
-        // Envia requisição
-        showProgressDialog();
+        for( String date : selectedDayList ){
 
-        String url = ApiEndpoints.RIDE_AVAIABILITIES + "/2015-05-10/night";
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, requestJson,
-                successListener, errorListener){
-            @Override
-            public HashMap<String, String> getHeaders() {
-                HashMap<String, String> params = new HashMap<String, String>();
-                params.put("Authentication-Token", token);
-                return params;
+            for( String period : selectedPeriodList ){
+
+                // Envia requisição
+                showProgressDialog();
+
+                String url = ApiEndpoints.RIDE_AVAIABILITIES + "/" + date + "/" + period.toLowerCase();
+                JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, requestJson,
+                        successListener, errorListener){
+                    @Override
+                    public HashMap<String, String> getHeaders() {
+                        HashMap<String, String> params = new HashMap<String, String>();
+                        params.put("Authentication-Token", token);
+                        return params;
+                    }
+                };
+
+                request.setRetryPolicy(new DefaultRetryPolicy(ApiEndpoints.TIMEOUT,
+                        DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+                RequestQueue queue = Volley.newRequestQueue(this);
+                queue.add(request);
+
             }
-        };
-
-        request.setRetryPolicy(new DefaultRetryPolicy(ApiEndpoints.TIMEOUT,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-        RequestQueue queue = Volley.newRequestQueue(this);
-        queue.add(request);
+        }
     }
 
     private String getToken() {
@@ -206,6 +231,9 @@ public class ConfigureRideActivity extends AppCompatActivity {
      * sequence.
      */
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+
+        SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
+
         public ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -218,6 +246,23 @@ public class ConfigureRideActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             return NUM_PAGES;
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            Fragment fragment = (Fragment) super.instantiateItem(container, position);
+            registeredFragments.put(position, fragment);
+            return fragment;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            registeredFragments.remove(position);
+            super.destroyItem(container, position, object);
+        }
+
+        public Fragment getRegisteredFragment(int position) {
+            return registeredFragments.get(position);
         }
 
     }

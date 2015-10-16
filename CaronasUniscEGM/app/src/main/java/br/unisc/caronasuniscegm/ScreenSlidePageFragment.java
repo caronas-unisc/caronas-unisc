@@ -12,7 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -47,7 +51,11 @@ public class ScreenSlidePageFragment extends Fragment {
     private String address;
 
     static final int PICK_LOCATION_REQUEST = 1;  // The request code
+    private List<String> selectedDays;
 
+    private TextView vlAddress;
+    private TextView vlLatitude;
+    private TextView vlLongitude;
     /**
      * Factory method for this fragment class. Constructs a new fragment for the given page number.
      */
@@ -88,7 +96,7 @@ public class ScreenSlidePageFragment extends Fragment {
                 rootView = (ViewGroup) inflater
                         .inflate(R.layout.fragment_day, container, false);
 
-                configureChooseDay( rootView );
+                configureChooseDay(rootView);
                 break;
             case 2:
                 // Inflate the layout containing a title and body text.
@@ -96,11 +104,6 @@ public class ScreenSlidePageFragment extends Fragment {
                         .inflate(R.layout.fragment_period, container, false);
 
                 configureChoosePeriod(rootView);
-                break;
-            case 3:
-                // Inflate the layout containing a title and body text.
-                rootView = (ViewGroup) inflater
-                        .inflate(R.layout.fragment_select_location, container, false);
                 break;
 
             default:
@@ -120,6 +123,9 @@ public class ScreenSlidePageFragment extends Fragment {
             }
         });
 
+        vlAddress = (TextView) rootView.findViewById(R.id.vl_address);
+        vlLatitude = (TextView) rootView.findViewById(R.id.vl_latitude);
+        vlLongitude = (TextView) rootView.findViewById(R.id.vl_longitude);
 
     }
 
@@ -133,12 +139,9 @@ public class ScreenSlidePageFragment extends Fragment {
                 longitude = data.getExtras().getDouble("longitude");
                 address = data.getExtras().getString("address");
 
-                ConfigureRideActivity configureRideActivity =
-                        (ConfigureRideActivity)  getActivity();
-                configureRideActivity.setLatitude(latitude);
-                configureRideActivity.setLongitude(longitude);
-                configureRideActivity.setAddress(address);
-
+                vlAddress.setText(address);
+                vlLatitude.setText(latitude + "");
+                vlLongitude.setText(longitude+ "");
             }
         }
     }
@@ -168,22 +171,22 @@ public class ScreenSlidePageFragment extends Fragment {
 
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
         //if( now.getTimeInMillis() < calendar.getTimeInMillis() ){
-            mDaysList.add( getResources().getString(R.string.field_friday) );
+            mDaysList.add(getResources().getString(R.string.field_friday));
         //}
 
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
         //if( now.getTimeInMillis() < calendar.getTimeInMillis() ){
-            mDaysList.add( getResources().getString(R.string.field_thursday) );
+            mDaysList.add(getResources().getString(R.string.field_thursday));
         //}
 
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
         //if( now.getTimeInMillis() < calendar.getTimeInMillis() ){
-            mDaysList.add( getResources().getString(R.string.field_wednesday) );
+            mDaysList.add(getResources().getString(R.string.field_wednesday));
         //}
 
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
         //if( now.getTimeInMillis() < calendar.getTimeInMillis() ){
-            mDaysList.add( getResources().getString(R.string.field_tuesday) );
+            mDaysList.add(getResources().getString(R.string.field_tuesday));
         //}
 
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
@@ -204,6 +207,62 @@ public class ScreenSlidePageFragment extends Fragment {
         return mPageNumber;
     }
 
+    public List<String> getSelectedPeriods() {
+
+        List<String> names = new ArrayList<String>();
+        for (int i=0;i<mPeriodAdapter.getCount();i++){
+            if( mPeriodAdapter.checkedPeriods[i] ){
+                names.add( mPeriodList.get(i) );
+            }
+        }
+
+        return names;
+    }
+
+    public List<String> getSelectedDays() {
+        List<String> dates = new ArrayList<String>();
+        for (int i=0;i<mDayOfTheWeekAdapter.getCount();i++){
+            if( mDayOfTheWeekAdapter.checkedDays[i] ){
+
+                Calendar calendar = Calendar.getInstance();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Date date = new Date();
+                calendar.setTime(date);
+
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+                if( mDaysList.get(i) == getResources().getString(R.string.field_monday) ){
+                    dates.add(dateFormat.format(calendar.getTime()));
+                }
+
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
+                if( mDaysList.get(i) == getResources().getString(R.string.field_tuesday) ){
+                    dates.add(dateFormat.format(calendar.getTime()));
+                }
+
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
+                if( mDaysList.get(i) == getResources().getString(R.string.field_wednesday) ){
+                    dates.add(dateFormat.format(calendar.getTime()));
+                }
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
+                if( mDaysList.get(i) == getResources().getString(R.string.field_thursday) ){
+                    dates.add(dateFormat.format(calendar.getTime()));
+                }
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
+                if( mDaysList.get(i) == getResources().getString(R.string.field_friday) ){
+                    dates.add(dateFormat.format(calendar.getTime()));
+                }
+
+            }
+        }
+
+        return dates;
+    }
+
     public Double getLatitude(){ return this.latitude; }
+
+    Double getLongitude(){ return this.longitude; }
+
+    String getAddress(){ return this.address; }
+
 
 }

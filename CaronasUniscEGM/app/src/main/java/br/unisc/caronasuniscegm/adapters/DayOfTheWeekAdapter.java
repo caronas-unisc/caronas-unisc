@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ public class DayOfTheWeekAdapter extends ArrayAdapter<String> {
     int layoutResourceId;
     private List<String> data = null;
     LayoutInflater inflater;
+    public boolean[] checkedDays;
 
     public DayOfTheWeekAdapter(Context context, LayoutInflater inflater, int layoutResourceId, List<String> data) {
         super(context, layoutResourceId, data);
@@ -29,10 +31,11 @@ public class DayOfTheWeekAdapter extends ArrayAdapter<String> {
         this.context = context;
         this.inflater = inflater;
         this.setData(data);
+        this.createCheckedDays();
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View row = convertView;
         DataHolder holder = null;
 
@@ -43,6 +46,14 @@ public class DayOfTheWeekAdapter extends ArrayAdapter<String> {
             holder = new DataHolder();
             holder.txtDayOfTheWeek = (TextView) row.findViewById(R.id.txtDayOfTheWeek);
             holder.checkboxDayOfTheWeek = (CheckBox) row.findViewById(R.id.checkboxDayOfTheWeek);
+
+            holder.checkboxDayOfTheWeek.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                    
+                    checkedDays[position] = isChecked;
+                }
+            });
 
             row.setTag(holder);
         }
@@ -61,6 +72,9 @@ public class DayOfTheWeekAdapter extends ArrayAdapter<String> {
 
     public void setData(List<String> data) {
         this.data = data;
+    }
+    public void createCheckedDays(){
+        this.checkedDays = new boolean[getCount()];
     }
 
 

@@ -44,6 +44,9 @@
     <string name="field_thursday">Thursday</string>
     <string name="field_friday">Friday</string>
     <string name="btn_add_place">Add place</string>
+    <string name="lbl_address">Address:</string>
+    <string name="lbl_latitude">Latitude:</string>
+    <string name="lbl_longitude">Longitude:</string>
 
 
 </resources>
