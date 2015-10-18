@@ -1,9 +1,7 @@
 package br.unisc.caronasuniscegm;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -30,7 +28,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 
-import br.unisc.caronasuniscegm.Utils.TokenUtils;
+import br.unisc.caronasuniscegm.utils.TokenUtils;
 import br.unisc.caronasuniscegm.rest.ApiEndpoints;
 import br.unisc.caronasuniscegm.rest.RideIntention;
 
