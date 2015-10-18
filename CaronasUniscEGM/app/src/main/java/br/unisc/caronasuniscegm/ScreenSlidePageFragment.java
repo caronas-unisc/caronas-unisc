@@ -11,10 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -56,6 +58,12 @@ public class ScreenSlidePageFragment extends Fragment {
     private TextView vlAddress;
     private TextView vlLatitude;
     private TextView vlLongitude;
+
+    private LinearLayout layoutPlaceInCar;
+    private EditText textPlacesInCar;
+    private String giveReceiveRide;
+
+
     /**
      * Factory method for this fragment class. Constructs a new fragment for the given page number.
      */
@@ -94,11 +102,18 @@ public class ScreenSlidePageFragment extends Fragment {
             case 1:
                 // Inflate the layout containing a title and body text.
                 rootView = (ViewGroup) inflater
+                        .inflate(R.layout.fragment_give_receive_ride, container, false);
+
+                configureChooseGiveReceiveRide(rootView);
+                break;
+            case 2:
+                // Inflate the layout containing a title and body text.
+                rootView = (ViewGroup) inflater
                         .inflate(R.layout.fragment_day, container, false);
 
                 configureChooseDay(rootView);
                 break;
-            case 2:
+            case 3:
                 // Inflate the layout containing a title and body text.
                 rootView = (ViewGroup) inflater
                         .inflate(R.layout.fragment_period, container, false);
@@ -110,6 +125,54 @@ public class ScreenSlidePageFragment extends Fragment {
                 break;
         }
         return rootView;
+    }
+
+    private void configureChooseGiveReceiveRide(ViewGroup rootView) {
+
+        layoutPlaceInCar = (LinearLayout) rootView.findViewById(R.id.layout_places_in_car);
+        textPlacesInCar = (EditText) rootView.findViewById(R.id.text_places_in_car);
+
+        RadioGroup rg = (RadioGroup) rootView.findViewById(R.id.radio_group_give_receive_ride);
+        rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId)
+            {
+                switch(checkedId)
+                {
+                    case R.id.radio_give_ride:
+                        giveReceiveRide = "give";
+                        layoutPlaceInCar.setVisibility(View.VISIBLE);
+                        break;
+                    case R.id.radio_receive_ride:
+                        giveReceiveRide = "receive";
+                        layoutPlaceInCar.setVisibility(View.INVISIBLE);
+                        textPlacesInCar.setText("");
+                        break;
+                }
+            }
+        });
+
+    }
+
+    public void onRadioButtonClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.radio_give_ride:
+                if (checked)
+                    giveReceiveRide = ((RadioButton) view).getText().toString();
+                    layoutPlaceInCar.setVisibility(View.VISIBLE);
+                    break;
+            case R.id.radio_receive_ride:
+                if (checked)
+                    giveReceiveRide = ((RadioButton) view).getText().toString();
+                    layoutPlaceInCar.setVisibility(View.INVISIBLE);
+                    textPlacesInCar.setText("");
+                break;
+        }
     }
 
     private void configureChoosePlace(ViewGroup rootView) {
@@ -264,5 +327,7 @@ public class ScreenSlidePageFragment extends Fragment {
 
     String getAddress(){ return this.address; }
 
+    public int getPlacesInCar() { return Integer.valueOf(textPlacesInCar.getText().toString()); }
 
+    public String getGiveReceiveRide() { return giveReceiveRide; }
 }

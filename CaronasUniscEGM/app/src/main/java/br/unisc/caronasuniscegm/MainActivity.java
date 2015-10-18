@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         showProgressDialog();
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
-                ApiEndpoints.SESSION_INFO, null, successListener, errorListener) {
+                ApiEndpoints.SESSION_INFO, successListener, errorListener) {
             @Override
             public HashMap<String, String> getHeaders() {
                 HashMap<String, String> params = new HashMap<String, String>();

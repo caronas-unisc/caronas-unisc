@@ -9,16 +9,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.NavUtils;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -33,7 +30,9 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 
+import br.unisc.caronasuniscegm.Utils.TokenUtils;
 import br.unisc.caronasuniscegm.rest.ApiEndpoints;
+import br.unisc.caronasuniscegm.rest.RideIntention;
 
 /**
  * Created by MateusFelipe on 11/10/2015.
@@ -42,22 +41,13 @@ public class ConfigureRideActivity extends AppCompatActivity {
     /**
      * The number of pages (wizard steps) to show in this demo.
      */
-    private static final int NUM_PAGES = 3;
+    private static final int NUM_PAGES = 4;
 
     private ProgressDialog pd;
-    private Double latitude;
-    /**
-     * The pager widget, which handles animation and allows swiping horizontally to access previous
-     * and next wizard steps.
-     */
     private ViewPager mPager;
-
-    /**
-     * The pager adapter, which provides the pages to the view pager widget.
-     */
     private ScreenSlidePagerAdapter mPagerAdapter;
-    private Double longitude;
-    private String address;
+
+    private RideIntention rideIntention;
 
     private List<String> selectedPeriodList;
     private List<String> selectedDayList;
@@ -66,6 +56,8 @@ public class ConfigureRideActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_screen_slide);
+
+        rideIntention = new RideIntention();
 
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.pager);
@@ -132,44 +124,41 @@ public class ConfigureRideActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void setLatitude(Double latitude){
-        this.latitude = latitude;
-    }
-
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     private void addRideIntention() {
 
         ScreenSlidePageFragment page0 = (ScreenSlidePageFragment) mPagerAdapter.getRegisteredFragment(0);
         ScreenSlidePageFragment page1 = (ScreenSlidePageFragment) mPagerAdapter.getRegisteredFragment(1);
         ScreenSlidePageFragment page2 = (ScreenSlidePageFragment) mPagerAdapter.getRegisteredFragment(2);
+        ScreenSlidePageFragment page3 = (ScreenSlidePageFragment) mPagerAdapter.getRegisteredFragment(3);
 
-        this.latitude = page0.getLatitude();
-        this.longitude = page0.getLongitude();
-        this.address = page0.getAddress();
+        rideIntention.setStartingLocationLatitude(page0.getLatitude());
+        rideIntention.setStartingLocationLongitude(page0.getLongitude());
+        rideIntention.setStartingLocationAddress(page0.getAddress());
+        rideIntention.setAvailabilityType(page1.getGiveReceiveRide());
 
-        this.selectedDayList = page1.getSelectedDays();
-        this.selectedPeriodList = page2.getSelectedPeriods();
+        if( rideIntention.getAvailabilityType() == "give" ) {
+            rideIntention.setAvailablePlacesInCar(page1.getPlacesInCar());
+        }
+
+        this.selectedDayList = page2.getSelectedDays();
+        this.selectedPeriodList = page3.getSelectedPeriods();
 
         // Monta objeto JSON
         JSONObject requestJson = new JSONObject();
-        JSONObject rideIntention = new JSONObject();
+        JSONObject rideIntentionJson = new JSONObject();
 
 
-        final String token = getToken();
+        final String token = TokenUtils.getToken(this.getApplicationContext());
 
         try {
-            rideIntention.put("availability_type", "receive");
-            rideIntention.put("starting_location_address", this.address);
-            rideIntention.put("starting_location_latitude", this.latitude);
-            rideIntention.put("starting_location_longitude", this.longitude);
-            requestJson.put("ride_availability", rideIntention);
+            rideIntentionJson.put("availability_type", rideIntention.getAvailabilityType() );
+            if( rideIntention.getAvailabilityType() == "give" ){
+                rideIntentionJson.put("available_places_in_car", rideIntention.getAvailablePlacesInCar());
+            }
+            rideIntentionJson.put("starting_location_address", rideIntention.getStartingLocationAddress());
+            rideIntentionJson.put("starting_location_latitude", rideIntention.getStartingLocationLatitude());
+            rideIntentionJson.put("starting_location_longitude", rideIntention.getStartingLocationLongitude());
+            requestJson.put("ride_availability", rideIntentionJson);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -220,11 +209,7 @@ public class ConfigureRideActivity extends AppCompatActivity {
         }
     }
 
-    private String getToken() {
-        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preference_file_key),
-                Context.MODE_PRIVATE);
-        return sharedPref.getString(getString(R.string.preference_session_token), "");
-    }
+
 
     /**
      * A simple pager adapter that represents 5 {@link ScreenSlidePageFragment} objects, in
