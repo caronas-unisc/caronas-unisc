@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 import java.util.List;
@@ -44,7 +43,7 @@ public class PeriodAdapter extends ArrayAdapter<String> {
             row = inflater.inflate(layoutResourceId, parent, false);
 
             holder = new DataHolder();
-            holder.txtPeriod = (TextView) row.findViewById(R.id.txtPeriod);
+            holder.txtPeriod = (TextView) row.findViewById(R.id.txt_period);
             holder.checkboxPeriod = (CheckBox) row.findViewById(R.id.checkboxPeriod);
 
             holder.checkboxPeriod.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

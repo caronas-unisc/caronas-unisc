@@ -23,7 +23,7 @@
             android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/locationMarkertext"
+                android:id="@+id/location_marker_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_corner_map"
@@ -35,7 +35,7 @@
                 android:textColor="@android:color/white" />
 
             <ImageView
-                android:id="@+id/imageView1"
+                android:id="@+id/image_view_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/maps_marker_icon" />
@@ -49,7 +49,7 @@
             android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/textView1"
+                android:id="@+id/text_view_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -58,7 +58,7 @@
                 android:textColor="#28b54c" />
 
             <TextView
-                android:id="@+id/adressText"
+                android:id="@+id/adress_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"

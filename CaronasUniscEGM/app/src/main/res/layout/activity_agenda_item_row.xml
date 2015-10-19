@@ -10,51 +10,83 @@
         android:orientation="horizontal" >
 
         <TextView
-            android:id="@+id/txtDate"
+            android:id="@+id/txt_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0.4"
             android:ems="10" />
 
+        <TextView
+            android:id="@+id/txt_period"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.6"
+            android:ems="10" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/lbl_availability_type"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.40"
+            android:text="@string/lbl_availability_type"
+            android:ems="10" />
+
+        <TextView
+            android:id="@+id/txt_availability_type"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.60"
+            android:ems="10" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:visibility="invisible">
+        android:id="@+id/layout_places_in_car">
 
         <TextView
-            android:id="@+id/txtDayOfTheWeek"
+            android:id="@+id/lbl_places_in_car"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0.30"
+            android:text="@string/lbl_places_in_car"
+            android:ems="10" />
+
+        <TextView
+            android:id="@+id/txt_places_in_car"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.70"
             android:ems="10" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:id="@+id/layout_starting_location_address">
 
         <TextView
-            android:id="@+id/txtPeriod"
+            android:id="@+id/lbl_address"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0.20"
+            android:text="@string/lbl_address"
             android:ems="10" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
 
         <TextView
-            android:id="@+id/txtAvailabilityType"
+            android:id="@+id/txt_starting_location_address"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0.80"
             android:ems="10" />
     </LinearLayout>
 

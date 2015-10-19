@@ -1,16 +1,9 @@
 package br.unisc.caronasuniscegm;
 
-import android.Manifest;
-import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,7 +33,7 @@ public class AddPlaceActivity extends FragmentActivity {
     private LinearLayout markerLayout;
     private Geocoder geocoder;
     private List<Address> addresses;
-    private TextView Address;
+    private TextView txtStartingLocationAddress;
     private Marker mStartRideMarker;
     private Marker mDestinationRideMarker;
 
@@ -74,8 +67,8 @@ public class AddPlaceActivity extends FragmentActivity {
      */
     private void setUpMapIfNeeded() {
 
-        markerText = (TextView) findViewById(R.id.locationMarkertext);
-        Address = (TextView) findViewById(R.id.adressText);
+        markerText = (TextView) findViewById(R.id.location_marker_text);
+        txtStartingLocationAddress = (TextView) findViewById(R.id.adress_text);
         markerLayout = (LinearLayout) findViewById(R.id.locationMarker);
 
 
@@ -180,7 +173,7 @@ public class AddPlaceActivity extends FragmentActivity {
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("latitude",mStartRideMarker.getPosition().latitude);
                     returnIntent.putExtra("longitude",mStartRideMarker.getPosition().longitude);
-                    returnIntent.putExtra("address", Address.getText().toString());
+                    returnIntent.putExtra("address", txtStartingLocationAddress.getText().toString());
                     setResult(RESULT_OK, returnIntent);
                     finish();
 
@@ -205,9 +198,7 @@ public class AddPlaceActivity extends FragmentActivity {
         }
 
         @Override
-        protected void onPreExecute() {
-            Address.setText(" Getting location ");
-        }
+        protected void onPreExecute() { txtStartingLocationAddress.setText(" Getting location "); }
 
         @Override
         protected String doInBackground(String... params) {
@@ -244,7 +235,7 @@ public class AddPlaceActivity extends FragmentActivity {
         @Override
         protected void onPostExecute(String result) {
             try {
-                Address.setText(addresses.get(0).getAddressLine(0)
+                txtStartingLocationAddress.setText(addresses.get(0).getAddressLine(0)
                         + addresses.get(0).getAddressLine(1) + " ");
             } catch (Exception e) {
                 e.printStackTrace();

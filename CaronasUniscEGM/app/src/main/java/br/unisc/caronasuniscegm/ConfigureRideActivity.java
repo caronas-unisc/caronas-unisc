@@ -28,7 +28,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 
-import br.unisc.caronasuniscegm.utils.TokenUtils;
+import br.unisc.caronasuniscegm.utilss.TokenUtils;
 import br.unisc.caronasuniscegm.rest.ApiEndpoints;
 import br.unisc.caronasuniscegm.rest.RideIntention;
 
@@ -134,7 +134,7 @@ public class ConfigureRideActivity extends AppCompatActivity {
         rideIntention.setStartingLocationAddress(page0.getAddress());
         rideIntention.setAvailabilityType(page1.getGiveReceiveRide());
 
-        if( rideIntention.getAvailabilityType() == "give" ) {
+        if( rideIntention.getAvailabilityType() == RideIntention.AVAIBILITY_TYPE_GIVE ) {
             rideIntention.setAvailablePlacesInCar(page1.getPlacesInCar());
         }
 
@@ -150,7 +150,7 @@ public class ConfigureRideActivity extends AppCompatActivity {
 
         try {
             rideIntentionJson.put("availability_type", rideIntention.getAvailabilityType() );
-            if( rideIntention.getAvailabilityType() == "give" ){
+            if( rideIntention.getAvailabilityType().equals(RideIntention.AVAIBILITY_TYPE_GIVE) ){
                 rideIntentionJson.put("available_places_in_car", rideIntention.getAvailablePlacesInCar());
             }
             rideIntentionJson.put("starting_location_address", rideIntention.getStartingLocationAddress());

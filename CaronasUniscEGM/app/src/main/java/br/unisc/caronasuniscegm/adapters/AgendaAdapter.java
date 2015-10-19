@@ -5,23 +5,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.util.List;
 import br.unisc.caronasuniscegm.R;
 import br.unisc.caronasuniscegm.rest.RideIntention;
+import br.unisc.caronasuniscegm.utilss.CalendarUtils;
 
 /**
  * Created by MateusFelipe on 17/10/2015.
  */
 public class AgendaAdapter extends ArrayAdapter<RideIntention> {
 
-    Context context;
-    int layoutResourceId;
+    private Context context;
+    private int layoutResourceId;
     private List<RideIntention> data = null;
-    LayoutInflater inflater;
-    public boolean[] checkedDays;
+    private LayoutInflater inflater;
 
     public AgendaAdapter(Context context, LayoutInflater inflater, int layoutResourceId, List<RideIntention> data) {
         super(context, layoutResourceId, data);
@@ -41,16 +40,13 @@ public class AgendaAdapter extends ArrayAdapter<RideIntention> {
             row = inflater.inflate(layoutResourceId, parent, false);
 
             holder = new DataHolder();
-            holder.txtDate = (TextView) row.findViewById(R.id.txtDate);
-            holder.txtDayOfTheWeek = (TextView) row.findViewById(R.id.txtDayOfTheWeek);
-            holder.txtPeriod = (TextView) row.findViewById(R.id.txtPeriod);
-            holder.txtAvailabilityType = (TextView) row.findViewById(R.id.txtAvailabilityType);
-
-            TextView txtDate;
-            TextView txtDayOfTheWeek;
-            TextView txtPeriod;
-            TextView txtAvailabilityType;
-
+            holder.txtDate = (TextView) row.findViewById(R.id.txt_date);
+            holder.txtPeriod = (TextView) row.findViewById(R.id.txt_period);
+            holder.txtAvailabilityType = (TextView) row.findViewById(R.id.txt_availability_type);
+            holder.txtPlacesInCar = (TextView) row.findViewById(R.id.txt_places_in_car);
+            holder.txtStartingLocationAddress = (TextView) row.findViewById(R.id.txt_starting_location_address);
+            holder.layoutAddress = (LinearLayout) row.findViewById(R.id.layout_starting_location_address);
+            holder.layoutAvaiablePlacesInCar = (LinearLayout) row.findViewById(R.id.layout_places_in_car);
 
             row.setTag(holder);
         }
@@ -58,6 +54,21 @@ public class AgendaAdapter extends ArrayAdapter<RideIntention> {
         {
             holder = (DataHolder)row.getTag();
         }
+
+        RideIntention rideIntention = getData().get(position);
+        holder.txtDate.setText( CalendarUtils.dateToString(rideIntention.getDate()) );
+        holder.txtPeriod.setText(rideIntention.getPeriod());
+        holder.txtAvailabilityType.setText(rideIntention.getAvailabilityType());
+        if( rideIntention.getAvailabilityType().equals(RideIntention.AVAIBILITY_TYPE_GIVE )){
+            holder.txtPlacesInCar.setText( rideIntention.getAvailablePlacesInCar() + "" );
+            holder.layoutAddress.setVisibility(View.GONE);
+            holder.layoutAvaiablePlacesInCar.setVisibility(View.VISIBLE);
+        }else{
+            holder.txtStartingLocationAddress.setText(rideIntention.getStartingLocationAddress());
+            holder.layoutAvaiablePlacesInCar.setVisibility(View.GONE);
+            holder.layoutAddress.setVisibility(View.VISIBLE);
+        }
+
 
         return row;
     }
@@ -68,11 +79,20 @@ public class AgendaAdapter extends ArrayAdapter<RideIntention> {
         this.data = data;
     }
 
+    public void updateDataList(List<RideIntention> newlist) {
+        data.clear();
+        data.addAll(newlist);
+        this.notifyDataSetChanged();
+    }
+
     static class DataHolder
     {
         TextView txtDate;
-        TextView txtDayOfTheWeek;
         TextView txtPeriod;
         TextView txtAvailabilityType;
+        TextView txtPlacesInCar;
+        TextView txtStartingLocationAddress;
+        LinearLayout layoutAvaiablePlacesInCar;
+        LinearLayout layoutAddress;
     }
 }

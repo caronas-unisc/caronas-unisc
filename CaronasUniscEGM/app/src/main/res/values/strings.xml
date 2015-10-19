@@ -52,6 +52,8 @@
     <string name="lbl_receive_ride">Receive</string>
     <string name="lbl_places_in_car">Places in Car</string>
     <string name="txt_no_ride_intentions">No ride intentions recorded for this week.</string>
+    <string name="text_title_agenda_list">Agenda for this week:</string>
+    <string name="lbl_availability_type">Availability Type</string>
 
 
 </resources>

@@ -29,7 +29,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import br.unisc.caronasuniscegm.utils.TokenUtils;
+import br.unisc.caronasuniscegm.utilss.CalendarUtils;
+import br.unisc.caronasuniscegm.utilss.TokenUtils;
 import br.unisc.caronasuniscegm.adapters.AgendaAdapter;
 import br.unisc.caronasuniscegm.rest.ApiEndpoints;
 import br.unisc.caronasuniscegm.rest.RideIntention;
@@ -76,8 +77,12 @@ public class AgendaActivity extends AppCompatActivity {
            }
 
        });
+    }
 
-        mRideIntentionList = getThisWeekRideIntentionList();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateThisWeekRideIntentionList();
     }
 
     @Override
@@ -87,7 +92,7 @@ public class AgendaActivity extends AppCompatActivity {
     }
 
 
-    public List<RideIntention> getThisWeekRideIntentionList() {
+    public void updateThisWeekRideIntentionList() {
 
         final String token = TokenUtils.getToken(this.getApplicationContext());
 
@@ -103,8 +108,7 @@ public class AgendaActivity extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                mAdapter.setData(mRideIntentionList);
-                mAdapter.notifyDataSetChanged();
+                mAdapter.updateDataList(mRideIntentionList);
             }
         };
 
@@ -119,11 +123,9 @@ public class AgendaActivity extends AppCompatActivity {
 
         // Envia requisição
         showProgressDialog();
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
 
-        String url = ApiEndpoints.RIDE_AVAIABILITIES + "/week/" + sdf.format(date);
+        String url = ApiEndpoints.RIDE_AVAIABILITIES + "/week/" + CalendarUtils.dateToString(date);
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url,
                 successListener, errorListener){
             @Override
@@ -139,8 +141,6 @@ public class AgendaActivity extends AppCompatActivity {
 
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(request);
-
-        return thisWeekRideIntentionList;
     }
 
     private void formatRideIntentionList(JSONArray jsonArrayResponse) throws JSONException, ParseException {
@@ -160,7 +160,7 @@ public class AgendaActivity extends AppCompatActivity {
             rideIntention.setStartingLocationLatitude(jsonArrayResponse.getJSONObject(i).getDouble("starting_location_latitude"));
             rideIntention.setStartingLocationLongitude(jsonArrayResponse.getJSONObject(i).getDouble("starting_location_longitude"));
 
-            if( rideIntention.getAvailabilityType() == "give" ) {
+            if( rideIntention.getAvailabilityType().equals(RideIntention.AVAIBILITY_TYPE_GIVE) ) {
                 rideIntention.setAvailablePlacesInCar(jsonArrayResponse.getJSONObject(i).getInt("available_places_in_car"));
             }
 

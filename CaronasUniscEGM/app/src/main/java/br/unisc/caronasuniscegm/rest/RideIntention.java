@@ -7,6 +7,8 @@ public class RideIntention {
     public static final String GIVE_AND_RECEIVE_RIDE = "give_and_receive_ride";
     public static final String GIVE_RIDE = "give_ride";
     public static final String RECEIVE_RIDE = "receive_ride";
+    public static final String AVAIBILITY_TYPE_RECEIVE = "receive";
+    public static final String AVAIBILITY_TYPE_GIVE = "give";
 
     private Date date;
     private String period;
