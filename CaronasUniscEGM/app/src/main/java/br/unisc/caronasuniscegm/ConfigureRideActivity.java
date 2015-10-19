@@ -28,7 +28,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 
-import br.unisc.caronasuniscegm.utilss.TokenUtils;
+import br.unisc.caronasuniscegm.utils.TokenUtils;
 import br.unisc.caronasuniscegm.rest.ApiEndpoints;
 import br.unisc.caronasuniscegm.rest.RideIntention;
 

@@ -1,4 +1,4 @@
-package br.unisc.caronasuniscegm.utilss;
+package br.unisc.caronasuniscegm.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;

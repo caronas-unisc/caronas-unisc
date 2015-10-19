@@ -29,8 +29,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import br.unisc.caronasuniscegm.utilss.CalendarUtils;
-import br.unisc.caronasuniscegm.utilss.TokenUtils;
+import br.unisc.caronasuniscegm.utils.CalendarUtils;
+import br.unisc.caronasuniscegm.utils.TokenUtils;
 import br.unisc.caronasuniscegm.adapters.AgendaAdapter;
 import br.unisc.caronasuniscegm.rest.ApiEndpoints;
 import br.unisc.caronasuniscegm.rest.RideIntention;

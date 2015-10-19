@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 import br.unisc.caronasuniscegm.R;
 import br.unisc.caronasuniscegm.rest.RideIntention;
-import br.unisc.caronasuniscegm.utilss.CalendarUtils;
+import br.unisc.caronasuniscegm.utils.CalendarUtils;
 
 /**
  * Created by MateusFelipe on 17/10/2015.
