@@ -13,6 +13,7 @@ import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -110,16 +111,69 @@ public class ConfigureRideActivity extends AppCompatActivity {
 
             case R.id.action_next:
 
-                // Finish, send data to web service
-                if( mPager.getCurrentItem() == mPagerAdapter.getCount() - 1 ){
-                    addRideIntention();
-                }else {
-                    mPager.setCurrentItem(mPager.getCurrentItem() + 1);
+                switch(mPager.getCurrentItem()){
+                    case 0:
+                        if(validateChoosePlace()){ mPager.setCurrentItem(mPager.getCurrentItem() + 1);}
+                        break;
+                    case 1:
+                        if(validateAvailabilityType()){ mPager.setCurrentItem(mPager.getCurrentItem() + 1);}
+                        break;
+                    case 2:
+                        if(validateSelectedDays()){ mPager.setCurrentItem(mPager.getCurrentItem() + 1);}
+                        break;
+                    case 3:
+                        if(validateSelectedPeriods()){  addRideIntention(); }
+                        break;
                 }
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean validateSelectedPeriods() {
+        ScreenSlidePageFragment page3 = (ScreenSlidePageFragment) mPagerAdapter.getRegisteredFragment(3);
+        if( page3.getSelectedPeriods() == null || page3.getSelectedPeriods().size() == 0 ){
+            Toast.makeText(getApplicationContext(),"Select at least one period before moving on.",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean validateSelectedDays() {
+        ScreenSlidePageFragment page2 = (ScreenSlidePageFragment) mPagerAdapter.getRegisteredFragment(2);
+        if( page2.getSelectedDays() == null || page2.getSelectedDays().size() == 0 ){
+            Toast.makeText(getApplicationContext(),"Select at least one day before moving on.",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean validateAvailabilityType() {
+        ScreenSlidePageFragment page1 = (ScreenSlidePageFragment) mPagerAdapter.getRegisteredFragment(1);
+        if( page1.getAvailabilityType() == null ){
+            Toast.makeText(getApplicationContext(),"Select one availability type before moving on.",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if( page1.getAvailabilityType().equals(RideIntention.AVAILABILITY_TYPE_GIVE) && page1.getPlacesInCar() == 0 ){
+            Toast.makeText(getApplicationContext(),"Select a valid amount of places in your car before moving on.",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean validateChoosePlace() {
+        ScreenSlidePageFragment page0 = (ScreenSlidePageFragment) mPagerAdapter.getRegisteredFragment(0);
+        if( page0.getLatitude() == null ){
+            Toast.makeText(getApplicationContext(),"Select a place before moving on.",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
     }
 
     private void addRideIntention() {
@@ -132,9 +186,9 @@ public class ConfigureRideActivity extends AppCompatActivity {
         rideIntention.setStartingLocationLatitude(page0.getLatitude());
         rideIntention.setStartingLocationLongitude(page0.getLongitude());
         rideIntention.setStartingLocationAddress(page0.getAddress());
-        rideIntention.setAvailabilityType(page1.getGiveReceiveRide());
+        rideIntention.setAvailabilityType(page1.getAvailabilityType());
 
-        if( rideIntention.getAvailabilityType() == RideIntention.AVAIBILITY_TYPE_GIVE ) {
+        if( rideIntention.getAvailabilityType().equals(RideIntention.AVAILABILITY_TYPE_GIVE)) {
             rideIntention.setAvailablePlacesInCar(page1.getPlacesInCar());
         }
 
@@ -150,7 +204,7 @@ public class ConfigureRideActivity extends AppCompatActivity {
 
         try {
             rideIntentionJson.put("availability_type", rideIntention.getAvailabilityType() );
-            if( rideIntention.getAvailabilityType().equals(RideIntention.AVAIBILITY_TYPE_GIVE) ){
+            if( rideIntention.getAvailabilityType().equals(RideIntention.AVAILABILITY_TYPE_GIVE) ){
                 rideIntentionJson.put("available_places_in_car", rideIntention.getAvailablePlacesInCar());
             }
             rideIntentionJson.put("starting_location_address", rideIntention.getStartingLocationAddress());

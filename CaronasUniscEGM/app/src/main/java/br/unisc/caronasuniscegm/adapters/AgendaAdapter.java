@@ -59,7 +59,7 @@ public class AgendaAdapter extends ArrayAdapter<RideIntention> {
         holder.txtDate.setText( CalendarUtils.dateToString(rideIntention.getDate()) );
         holder.txtPeriod.setText(rideIntention.getPeriod());
         holder.txtAvailabilityType.setText(rideIntention.getAvailabilityType());
-        if( rideIntention.getAvailabilityType().equals(RideIntention.AVAIBILITY_TYPE_GIVE )){
+        if( rideIntention.getAvailabilityType().equals(RideIntention.AVAILABILITY_TYPE_GIVE)){
             holder.txtPlacesInCar.setText( rideIntention.getAvailablePlacesInCar() + "" );
             holder.layoutAddress.setVisibility(View.GONE);
             holder.layoutAvaiablePlacesInCar.setVisibility(View.VISIBLE);

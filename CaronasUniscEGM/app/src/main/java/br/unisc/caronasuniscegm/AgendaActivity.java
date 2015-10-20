@@ -160,7 +160,7 @@ public class AgendaActivity extends AppCompatActivity {
             rideIntention.setStartingLocationLatitude(jsonArrayResponse.getJSONObject(i).getDouble("starting_location_latitude"));
             rideIntention.setStartingLocationLongitude(jsonArrayResponse.getJSONObject(i).getDouble("starting_location_longitude"));
 
-            if( rideIntention.getAvailabilityType().equals(RideIntention.AVAIBILITY_TYPE_GIVE) ) {
+            if( rideIntention.getAvailabilityType().equals(RideIntention.AVAILABILITY_TYPE_GIVE) ) {
                 rideIntention.setAvailablePlacesInCar(jsonArrayResponse.getJSONObject(i).getInt("available_places_in_car"));
             }
 

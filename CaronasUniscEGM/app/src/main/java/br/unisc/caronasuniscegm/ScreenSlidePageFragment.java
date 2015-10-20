@@ -26,6 +26,7 @@ import java.util.List;
 
 import br.unisc.caronasuniscegm.adapters.DayOfTheWeekAdapter;
 import br.unisc.caronasuniscegm.adapters.PeriodAdapter;
+import br.unisc.caronasuniscegm.rest.RideIntention;
 
 public class ScreenSlidePageFragment extends Fragment {
     /**
@@ -61,7 +62,7 @@ public class ScreenSlidePageFragment extends Fragment {
 
     private LinearLayout layoutPlaceInCar;
     private EditText textPlacesInCar;
-    private String giveReceiveRide;
+    private String availabilityType;
 
 
     /**
@@ -141,11 +142,11 @@ public class ScreenSlidePageFragment extends Fragment {
                 switch(checkedId)
                 {
                     case R.id.radio_give_ride:
-                        giveReceiveRide = "give";
+                        availabilityType = RideIntention.AVAILABILITY_TYPE_GIVE;
                         layoutPlaceInCar.setVisibility(View.VISIBLE);
                         break;
                     case R.id.radio_receive_ride:
-                        giveReceiveRide = "receive";
+                        availabilityType = RideIntention.AVAILABILITY_TYPE_RECEIVE;
                         layoutPlaceInCar.setVisibility(View.INVISIBLE);
                         textPlacesInCar.setText("");
                         break;
@@ -163,12 +164,12 @@ public class ScreenSlidePageFragment extends Fragment {
         switch(view.getId()) {
             case R.id.radio_give_ride:
                 if (checked)
-                    giveReceiveRide = ((RadioButton) view).getText().toString();
+                    availabilityType = ((RadioButton) view).getText().toString();
                     layoutPlaceInCar.setVisibility(View.VISIBLE);
                     break;
             case R.id.radio_receive_ride:
                 if (checked)
-                    giveReceiveRide = ((RadioButton) view).getText().toString();
+                    availabilityType = ((RadioButton) view).getText().toString();
                     layoutPlaceInCar.setVisibility(View.INVISIBLE);
                     textPlacesInCar.setText("");
                 break;
@@ -327,7 +328,13 @@ public class ScreenSlidePageFragment extends Fragment {
 
     String getAddress(){ return this.address; }
 
-    public int getPlacesInCar() { return Integer.valueOf(textPlacesInCar.getText().toString()); }
+    public int getPlacesInCar() {
+        if (textPlacesInCar.getText().toString().isEmpty()) {
+            return 0;
+        } else {
+            return Integer.valueOf(textPlacesInCar.getText().toString());
+        }
+    }
 
-    public String getGiveReceiveRide() { return giveReceiveRide; }
+    public String getAvailabilityType() { return availabilityType; }
 }
