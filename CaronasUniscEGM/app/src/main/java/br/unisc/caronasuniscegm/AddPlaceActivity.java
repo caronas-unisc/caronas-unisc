@@ -1,10 +1,15 @@
 package br.unisc.caronasuniscegm;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -100,6 +105,29 @@ public class AddPlaceActivity extends FragmentActivity {
         }
     }
 
+    private LatLng getCurrentCoordinates() {
+        LocationManager locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    public void requestPermissions(@NonNull String[] permissions, int requestCode)
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for Activity#requestPermissions for more details.
+                return null;
+            }
+        }
+
+        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if (location != null)
+            return new LatLng(location.getLatitude(), location.getLongitude());
+
+        return null;
+    }
+
     /**
      * This is where we can add markers or lines, add listeners or move the camera. In this case, we
      * just add a marker near Africa.
@@ -107,11 +135,13 @@ public class AddPlaceActivity extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        // Centro de santa cruz do sul
-        LatLng latLong = new LatLng(-29.7032527, -52.4277339);
+        LatLng latLong = getCurrentCoordinates();
+
+        if (latLong == null)
+            latLong = new LatLng(-29.7032527, -52.4277339); // Centro de santa cruz do sul
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(latLong).zoom(19f).tilt(70).build();
+                .target(latLong).zoom(17f).build();
 
         mMap.setMyLocationEnabled(true);
         mMap.animateCamera(CameraUpdateFactory
@@ -120,8 +150,7 @@ public class AddPlaceActivity extends FragmentActivity {
         mMap.clear();
 
         // LatLong da unisc
-        LatLng latLng1 = new LatLng(-29.6987289,
-                -52.4372599);
+        LatLng latLng1 = new LatLng(-29.6987289,  -52.4372599);
 
         mDestinationRideMarker = mMap.addMarker(new MarkerOptions()
                 .position(latLng1)
@@ -129,19 +158,6 @@ public class AddPlaceActivity extends FragmentActivity {
                 .snippet("")
                 .icon(BitmapDescriptorFactory
                         .fromResource(R.drawable.maps_marker_icon)));
-
-
-        /*LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        try {
-            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            double lat = location.getLatitude();
-            double lng = location.getLongitude();
-            mMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title("Marker"));
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 18.0f));
-        } catch (SecurityException ex) {
-
-        }*/
 
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
 
@@ -193,10 +209,9 @@ public class AddPlaceActivity extends FragmentActivity {
                     setResult(RESULT_OK, returnIntent);
                     finish();
 
+                    //String url = makeURL(mStartRideMarker.getPosition().latitude,mStartRideMarker.getPosition().longitude,mDestinationRideMarker.getPosition().latitude, mDestinationRideMarker.getPosition().longitude);
+                    //getJSONFromUrl(url);
 
-                    /*String url = makeURL(mStartRideMarker.getPosition().latitude,mStartRideMarker.getPosition().longitude,mDestinationRideMarker.getPosition().latitude, mDestinationRideMarker.getPosition().longitude);
-                    getJSONFromUrl(url);
-                    */
                 } catch (Exception e) {
                 }
 
