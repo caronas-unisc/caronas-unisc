@@ -26,6 +26,9 @@
     <string name="title_activity_agenda">Agenda</string>
     <string name="title_activity_configure_ride">Configure a carona</string>
     <string name="finding_your_location">Procurando sua localização...</string>
+    <string name="set_your_location">Definir local aqui</string>
+    <string name="selected_location">Local escolhido</string>
+    <string name="getting_location">Buscando endereço</string>
     <string name="action_previous">Anterior</string>
     <string name="action_next">Proxima</string>
     <string name="action_finish">Salvar</string>

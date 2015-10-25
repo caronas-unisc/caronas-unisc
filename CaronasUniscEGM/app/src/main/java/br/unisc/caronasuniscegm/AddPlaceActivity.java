@@ -108,8 +108,17 @@ public class AddPlaceActivity extends FragmentActivity {
     }
 
     private void setUpWithCurrentLocation() {
+        // Inicialmente define localização no centro de Santa Cruz do Sul
+        LatLng latLng = new LatLng(-29.7032527, -52.4277339);
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(latLng).zoom(17f).build();
+
+        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        // Ativa My Location
         mMap.setMyLocationEnabled(true);
 
+        // Diálogo para aguardar busca da localização
         final ProgressDialog pd = new ProgressDialog(AddPlaceActivity.this);
         pd.setMessage(getString(R.string.finding_your_location));
         pd.setCancelable(false);
@@ -117,12 +126,13 @@ public class AddPlaceActivity extends FragmentActivity {
                 new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
                 mMap.setOnMyLocationChangeListener(null);
+                dialog.dismiss();
             }
         });
         pd.show();
 
+        // No primeiro retorno da API do My Location, posiciona usuário na localização retornada
         mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
             private boolean loaded = false;
 
@@ -157,12 +167,6 @@ public class AddPlaceActivity extends FragmentActivity {
     private void setUpMap() {
         setUpWithCurrentLocation();
 
-        LatLng latLng = new LatLng(-29.7032527, -52.4277339); // Centro de Santa Cruz do Sul
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(latLng).zoom(17f).build();
-
-        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
         // Clears all the existing markers
         mMap.clear();
 
@@ -185,7 +189,7 @@ public class AddPlaceActivity extends FragmentActivity {
 
                     center = mMap.getCameraPosition().target;
 
-                    markerText.setText(" Set your Location ");
+                    markerText.setText(getString(R.string.set_your_location));
                     //mMap.clear();
                     markerLayout.setVisibility(View.VISIBLE);
 
@@ -250,7 +254,9 @@ public class AddPlaceActivity extends FragmentActivity {
         }
 
         @Override
-        protected void onPreExecute() { txtStartingLocationAddress.setText(" Getting location "); }
+        protected void onPreExecute() {
+            txtStartingLocationAddress.setText(getString(R.string.getting_location));
+        }
 
         @Override
         protected String doInBackground(String... params) {

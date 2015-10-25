@@ -55,4 +55,7 @@
     <string name="text_title_agenda_list">Agenda for this week:</string>
     <string name="lbl_availability_type">Availability Type</string>
     <string name="finding_your_location">Finding your location...</string>
+    <string name="set_your_location">Set location here</string>
+    <string name="selected_location">Selected location</string>
+    <string name="getting_location">Getting address</string>
 </resources>

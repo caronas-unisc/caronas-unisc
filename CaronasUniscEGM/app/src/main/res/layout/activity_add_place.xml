@@ -31,7 +31,7 @@
                 android:minWidth="180dp"
                 android:paddingLeft="2dp"
                 android:paddingRight="2dp"
-                android:text=" Set your Location "
+                android:text="@string/set_your_location"
                 android:textColor="@android:color/white" />
 
             <ImageView
@@ -53,7 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:text="Selected Location"
+                android:text="@string/selected_location"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="#28b54c" />
 
@@ -64,7 +64,7 @@
                 android:layout_marginLeft="10dp"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="Getting location"
+                android:text="@string/getting_location"
                 android:textSize="16sp" />
         </LinearLayout>
     </FrameLayout>
