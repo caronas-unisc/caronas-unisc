@@ -1,6 +1,8 @@
 package br.unisc.caronasuniscegm;
 
 import android.Manifest;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -105,27 +107,45 @@ public class AddPlaceActivity extends FragmentActivity {
         }
     }
 
-    private LatLng getCurrentCoordinates() {
-        LocationManager locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    public void requestPermissions(@NonNull String[] permissions, int requestCode)
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for Activity#requestPermissions for more details.
-                return null;
+    private void setUpWithCurrentLocation() {
+        mMap.setMyLocationEnabled(true);
+
+        final ProgressDialog pd = new ProgressDialog(AddPlaceActivity.this);
+        pd.setMessage(getString(R.string.finding_your_location));
+        pd.setCancelable(false);
+        pd.setButton(pd.BUTTON_NEGATIVE, getString(android.R.string.cancel),
+                new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                mMap.setOnMyLocationChangeListener(null);
             }
-        }
+        });
+        pd.show();
 
-        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if (location != null)
-            return new LatLng(location.getLatitude(), location.getLongitude());
+        mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+            private boolean loaded = false;
 
-        return null;
+            @Override
+            public void onMyLocationChange(Location location) {
+                if (loaded)
+                    return;
+
+                loaded = true;
+
+                if (pd.isShowing())
+                    pd.dismiss();
+
+                if (location != null) {
+                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                            .target(latLng).zoom(17f).build();
+
+                    mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                }
+            }
+        });
     }
 
     /**
@@ -135,17 +155,14 @@ public class AddPlaceActivity extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        LatLng latLong = getCurrentCoordinates();
+        setUpWithCurrentLocation();
 
-        if (latLong == null)
-            latLong = new LatLng(-29.7032527, -52.4277339); // Centro de santa cruz do sul
-
+        LatLng latLng = new LatLng(-29.7032527, -52.4277339); // Centro de Santa Cruz do Sul
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(latLong).zoom(17f).build();
+                .target(latLng).zoom(17f).build();
 
-        mMap.setMyLocationEnabled(true);
-        mMap.animateCamera(CameraUpdateFactory
-                .newCameraPosition(cameraPosition));
+        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
         // Clears all the existing markers
         mMap.clear();
 
@@ -385,4 +402,5 @@ public class AddPlaceActivity extends FragmentActivity {
 
         return poly;
     }
+
 }

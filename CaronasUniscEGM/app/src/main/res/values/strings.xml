@@ -54,6 +54,5 @@
     <string name="txt_no_ride_intentions">No ride intentions recorded for this week.</string>
     <string name="text_title_agenda_list">Agenda for this week:</string>
     <string name="lbl_availability_type">Availability Type</string>
-
-
+    <string name="finding_your_location">Finding your location...</string>
 </resources>
