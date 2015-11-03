@@ -1,10 +1,17 @@
 package br.unisc.caronasuniscegm;
 
+import android.Manifest;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -100,6 +107,57 @@ public class AddPlaceActivity extends FragmentActivity {
         }
     }
 
+    private void setUpWithCurrentLocation() {
+        // Inicialmente define localização no centro de Santa Cruz do Sul
+        LatLng latLng = new LatLng(-29.7032527, -52.4277339);
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(latLng).zoom(17f).build();
+
+        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        // Ativa My Location
+        mMap.setMyLocationEnabled(true);
+
+        // Diálogo para aguardar busca da localização
+        final ProgressDialog pd = new ProgressDialog(AddPlaceActivity.this);
+        pd.setMessage(getString(R.string.finding_your_location));
+        pd.setCancelable(false);
+        pd.setButton(pd.BUTTON_NEGATIVE, getString(android.R.string.cancel),
+                new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mMap.setOnMyLocationChangeListener(null);
+                dialog.dismiss();
+            }
+        });
+        pd.show();
+
+        // No primeiro retorno da API do My Location, posiciona usuário na localização retornada
+        mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+            private boolean loaded = false;
+
+            @Override
+            public void onMyLocationChange(Location location) {
+                if (loaded)
+                    return;
+
+                loaded = true;
+
+                if (pd.isShowing())
+                    pd.dismiss();
+
+                if (location != null) {
+                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                            .target(latLng).zoom(17f).build();
+
+                    mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                }
+            }
+        });
+    }
+
     /**
      * This is where we can add markers or lines, add listeners or move the camera. In this case, we
      * just add a marker near Africa.
@@ -107,21 +165,13 @@ public class AddPlaceActivity extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        // Centro de santa cruz do sul
-        LatLng latLong = new LatLng(-29.7032527, -52.4277339);
+        setUpWithCurrentLocation();
 
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(latLong).zoom(19f).tilt(70).build();
-
-        mMap.setMyLocationEnabled(true);
-        mMap.animateCamera(CameraUpdateFactory
-                .newCameraPosition(cameraPosition));
         // Clears all the existing markers
         mMap.clear();
 
         // LatLong da unisc
-        LatLng latLng1 = new LatLng(-29.6987289,
-                -52.4372599);
+        LatLng latLng1 = new LatLng(-29.6987289,  -52.4372599);
 
         mDestinationRideMarker = mMap.addMarker(new MarkerOptions()
                 .position(latLng1)
@@ -129,19 +179,6 @@ public class AddPlaceActivity extends FragmentActivity {
                 .snippet("")
                 .icon(BitmapDescriptorFactory
                         .fromResource(R.drawable.maps_marker_icon)));
-
-
-        /*LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        try {
-            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            double lat = location.getLatitude();
-            double lng = location.getLongitude();
-            mMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title("Marker"));
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 18.0f));
-        } catch (SecurityException ex) {
-
-        }*/
 
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
 
@@ -152,7 +189,7 @@ public class AddPlaceActivity extends FragmentActivity {
 
                     center = mMap.getCameraPosition().target;
 
-                    markerText.setText(" Set your Location ");
+                    markerText.setText(getString(R.string.set_your_location));
                     //mMap.clear();
                     markerLayout.setVisibility(View.VISIBLE);
 
@@ -193,10 +230,9 @@ public class AddPlaceActivity extends FragmentActivity {
                     setResult(RESULT_OK, returnIntent);
                     finish();
 
+                    //String url = makeURL(mStartRideMarker.getPosition().latitude,mStartRideMarker.getPosition().longitude,mDestinationRideMarker.getPosition().latitude, mDestinationRideMarker.getPosition().longitude);
+                    //getJSONFromUrl(url);
 
-                    /*String url = makeURL(mStartRideMarker.getPosition().latitude,mStartRideMarker.getPosition().longitude,mDestinationRideMarker.getPosition().latitude, mDestinationRideMarker.getPosition().longitude);
-                    getJSONFromUrl(url);
-                    */
                 } catch (Exception e) {
                 }
 
@@ -218,7 +254,9 @@ public class AddPlaceActivity extends FragmentActivity {
         }
 
         @Override
-        protected void onPreExecute() { txtStartingLocationAddress.setText(" Getting location "); }
+        protected void onPreExecute() {
+            txtStartingLocationAddress.setText(getString(R.string.getting_location));
+        }
 
         @Override
         protected String doInBackground(String... params) {
@@ -256,7 +294,7 @@ public class AddPlaceActivity extends FragmentActivity {
         protected void onPostExecute(String result) {
             try {
                 txtStartingLocationAddress.setText(addresses.get(0).getAddressLine(0)
-                        + addresses.get(0).getAddressLine(1) + " ");
+                        + " - " + addresses.get(0).getAddressLine(1));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -370,4 +408,5 @@ public class AddPlaceActivity extends FragmentActivity {
 
         return poly;
     }
+
 }
