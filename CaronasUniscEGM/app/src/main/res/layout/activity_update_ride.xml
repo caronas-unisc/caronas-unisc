@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/lbl_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.30"
+            android:text="@string/lbl_date"
+            android:ems="10" />
+
+        <Spinner
+            android:id="@+id/spinner_day_of_the_week"
+            android:layout_width="0dp"
+            android:layout_height="65dp"
+            android:ems="10"
+            android:layout_weight="0.7" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/lbl_period"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:text="@string/lbl_period"
+            android:ems="10" />
+
+        <Spinner
+            android:id="@+id/spinner_period"
+            android:layout_width="0dp"
+            android:layout_height="65dp"
+            android:ems="10"
+            android:layout_weight="0.7" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/lbl_availability_type"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:text="@string/lbl_availability_type"
+            android:ems="10" />
+
+        <Spinner
+            android:id="@+id/spinner_availability_type"
+            android:layout_width="0dp"
+            android:layout_height="65dp"
+            android:ems="10"
+            android:layout_weight="0.7" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/layout_places_in_car">
+
+        <TextView
+            android:id="@+id/lbl_places_in_car"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:text="@string/lbl_places_in_car"
+            android:ems="10" />
+
+        <EditText
+            android:id="@+id/txt_places_in_car"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            android:ems="10" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/layout_starting_location_address">
+
+        <TextView
+            android:id="@+id/lbl_address"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:text="@string/lbl_address"
+            android:ems="10" />
+
+        <TextView
+            android:id="@+id/txt_starting_location_address"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.45"
+            android:ems="10" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_change"
+            android:id="@+id/button"
+            android:layout_weight="0.25"
+            android:ems="10"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_save"
+            android:id="@+id/lbl_save" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_delete"
+            android:id="@+id/btn_delete" />
+    </LinearLayout>
+
+
+
+</LinearLayout>

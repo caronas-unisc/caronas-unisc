@@ -27,6 +27,7 @@ import java.util.List;
 import br.unisc.caronasuniscegm.adapters.DayOfTheWeekAdapter;
 import br.unisc.caronasuniscegm.adapters.PeriodAdapter;
 import br.unisc.caronasuniscegm.rest.RideIntention;
+import br.unisc.caronasuniscegm.utils.CalendarUtils;
 
 public class ScreenSlidePageFragment extends Fragment {
     /**
@@ -227,36 +228,7 @@ public class ScreenSlidePageFragment extends Fragment {
 
         mDaysListview = (ListView) rootView.findViewById(R.id.listview_choose_day);
 
-        Calendar now = Calendar.getInstance();
-        Calendar calendar = Calendar.getInstance();
-        Date date = new Date();
-        now.setTime(date);
-        calendar.setTime(date);
-
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
-        //if( now.getTimeInMillis() < calendar.getTimeInMillis() ){
-            mDaysList.add(getResources().getString(R.string.field_friday));
-        //}
-
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
-        //if( now.getTimeInMillis() < calendar.getTimeInMillis() ){
-            mDaysList.add(getResources().getString(R.string.field_thursday));
-        //}
-
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
-        //if( now.getTimeInMillis() < calendar.getTimeInMillis() ){
-            mDaysList.add(getResources().getString(R.string.field_wednesday));
-        //}
-
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
-        //if( now.getTimeInMillis() < calendar.getTimeInMillis() ){
-            mDaysList.add(getResources().getString(R.string.field_tuesday));
-        //}
-
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
-        //if( now.getTimeInMillis() < calendar.getTimeInMillis() ){
-            mDaysList.add( getResources().getString(R.string.field_monday) );
-        //}
+        mDaysList = CalendarUtils.getUpcommingDaysOfTheWeek(getContext());
 
         mDayOfTheWeekAdapter = new DayOfTheWeekAdapter(getActivity().getApplicationContext(), getActivity().getLayoutInflater(),
                 R.layout.fragment_day_item_row, mDaysList);

@@ -72,11 +72,25 @@
         <activity
             android:name=".AgendaActivity"
             android:label="@string/title_activity_agenda" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
         </activity>
         <activity
             android:name=".ConfigureRideActivity"
             android:label="@string/title_activity_configure_ride"
             android:configChanges="orientation|screenSize">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".AgendaActivity" />
+        </activity>
+        <activity
+            android:name=".UpdateRideActivity"
+            android:label="@string/title_activity_update_ride"
+            android:configChanges="orientation|screenSize">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".AgendaActivity" />
         </activity>
 
     </application>

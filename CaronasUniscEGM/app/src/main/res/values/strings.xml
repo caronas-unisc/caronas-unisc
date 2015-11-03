@@ -59,4 +59,10 @@
     <string name="selected_location">Selected location</string>
     <string name="getting_location">Getting address</string>
     <string name="btn_copy_last_week_ride">Copy last week agenda</string>
+    <string name="lbl_period">Period</string>
+    <string name="lbl_date">Date</string>
+    <string name="lbl_change">Change</string>
+    <string name="lbl_save">Save</string>
+    <string name="lbl_delete">Delete</string>
+    <string name="title_activity_update_ride">Update Ride</string>
 </resources>

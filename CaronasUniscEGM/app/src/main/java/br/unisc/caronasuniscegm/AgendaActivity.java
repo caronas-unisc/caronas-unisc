@@ -83,6 +83,9 @@ public class AgendaActivity extends AppCompatActivity {
        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
            @Override
            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+               RideIntention rideIntention = (RideIntention) mListView.getItemAtPosition(position);
+               Intent intent = new Intent(getApplicationContext(), UpdateRideActivity.class);
+               startActivity(intent);
 
            }
        });
