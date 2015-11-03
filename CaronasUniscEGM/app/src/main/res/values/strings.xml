@@ -58,4 +58,5 @@
     <string name="set_your_location">Set location here</string>
     <string name="selected_location">Selected location</string>
     <string name="getting_location">Getting address</string>
+    <string name="btn_copy_last_week_ride">Copy last week agenda</string>
 </resources>
