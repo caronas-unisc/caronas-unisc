@@ -61,12 +61,13 @@ public class AgendaAdapter extends ArrayAdapter<RideIntention> {
         holder.txtAvailabilityType.setText(rideIntention.getAvailabilityType());
         if( rideIntention.getAvailabilityType().equals(RideIntention.AVAILABILITY_TYPE_GIVE)){
             holder.txtPlacesInCar.setText( rideIntention.getAvailablePlacesInCar() + "" );
-            holder.layoutAddress.setVisibility(View.GONE);
+            holder.txtStartingLocationAddress.setText(rideIntention.getStartingLocationAddress());
+            //holder.layoutAddress.setVisibility(View.GONE);
             holder.layoutAvaiablePlacesInCar.setVisibility(View.VISIBLE);
         }else{
             holder.txtStartingLocationAddress.setText(rideIntention.getStartingLocationAddress());
             holder.layoutAvaiablePlacesInCar.setVisibility(View.GONE);
-            holder.layoutAddress.setVisibility(View.VISIBLE);
+            //holder.layoutAddress.setVisibility(View.VISIBLE);
         }
 
 

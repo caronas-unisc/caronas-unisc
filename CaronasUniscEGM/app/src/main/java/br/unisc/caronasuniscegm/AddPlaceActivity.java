@@ -1,22 +1,22 @@
 package br.unisc.caronasuniscegm;
 
-import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,24 +47,116 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import br.unisc.caronasuniscegm.datasource.LocationDataSource;
+
 public class AddPlaceActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
-    private TextView markerText;
-    private LatLng center;
-    private LinearLayout markerLayout;
-    private Geocoder geocoder;
-    private List<Address> addresses;
-    private TextView txtStartingLocationAddress;
+    private TextView mStartMarkerText;
+    private LatLng mScreenCenterPosition;
+    private LinearLayout mStartMarkerLayout;
+    private Geocoder mGeocoder;
+    private List<Address> mListAddress;
+    private TextView mTxtStartingLocationAddress;
     private Marker mStartRideMarker;
     private Marker mDestinationRideMarker;
+    private Button mBtnFinish;
+    private Button mBtnChangePin;
+    private Spinner mSpinnerSavedLocations;
+
+    LocationDataSource mLocationDataSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_place);
+        initUiElements();
         setUpMapIfNeeded();
+        initSavedLocationSpinner();
+    }
+
+    private void initSavedLocationSpinner() {
+        mLocationDataSource = new LocationDataSource(this);
+
+        mLocationDataSource.open();
+        final ArrayList<br.unisc.caronasuniscegm.model.Location> listLocation = mLocationDataSource.findAll();
+
+        List<String> listLocationSpinner = new ArrayList<String>();
+        listLocationSpinner.add(getResources().getString(R.string.msg_select_between_custom_location));
+        for(br.unisc.caronasuniscegm.model.Location location : listLocation){
+            listLocationSpinner.add(location.getmName());
+        }
+
+        ArrayAdapter<String> arrayAdapterAvailabilityType = new ArrayAdapter<String>(
+                this,
+                android.R.layout.simple_spinner_item,
+                listLocationSpinner );
+        arrayAdapterAvailabilityType.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinnerSavedLocations.setAdapter(arrayAdapterAvailabilityType);
+        // Select first element
+        mSpinnerSavedLocations.setSelection(0);
+
+        mSpinnerSavedLocations.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+
+                for (br.unisc.caronasuniscegm.model.Location location : listLocation) {
+                    if (parentView.getItemAtPosition(position).toString().equals(location.getmName())) {
+                        setUpMap();
+                        addStartMarkerOnMap(location.getmLatitude(), location.getmLongitude());
+                        new GetLocationAsync(location.getmLatitude(), location.getmLongitude()).execute();
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+    }
+
+    private void initUiElements() {
+        mStartMarkerText = (TextView) findViewById(R.id.location_marker_text);
+        mTxtStartingLocationAddress = (TextView) findViewById(R.id.adress_text);
+        mStartMarkerLayout = (LinearLayout) findViewById(R.id.locationMarker);
+        mBtnFinish = (Button) findViewById(R.id.btn_finish);
+        mBtnChangePin = (Button) findViewById(R.id.btn_change_pin);
+        mSpinnerSavedLocations = (Spinner) findViewById(R.id.spinner_saved_locations);
+
+        mBtnFinish.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                if (mStartRideMarker.getPosition() != null) {
+                    Intent returnIntent = new Intent();
+                    returnIntent.putExtra("latitude", mStartRideMarker.getPosition().latitude);
+                    returnIntent.putExtra("longitude", mStartRideMarker.getPosition().longitude);
+                    returnIntent.putExtra("address", mTxtStartingLocationAddress.getText().toString());
+
+                    // If user has selected a new custom location
+                    if (mSpinnerSavedLocations.getSelectedItemPosition() == 0) {
+                        returnIntent.putExtra("newLocation", true);
+                    }
+
+                    setResult(RESULT_OK, returnIntent);
+                    finish();
+                } else {
+                    Toast.makeText(getApplicationContext(),
+                            getResources().getString(R.string.msg_err_select_location), Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
+
+        mBtnChangePin.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Select first element
+                mSpinnerSavedLocations.setSelection(0);
+                setUpMap();
+            }
+        });
     }
 
     @Override
@@ -89,12 +181,6 @@ public class AddPlaceActivity extends FragmentActivity {
      * method in {@link #onResume()} to guarantee that it will be called.
      */
     private void setUpMapIfNeeded() {
-
-        markerText = (TextView) findViewById(R.id.location_marker_text);
-        txtStartingLocationAddress = (TextView) findViewById(R.id.adress_text);
-        markerLayout = (LinearLayout) findViewById(R.id.locationMarker);
-
-
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
             // Try to obtain the map from the SupportMapFragment.
@@ -165,17 +251,23 @@ public class AddPlaceActivity extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        setUpWithCurrentLocation();
+
+        // Just search for the location on map load
+        if( mStartRideMarker == null ){
+            setUpWithCurrentLocation();
+        }
 
         // Clears all the existing markers
         mMap.clear();
+        mStartRideMarker = null;
+        mStartMarkerLayout.setVisibility(View.VISIBLE);
 
         // LatLong da unisc
         LatLng latLng1 = new LatLng(-29.6987289,  -52.4372599);
 
         mDestinationRideMarker = mMap.addMarker(new MarkerOptions()
                 .position(latLng1)
-                .title("Destination")
+                .title(getResources().getString(R.string.lbl_destination))
                 .snippet("")
                 .icon(BitmapDescriptorFactory
                         .fromResource(R.drawable.maps_marker_icon)));
@@ -187,57 +279,43 @@ public class AddPlaceActivity extends FragmentActivity {
 
                 if (mStartRideMarker == null) {
 
-                    center = mMap.getCameraPosition().target;
+                    mScreenCenterPosition = mMap.getCameraPosition().target;
 
-                    markerText.setText(getString(R.string.set_your_location));
+                    mStartMarkerText.setText(getString(R.string.set_your_location));
                     //mMap.clear();
-                    markerLayout.setVisibility(View.VISIBLE);
+                    mStartMarkerLayout.setVisibility(View.VISIBLE);
 
-                    try {
-                        new GetLocationAsync(center.latitude, center.longitude)
-                                .execute();
-
-                    } catch (Exception e) {
-                    }
+                    new GetLocationAsync(mScreenCenterPosition.latitude, mScreenCenterPosition.longitude).execute();
                 }
 
             }
         });
 
-        markerLayout.setOnClickListener(new View.OnClickListener() {
+        mStartMarkerLayout.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                try {
-
-                    LatLng latLng1 = new LatLng(center.latitude,
-                            center.longitude);
-
-                    mStartRideMarker = mMap.addMarker(new MarkerOptions()
-                            .position(latLng1)
-                            .title("Start")
-                            .snippet("")
-                            .icon(BitmapDescriptorFactory
-                                    .fromResource(R.drawable.maps_marker_icon)));
-                    mStartRideMarker.setDraggable(true);
-
-                    markerLayout.setVisibility(View.GONE);
-
-                    Intent returnIntent = new Intent();
-                    returnIntent.putExtra("latitude", mStartRideMarker.getPosition().latitude);
-                    returnIntent.putExtra("longitude", mStartRideMarker.getPosition().longitude);
-                    returnIntent.putExtra("address", txtStartingLocationAddress.getText().toString());
-                    setResult(RESULT_OK, returnIntent);
-                    finish();
-
-                    //String url = makeURL(mStartRideMarker.getPosition().latitude,mStartRideMarker.getPosition().longitude,mDestinationRideMarker.getPosition().latitude, mDestinationRideMarker.getPosition().longitude);
-                    //getJSONFromUrl(url);
-
-                } catch (Exception e) {
-                }
-
+                addStartMarkerOnMap(mScreenCenterPosition.latitude, mScreenCenterPosition.longitude);
             }
         });
+    }
+
+    private void addStartMarkerOnMap(double latitude, double longitude) {
+        LatLng latLng1 = new LatLng(latitude,
+                longitude);
+
+        mStartRideMarker = mMap.addMarker(new MarkerOptions()
+                .position(latLng1)
+                .title(getResources().getString(R.string.lbl_start))
+                .snippet("")
+                .icon(BitmapDescriptorFactory
+                        .fromResource(R.drawable.maps_marker_icon)));
+        mStartRideMarker.setDraggable(true);
+
+        mStartMarkerLayout.setVisibility(View.GONE);
+
+        String url = makeURL(mStartRideMarker.getPosition().latitude, mStartRideMarker.getPosition().longitude, mDestinationRideMarker.getPosition().latitude, mDestinationRideMarker.getPosition().longitude);
+        getJSONFromUrl(url);
     }
 
     private class GetLocationAsync extends AsyncTask<String, Void, String> {
@@ -255,20 +333,20 @@ public class AddPlaceActivity extends FragmentActivity {
 
         @Override
         protected void onPreExecute() {
-            txtStartingLocationAddress.setText(getString(R.string.getting_location));
+            mTxtStartingLocationAddress.setText(getString(R.string.getting_location));
         }
 
         @Override
         protected String doInBackground(String... params) {
 
             try {
-                geocoder = new Geocoder(AddPlaceActivity.this, Locale.ENGLISH);
-                addresses = geocoder.getFromLocation(x, y, 1);
+                mGeocoder = new Geocoder(AddPlaceActivity.this, Locale.ENGLISH);
+                mListAddress = mGeocoder.getFromLocation(x, y, 1);
                 str = new StringBuilder();
-                if (geocoder.isPresent()) {
+                if (mGeocoder.isPresent()) {
 
-                    if( addresses.size() > 0 ){
-                        Address returnAddress = addresses.get(0);
+                    if( mListAddress.size() > 0 ){
+                        Address returnAddress = mListAddress.get(0);
 
                         String localityString = returnAddress.getLocality();
                         String city = returnAddress.getCountryName();
@@ -293,8 +371,8 @@ public class AddPlaceActivity extends FragmentActivity {
         @Override
         protected void onPostExecute(String result) {
             try {
-                txtStartingLocationAddress.setText(addresses.get(0).getAddressLine(0)
-                        + " - " + addresses.get(0).getAddressLine(1));
+                mTxtStartingLocationAddress.setText(mListAddress.get(0).getAddressLine(0)
+                        + " - " + mListAddress.get(0).getAddressLine(1));
             } catch (Exception e) {
                 e.printStackTrace();
             }

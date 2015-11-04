@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ import java.util.List;
 
 import br.unisc.caronasuniscegm.adapters.DayOfTheWeekAdapter;
 import br.unisc.caronasuniscegm.adapters.PeriodAdapter;
+import br.unisc.caronasuniscegm.datasource.LocationDataSource;
+import br.unisc.caronasuniscegm.model.Location;
 import br.unisc.caronasuniscegm.rest.RideIntention;
 import br.unisc.caronasuniscegm.utils.CalendarUtils;
 
@@ -40,31 +43,38 @@ public class ScreenSlidePageFragment extends Fragment {
      */
     private int mPageNumber;
 
+    // Select Place
+    private TextView mVlAddress;
+    private TextView mVlLatitude;
+    private TextView mVlLongitude;
+    private Double latitude;
+    private Double longitude;
+    private String address;
+    private LinearLayout mLayoutLblSaveNewPlace;
+    private LinearLayout mLayoutLblPlaceName;
+    private LinearLayout mLayoutBtnSavePlace;
+    private LinearLayout mLayoutPlaceInCar;
+    private EditText mTextNewPlaceName;
+    private Button mBtnAddPlace;
+    private Button mBtnSaveNewPlace;
+    private LocationDataSource mLocationDataSource;
+
+    // Select days
     private ListView mDaysListview;
     private DayOfTheWeekAdapter mDayOfTheWeekAdapter;
     private List<String> mDaysList;
+    private List<String> selectedDays;
 
+    // Select period
     private ListView mPeriodListview;
     private PeriodAdapter mPeriodAdapter;
     private List<String> mPeriodList;
 
-    private Button mBtnAddPlace;
-
-    private Double latitude;
-    private Double longitude;
-    private String address;
+    // Select availability type
+    private String mAvailabilityType;
+    private EditText mTextPlacesInCar;
 
     static final int PICK_LOCATION_REQUEST = 1;  // The request code
-    private List<String> selectedDays;
-
-    private TextView vlAddress;
-    private TextView vlLatitude;
-    private TextView vlLongitude;
-
-    private LinearLayout layoutPlaceInCar;
-    private EditText textPlacesInCar;
-    private String availabilityType;
-
 
     /**
      * Factory method for this fragment class. Constructs a new fragment for the given page number.
@@ -131,8 +141,8 @@ public class ScreenSlidePageFragment extends Fragment {
 
     private void configureChooseGiveReceiveRide(ViewGroup rootView) {
 
-        layoutPlaceInCar = (LinearLayout) rootView.findViewById(R.id.layout_places_in_car);
-        textPlacesInCar = (EditText) rootView.findViewById(R.id.text_places_in_car);
+        mLayoutPlaceInCar = (LinearLayout) rootView.findViewById(R.id.layout_places_in_car);
+        mTextPlacesInCar = (EditText) rootView.findViewById(R.id.text_places_in_car);
 
         RadioGroup rg = (RadioGroup) rootView.findViewById(R.id.radio_group_give_receive_ride);
         rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
@@ -143,13 +153,13 @@ public class ScreenSlidePageFragment extends Fragment {
                 switch(checkedId)
                 {
                     case R.id.radio_give_ride:
-                        availabilityType = RideIntention.AVAILABILITY_TYPE_GIVE;
-                        layoutPlaceInCar.setVisibility(View.VISIBLE);
+                        mAvailabilityType = RideIntention.AVAILABILITY_TYPE_GIVE;
+                        mLayoutPlaceInCar.setVisibility(View.VISIBLE);
                         break;
                     case R.id.radio_receive_ride:
-                        availabilityType = RideIntention.AVAILABILITY_TYPE_RECEIVE;
-                        layoutPlaceInCar.setVisibility(View.INVISIBLE);
-                        textPlacesInCar.setText("");
+                        mAvailabilityType = RideIntention.AVAILABILITY_TYPE_RECEIVE;
+                        mLayoutPlaceInCar.setVisibility(View.INVISIBLE);
+                        mTextPlacesInCar.setText("");
                         break;
                 }
             }
@@ -165,14 +175,14 @@ public class ScreenSlidePageFragment extends Fragment {
         switch(view.getId()) {
             case R.id.radio_give_ride:
                 if (checked)
-                    availabilityType = ((RadioButton) view).getText().toString();
-                    layoutPlaceInCar.setVisibility(View.VISIBLE);
+                    mAvailabilityType = ((RadioButton) view).getText().toString();
+                    mLayoutPlaceInCar.setVisibility(View.VISIBLE);
                     break;
             case R.id.radio_receive_ride:
                 if (checked)
-                    availabilityType = ((RadioButton) view).getText().toString();
-                    layoutPlaceInCar.setVisibility(View.INVISIBLE);
-                    textPlacesInCar.setText("");
+                    mAvailabilityType = ((RadioButton) view).getText().toString();
+                    mLayoutPlaceInCar.setVisibility(View.INVISIBLE);
+                    mTextPlacesInCar.setText("");
                 break;
         }
     }
@@ -180,6 +190,20 @@ public class ScreenSlidePageFragment extends Fragment {
     private void configureChoosePlace(ViewGroup rootView) {
 
         mBtnAddPlace = (Button) rootView.findViewById( R.id.btnAddPlace );
+        mBtnSaveNewPlace = (Button) rootView.findViewById( R.id.btn_save );
+
+        mLayoutLblSaveNewPlace = (LinearLayout) rootView.findViewById( R.id.layout_lbl_save_new_place );
+        mLayoutLblPlaceName = (LinearLayout) rootView.findViewById( R.id.layout_lbl_place_name );
+        mLayoutBtnSavePlace = (LinearLayout) rootView.findViewById( R.id.layout_btn_save_place );
+
+        setVisibilityLayoutAddPlace(View.GONE);
+
+        mVlAddress = (TextView) rootView.findViewById(R.id.vl_address);
+        mVlLatitude = (TextView) rootView.findViewById(R.id.vl_latitude);
+        mVlLongitude = (TextView) rootView.findViewById(R.id.vl_longitude);
+        mTextNewPlaceName = (EditText) rootView.findViewById(R.id.txt_new_place_name);
+
+        mLocationDataSource = new LocationDataSource(getActivity().getApplicationContext());
 
         mBtnAddPlace.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -188,10 +212,25 @@ public class ScreenSlidePageFragment extends Fragment {
             }
         });
 
-        vlAddress = (TextView) rootView.findViewById(R.id.vl_address);
-        vlLatitude = (TextView) rootView.findViewById(R.id.vl_latitude);
-        vlLongitude = (TextView) rootView.findViewById(R.id.vl_longitude);
+        mBtnSaveNewPlace.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Location location = new Location(mTextNewPlaceName.getText().toString(), latitude, longitude);
+                mLocationDataSource.open();
+                mLocationDataSource.insert(location);
+                mLocationDataSource.close();
 
+                Toast.makeText(getActivity().getApplicationContext(),
+                        getResources().getString(R.string.msg_action_success), Toast.LENGTH_SHORT).show();
+
+                setVisibilityLayoutAddPlace(View.GONE);
+            }
+        });
+    }
+
+    private void setVisibilityLayoutAddPlace(int gone) {
+        mLayoutLblSaveNewPlace.setVisibility(gone);
+        mLayoutLblPlaceName.setVisibility(gone);
+        mLayoutBtnSavePlace.setVisibility(gone);
     }
 
     @Override
@@ -204,9 +243,13 @@ public class ScreenSlidePageFragment extends Fragment {
                 longitude = data.getExtras().getDouble("longitude");
                 address = data.getExtras().getString("address");
 
-                vlAddress.setText(address);
-                vlLatitude.setText(latitude + "");
-                vlLongitude.setText(longitude+ "");
+                if( data.hasExtra("newLocation") ){
+                    setVisibilityLayoutAddPlace(View.VISIBLE);
+                }
+
+                mVlAddress.setText(address);
+                mVlLatitude.setText(latitude + "");
+                mVlLongitude.setText(longitude + "");
             }
         }
     }
@@ -301,12 +344,12 @@ public class ScreenSlidePageFragment extends Fragment {
     String getAddress(){ return this.address; }
 
     public int getPlacesInCar() {
-        if (textPlacesInCar.getText().toString().isEmpty()) {
+        if (mTextPlacesInCar.getText().toString().isEmpty()) {
             return 0;
         } else {
-            return Integer.valueOf(textPlacesInCar.getText().toString());
+            return Integer.valueOf(mTextPlacesInCar.getText().toString());
         }
     }
 
-    public String getAvailabilityType() { return availabilityType; }
+    public String getAvailabilityType() { return mAvailabilityType; }
 }

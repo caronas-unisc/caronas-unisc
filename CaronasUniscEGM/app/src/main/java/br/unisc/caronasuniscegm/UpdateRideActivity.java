@@ -1,6 +1,7 @@
 package br.unisc.caronasuniscegm;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -18,15 +19,12 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -42,24 +40,21 @@ import br.unisc.caronasuniscegm.utils.TokenUtils;
  */
 public class UpdateRideActivity extends AppCompatActivity {
 
-    private Spinner mSpinnerDayOfTheWeek;
-    private Spinner mSpinnerPeriod;
+    private TextView mTextDate;
+    private TextView mTextPeriod;
     private Spinner mSpinnerAvailabilityType;
-
     private EditText mTextPlacesInCar;
     private TextView mTextStartingLocationAddress;
-
-    private List<String> mPeriodList;
-    private List<String> mDaysList;
-    private List<String> mAvailabilityTypeList;
-
-    private RideIntention rideIntention;
     private LinearLayout mLayoutPlacesInCar;
-
     private Button mButtonSaveRide;
     private Button mButtonDeleteRide;
-
+    private Button mButtonChangeAddress;
     private ProgressDialog pd;
+
+
+    private List<String> mAvailabilityTypeList;
+    private RideIntention rideIntention;
+    static final int CHANGE_ADRESS_REQUEST = 1;  // The request code
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,16 +64,11 @@ public class UpdateRideActivity extends AppCompatActivity {
         mLayoutPlacesInCar = (LinearLayout) findViewById(R.id.layout_places_in_car);
         mButtonSaveRide = (Button) findViewById(R.id.btn_save);
         mButtonDeleteRide = (Button) findViewById(R.id.btn_delete);
+        mButtonChangeAddress = (Button) findViewById(R.id.btn_change_address);
 
         extractExtrasToRideIntention();
         initializeSupportLists();
-        setSpinnerArrayAdapters();
-
-        mTextPlacesInCar = (EditText) findViewById(R.id.txt_places_in_car);
-        mTextPlacesInCar.setText(rideIntention.getAvailablePlacesInCar() + "");
-
-        mTextStartingLocationAddress = (TextView) findViewById(R.id.txt_starting_location_address);
-        mTextStartingLocationAddress.setText(rideIntention.getStartingLocationAddress());
+        setUiValues();
 
         mSpinnerAvailabilityType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -107,6 +97,16 @@ public class UpdateRideActivity extends AppCompatActivity {
                 deleteRide();
             }
         });
+        mButtonChangeAddress.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                changeRideAddress();
+            }
+        });
+    }
+
+    private void changeRideAddress() {
+        Intent intent = new Intent(getApplicationContext(), AddPlaceActivity.class);
+        startActivityForResult(intent, CHANGE_ADRESS_REQUEST);
     }
 
     private void saveRide() {
@@ -136,8 +136,7 @@ public class UpdateRideActivity extends AppCompatActivity {
                 hideProgressDialog();
 
                 Toast.makeText(getApplicationContext(),
-                        "Last week, your agenda was empty.", Toast.LENGTH_SHORT).show();
-
+                        getResources().getString(R.string.msg_action_success), Toast.LENGTH_SHORT).show();
                 finish();
             }
         };
@@ -183,7 +182,7 @@ public class UpdateRideActivity extends AppCompatActivity {
                 hideProgressDialog();
 
                 Toast.makeText(getApplicationContext(),
-                        "Last week, your agenda was empty.", Toast.LENGTH_SHORT).show();
+                        getResources().getString(R.string.msg_last_week_empty_agenda), Toast.LENGTH_SHORT).show();
 
                 finish();
             }
@@ -220,30 +219,26 @@ public class UpdateRideActivity extends AppCompatActivity {
         queue.add(request);
     }
 
-    private void setSpinnerArrayAdapters() {
-        mSpinnerDayOfTheWeek = (Spinner) findViewById(R.id.spinner_day_of_the_week);
-        ArrayAdapter<String> arrayAdapterDays = new ArrayAdapter<String>(
-                this,
-                android.R.layout.simple_spinner_item,
-                mDaysList );
-        arrayAdapterDays.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpinnerDayOfTheWeek.setAdapter(arrayAdapterDays);
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == CHANGE_ADRESS_REQUEST) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                Double latitude = data.getExtras().getDouble("latitude");
+                Double longitude = data.getExtras().getDouble("longitude");
+                String address = data.getExtras().getString("address");
 
-        // Set selected
-        int selectedPosition = arrayAdapterDays.getPosition(CalendarUtils.dateToDayOfTheWeek(this, rideIntention.getDate()));
-        mSpinnerDayOfTheWeek.setSelection(selectedPosition);
+                rideIntention.setStartingLocationAddress(address);
+                rideIntention.setStartingLocationLatitude(latitude);
+                rideIntention.setStartingLocationLongitude(longitude);
 
-        mSpinnerPeriod = (Spinner) findViewById(R.id.spinner_period);
-        ArrayAdapter<String> arrayAdapterPeriod = new ArrayAdapter<String>(
-                this,
-                android.R.layout.simple_spinner_item,
-                mPeriodList );
-        arrayAdapterPeriod.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpinnerPeriod.setAdapter(arrayAdapterPeriod);
+                mTextStartingLocationAddress.setText(address);
+            }
+        }
+    }
 
-        // Set selected
-        selectedPosition = arrayAdapterPeriod.getPosition( capitalizeFirstLetter(rideIntention.getPeriod()));
-        mSpinnerPeriod.setSelection(selectedPosition);
+    private void setUiValues() {
 
         mSpinnerAvailabilityType = (Spinner) findViewById(R.id.spinner_availability_type);
         ArrayAdapter<String> arrayAdapterAvailabilityType = new ArrayAdapter<String>(
@@ -254,22 +249,27 @@ public class UpdateRideActivity extends AppCompatActivity {
         mSpinnerAvailabilityType.setAdapter(arrayAdapterAvailabilityType);
 
         // Set selected
-        selectedPosition = arrayAdapterAvailabilityType.getPosition(rideIntention.getAvailabilityType());
+        int selectedPosition = arrayAdapterAvailabilityType.getPosition(rideIntention.getAvailabilityType());
         mSpinnerAvailabilityType.setSelection(selectedPosition);
 
         if( rideIntention.getAvailabilityType() == RideIntention.AVAILABILITY_TYPE_RECEIVE ){
             mLayoutPlacesInCar.setVisibility(View.GONE);
         }
+
+        mTextDate = (TextView) findViewById(R.id.txt_date);
+        mTextDate.setText(CalendarUtils.dateToString(rideIntention.getDate()));
+
+        mTextPeriod = (TextView) findViewById(R.id.txt_period);
+        mTextPeriod.setText( capitalizeFirstLetter(rideIntention.getPeriod()));
+
+        mTextPlacesInCar = (EditText) findViewById(R.id.txt_places_in_car);
+        mTextPlacesInCar.setText(rideIntention.getAvailablePlacesInCar() + "");
+
+        mTextStartingLocationAddress = (TextView) findViewById(R.id.txt_starting_location_address);
+        mTextStartingLocationAddress.setText(rideIntention.getStartingLocationAddress());
     }
 
     private void initializeSupportLists() {
-        mPeriodList = new ArrayList<String>();
-        mPeriodList.add(getResources().getString(R.string.field_morning));
-        mPeriodList.add(getResources().getString(R.string.field_afternoon));
-        mPeriodList.add(getResources().getString(R.string.field_night));
-
-        mDaysList = CalendarUtils.getUpcommingDaysOfTheWeek(getApplicationContext());
-
         mAvailabilityTypeList = new ArrayList<String>();
         mAvailabilityTypeList.add(RideIntention.AVAILABILITY_TYPE_GIVE);
         mAvailabilityTypeList.add(RideIntention.AVAILABILITY_TYPE_RECEIVE);

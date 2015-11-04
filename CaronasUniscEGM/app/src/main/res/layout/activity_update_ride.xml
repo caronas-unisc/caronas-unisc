@@ -16,12 +16,12 @@
             android:text="@string/lbl_date"
             android:ems="10" />
 
-        <Spinner
-            android:id="@+id/spinner_day_of_the_week"
+        <TextView
+            android:id="@+id/txt_date"
             android:layout_width="0dp"
-            android:layout_height="65dp"
-            android:ems="10"
-            android:layout_weight="0.7" />
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            android:ems="10" />
 
 
     </LinearLayout>
@@ -39,12 +39,12 @@
             android:text="@string/lbl_period"
             android:ems="10" />
 
-        <Spinner
-            android:id="@+id/spinner_period"
+        <TextView
+            android:id="@+id/txt_period"
             android:layout_width="0dp"
-            android:layout_height="65dp"
-            android:ems="10"
-            android:layout_weight="0.7" />
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            android:ems="10" />
 
     </LinearLayout>
 
@@ -89,7 +89,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.7"
-            android:ems="10" />
+            android:ems="10"
+            android:inputType="number"/>
     </LinearLayout>
 
     <LinearLayout
@@ -116,7 +117,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/lbl_change"
-            android:id="@+id/button"
+            android:id="@+id/btn_change_address"
             android:layout_weight="0.25"
             android:ems="10"/>
     </LinearLayout>

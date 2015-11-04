@@ -3,6 +3,7 @@ package br.unisc.caronasuniscegm;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.View;
@@ -41,7 +42,7 @@ import br.unisc.caronasuniscegm.rest.RideIntention;
  */
 public class AgendaActivity extends AppCompatActivity {
 
-    private Button mButtonConfigureRide;
+    private FloatingActionButton mButtonConfigureRide;
     private Button mButtonCopyLastWeekAgenda;
     private ListView mListView;
     private List<RideIntention> mRideIntentionList;
@@ -53,7 +54,7 @@ public class AgendaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agenda);
 
-       mButtonConfigureRide = (Button) findViewById( R.id.add_ride );
+       mButtonConfigureRide = (FloatingActionButton) findViewById( R.id.add_ride );
        mButtonCopyLastWeekAgenda = (Button) findViewById( R.id.btn_copy_last_week_ride );
 
        mButtonConfigureRide.setOnClickListener(new View.OnClickListener() {

@@ -67,6 +67,56 @@
                 android:text="@string/getting_location"
                 android:textSize="16sp" />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="124dp"
+            android:layout_margin="8dp"
+            android:background="@android:color/white"
+            android:orientation="vertical"
+            android:layout_gravity="center_horizontal|bottom"
+            android:weightSum="1">
+
+            <TextView
+                android:id="@+id/text_saved_locations"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@string/lbl_your_saved_locations"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#28b54c" />
+
+            <Spinner
+                android:id="@+id/spinner_saved_locations"
+                android:layout_width="wrap_content"
+                android:layout_height="46dp"
+                android:layout_marginBottom="10dp" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_change_pin"
+                    android:id="@+id/btn_change_pin"
+                    android:layout_weight="0.5"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_finish"
+                    android:id="@+id/btn_finish"
+                    android:layout_weight="0.5"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
+            </LinearLayout>
+
+        </LinearLayout>
+
     </FrameLayout>
 
 </RelativeLayout>
