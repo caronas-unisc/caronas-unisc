@@ -85,8 +85,15 @@ public class AgendaActivity extends AppCompatActivity {
            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                RideIntention rideIntention = (RideIntention) mListView.getItemAtPosition(position);
                Intent intent = new Intent(getApplicationContext(), UpdateRideActivity.class);
+               
+               intent.putExtra("date", rideIntention.getDate().getTime());
+               intent.putExtra("period",rideIntention.getPeriod());
+               intent.putExtra("availabilityType",rideIntention.getAvailabilityType());
+               intent.putExtra("startingLocationAddress",rideIntention.getStartingLocationAddress());
+               intent.putExtra("startingLocationLatitude",rideIntention.getStartingLocationLatitude());
+               intent.putExtra("startingLocationLongitude",rideIntention.getStartingLocationLongitude());
+               intent.putExtra("availablePlacesInCar",rideIntention.getAvailablePlacesInCar());
                startActivity(intent);
-
            }
        });
     }

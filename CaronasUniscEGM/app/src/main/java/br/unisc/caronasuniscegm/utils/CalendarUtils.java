@@ -54,4 +54,32 @@ public class CalendarUtils {
         }
         return listUpcommingDays;
     }
+
+    public static String dateToDayOfTheWeek( Context context, Date date ){
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        if( calendar.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY ){
+            return context.getResources().getString(R.string.field_monday);
+        }
+
+        if( calendar.get(Calendar.DAY_OF_WEEK) == Calendar.TUESDAY ){
+            return context.getResources().getString(R.string.field_tuesday);
+        }
+
+        if( calendar.get(Calendar.DAY_OF_WEEK) == Calendar.WEDNESDAY ){
+            return context.getResources().getString(R.string.field_wednesday);
+        }
+
+        if( calendar.get(Calendar.DAY_OF_WEEK) == Calendar.THURSDAY ){
+            return context.getResources().getString(R.string.field_thursday);
+        }
+
+        if( calendar.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY ){
+            return context.getResources().getString(R.string.field_friday);
+        }
+
+        return null;
+    }
 }
