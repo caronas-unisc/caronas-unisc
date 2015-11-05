@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AbsListView;
@@ -44,11 +46,13 @@ public class AgendaActivity extends AppCompatActivity {
 
     private FloatingActionButton mButtonConfigureRide;
     private Button mButtonCopyLastWeekAgenda;
-    private ListView mListView;
     private List<RideIntention> mRideIntentionList;
-    private AgendaAdapter mAdapter;
     private List<RideIntention> thisWeekRideIntentionList;
     private ProgressDialog pd;
+
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,30 +77,19 @@ public class AgendaActivity extends AppCompatActivity {
 
        mRideIntentionList = new ArrayList<RideIntention>();
 
-       mAdapter = new AgendaAdapter(getApplicationContext(), getLayoutInflater(),
-               R.layout.activity_agenda_item_row, mRideIntentionList);
+       mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_ride_intention);
 
-       mListView = (ListView) findViewById(R.id.list_view_ride_intention);
-       mListView.setAdapter(mAdapter);
-       mListView.setEmptyView(findViewById(R.id.rideIntentionEmptyElement));
-       mListView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+       // use this setting to improve performance if you know that changes
+       // in content do not change the layout size of the RecyclerView
+       mRecyclerView.setHasFixedSize(true);
 
-       mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-           @Override
-           public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-               RideIntention rideIntention = (RideIntention) mListView.getItemAtPosition(position);
-               Intent intent = new Intent(getApplicationContext(), UpdateRideActivity.class);
-               
-               intent.putExtra("date", rideIntention.getDate().getTime());
-               intent.putExtra("period",rideIntention.getPeriod());
-               intent.putExtra("availabilityType",rideIntention.getAvailabilityType());
-               intent.putExtra("startingLocationAddress",rideIntention.getStartingLocationAddress());
-               intent.putExtra("startingLocationLatitude",rideIntention.getStartingLocationLatitude());
-               intent.putExtra("startingLocationLongitude",rideIntention.getStartingLocationLongitude());
-               intent.putExtra("availablePlacesInCar",rideIntention.getAvailablePlacesInCar());
-               startActivity(intent);
-           }
-       });
+       // use a linear layout manager
+       mLayoutManager = new LinearLayoutManager(this);
+       mRecyclerView.setLayoutManager(mLayoutManager);
+
+       // specify an adapter (see also next example)
+       mAdapter = new AgendaAdapter(mRideIntentionList, this);
+       mRecyclerView.setAdapter(mAdapter);
     }
 
     private void copyLastWeekAgenda() {
@@ -119,7 +112,7 @@ public class AgendaActivity extends AppCompatActivity {
                             "Last week, your agenda was empty." , Toast.LENGTH_SHORT).show();
                 }
 
-                mAdapter.updateDataList(mRideIntentionList);
+                ((AgendaAdapter) mAdapter).updateDataList(mRideIntentionList);
             }
         };
 
@@ -186,7 +179,7 @@ public class AgendaActivity extends AppCompatActivity {
                 if( mRideIntentionList.size() == 0 ){
                     mButtonCopyLastWeekAgenda.setVisibility(View.VISIBLE);
                 }
-                mAdapter.updateDataList(mRideIntentionList);
+                ((AgendaAdapter) mAdapter).updateDataList(mRideIntentionList);
             }
         };
 
@@ -256,5 +249,18 @@ public class AgendaActivity extends AppCompatActivity {
     private void hideProgressDialog() {
         pd.dismiss();
         pd = null;
+    }
+
+    public void startUpdateRideActivity(RideIntention rideIntention) {
+        Intent intent = new Intent(getApplicationContext(), UpdateRideActivity.class);
+
+        intent.putExtra("date", rideIntention.getDate().getTime());
+        intent.putExtra("period", rideIntention.getPeriod());
+        intent.putExtra("availabilityType", rideIntention.getAvailabilityType());
+        intent.putExtra("startingLocationAddress", rideIntention.getStartingLocationAddress());
+        intent.putExtra("startingLocationLatitude", rideIntention.getStartingLocationLatitude());
+        intent.putExtra("startingLocationLongitude", rideIntention.getStartingLocationLongitude());
+        intent.putExtra("availablePlacesInCar", rideIntention.getAvailablePlacesInCar());
+        startActivity(intent);
     }
 }
