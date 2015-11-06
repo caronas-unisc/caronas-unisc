@@ -107,14 +107,14 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.ViewHolder
         if( rideIntention.getAvailabilityType().equals(RideIntention.AVAILABILITY_TYPE_GIVE)){
             holder.txtPlacesInCar.setText( rideIntention.getAvailablePlacesInCar() + "" );
             holder.txtStartingLocationAddress.setText(rideIntention.getStartingLocationAddress());
-            Drawable drawable = mContext.getResources().getDrawable(R.mipmap.ic_directions_car_black_24dp);
+            Drawable drawable = mContext.getResources().getDrawable(android.R.mipmap.sym_def_app_icon);
             holder.iconGiveReceiveRide.setImageDrawable(drawable);
 
             //holder.layoutAddress.setVisibility(View.GONE);
             //holder.layoutAvaiablePlacesInCar.setVisibility(View.VISIBLE);
         }else{
             holder.txtStartingLocationAddress.setText(rideIntention.getStartingLocationAddress());
-            Drawable drawable = mContext.getResources().getDrawable(R.mipmap.ic_event_seat_black_24dp);
+            Drawable drawable = mContext.getResources().getDrawable(android.R.mipmap.sym_def_app_icon);
             holder.iconGiveReceiveRide.setImageDrawable(drawable);
             //holder.layoutAvaiablePlacesInCar.setVisibility(View.GONE);
             //holder.layoutAddress.setVisibility(View.VISIBLE);

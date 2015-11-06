@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+    android:weightSum="1">
+    <TextView
+        android:id="@+id/text"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:text="text"
+        android:visibility="visible"
+        android:layout_width="171dp"
+        android:textColor="#FF000000" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ask Ride"
+        android:id="@+id/btn_ask_ride"
+        android:layout_weight="0.64" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Ride Pending"
+        android:id="@+id/txt_pending" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Chat"
+        android:id="@+id/btn_chat"
+        android:layout_weight="0.64" />
+</LinearLayout>
