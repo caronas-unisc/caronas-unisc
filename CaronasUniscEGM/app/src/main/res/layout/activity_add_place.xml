@@ -100,19 +100,28 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/lbl_change_pin"
-                    android:id="@+id/btn_change_pin"
-                    android:layout_weight="0.5"/>
+                    android:text="@string/lbl_finish"
+                    android:id="@+id/btn_finish"
+                    android:layout_weight="0.33"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
 
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/lbl_finish"
-                    android:id="@+id/btn_finish"
-                    android:layout_weight="0.5"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true" />
+                    android:text="@string/lbl_add_pin"
+                    android:id="@+id/btn_add_pin"
+                    android:layout_weight="0.33"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_reset_pin"
+                    android:id="@+id/btn_change_pin"
+                    android:layout_weight="0.33"/>
+
+
             </LinearLayout>
 
         </LinearLayout>

@@ -68,7 +68,8 @@
     <string name="msg_action_success">The action was executed successfully.</string>
     <string name="lbl_your_saved_locations">Your saved locations</string>
     <string name="lbl_finish">Finish</string>
-    <string name="lbl_change_pin">Change pin</string>
+    <string name="lbl_reset_pin">Reset route</string>
+    <string name="lbl_add_pin">Add pin</string>
     <string name="msg_err_select_location">Select a starting location before moving on.</string>
     <string name="lbl_destination">Destination</string>
     <string name="lbl_start">Start</string>

@@ -20,7 +20,8 @@ public class LocationDbHelper extends SQLiteOpenHelper {
                     LocationContract.Location._ID + " INTEGER PRIMARY KEY, " +
                     LocationContract.Location.NAME + TEXT_TYPE + COMMA_SEP +
                     LocationContract.Location.LATITUDE + NUMERIC_TYPE + COMMA_SEP +
-                    LocationContract.Location.LONGITUDE + NUMERIC_TYPE +
+                    LocationContract.Location.LONGITUDE + NUMERIC_TYPE + COMMA_SEP +
+                    LocationContract.Location.WAYPOINTS + TEXT_TYPE +
                     " )";
 
     private static final String SQL_DELETE_TABLE_LOCATION =
