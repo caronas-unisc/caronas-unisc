@@ -65,7 +65,7 @@ public class Location {
         this.mListWaypoints = mListWaypoints;
         mHashMapWaypoints = new HashMap<Double, Double>();
 
-        if( this.mListWaypoints != null  ){
+        if( this.mListWaypoints != null && mListWaypoints.length() > 0  ){
             String[] partsLocations = this.mListWaypoints.split(";");
             for( String latLong : partsLocations ){
                 String[] partsLatLong = latLong.split(",");

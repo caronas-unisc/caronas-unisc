@@ -98,7 +98,8 @@ public class AddPlaceActivity extends ActionBarActivity {
         mSearchView =
                 new SearchView(getSupportActionBar().getThemedContext());
         mSearchView.setQueryHint("Search for Places…");
-        mSearchView.setIconified(false);
+        mSearchView.clearFocus();
+        mSearchView.setIconified(true);
 
         menu.add("Search")
                 .setIcon(R.drawable.maps_marker_icon)
