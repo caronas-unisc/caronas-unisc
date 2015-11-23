@@ -36,8 +36,9 @@ public class LocationDataSource {
     public void insert(Location location) {
         ContentValues values = new ContentValues();
         values.put(LocationContract.Location.NAME, location.getmName());
-        values.put(LocationContract.Location.LATITUDE, location.getmLatitude());
-        values.put(LocationContract.Location.LONGITUDE, location.getmLongitude());
+        values.put(LocationContract.Location.LATITUDE, location.getmInitialLatitude());
+        values.put(LocationContract.Location.LONGITUDE, location.getmInitialLongitude());
+        values.put(LocationContract.Location.WAYPOINTS, location.getmListWaypoints());
 
         long insertId = database.insert( LocationContract.Location.TABLE_NAME, null, values);
     }
@@ -75,8 +76,9 @@ public class LocationDataSource {
         Location location = new Location();
         location.setmId(cursor.getLong((0)));
         location.setmName(cursor.getString(1));
-        location.setmLatitude(cursor.getDouble(2));
-        location.setmLongitude(cursor.getDouble(3));
+        location.setmInitialLatitude(cursor.getDouble(2));
+        location.setmInitialLongitude(cursor.getDouble(3));
+        location.setmListWaypoints(cursor.getString(4));
 
         return location;
     }

@@ -1,21 +1,27 @@
 package br.unisc.caronasuniscegm;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,28 +50,35 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
+import br.unisc.caronasuniscegm.adapters.SuggestionsCursosAdapter;
 import br.unisc.caronasuniscegm.datasource.LocationDataSource;
 
-public class AddPlaceActivity extends FragmentActivity {
+public class AddPlaceActivity extends ActionBarActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
     private TextView mStartMarkerText;
     private LatLng mScreenCenterPosition;
-    private LinearLayout mStartMarkerLayout;
+    private LinearLayout mMarkerLayout;
     private Geocoder mGeocoder;
     private List<Address> mListAddress;
     private TextView mTxtStartingLocationAddress;
-    private Marker mStartRideMarker;
+    private List<MarkerOptions> mListMarkerOptions;
     private Marker mDestinationRideMarker;
     private Button mBtnFinish;
-    private Button mBtnChangePin;
+    private Button mBtnAddPin;
+    private Button mBtnResetPin;
     private Spinner mSpinnerSavedLocations;
 
+    private SearchView mSearchView;
+
     LocationDataSource mLocationDataSource;
+    private SuggestionsCursosAdapter mSuggestionsCursorAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +87,74 @@ public class AddPlaceActivity extends FragmentActivity {
         initUiElements();
         setUpMapIfNeeded();
         initSavedLocationSpinner();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        menu.clear();
+        getMenuInflater().inflate(R.menu.menu_activity_add_place, menu);
+
+        mSearchView =
+                new SearchView(getSupportActionBar().getThemedContext());
+        mSearchView.setQueryHint("Search for Places…");
+        mSearchView.clearFocus();
+        mSearchView.setIconified(true);
+
+        menu.add("Search")
+                .setIcon(R.drawable.maps_marker_icon)
+                .setActionView(mSearchView)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String newText) {
+                return true;
+            }
+
+            /**
+             * Called when the query text is changed by the user.
+             *
+             * @param newText the new content of the query text field.
+             * @return false if the SearchView should perform the
+             * default action of showing any suggestions if available,
+             * true if the action was handled by the listener.
+             */
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                new LoadSugestionAddressesAsync(newText,getApplicationContext()).execute();
+                return true;
+            }
+        });
+
+        mSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                onSuggestionItemClick(position);
+                return true;
+            }
+        });
+
+        return true;
+    }
+
+    private void onSuggestionItemClick(int position) {
+        Cursor searchCursor = mSuggestionsCursorAdapter.getCursor();
+        if(searchCursor.moveToPosition(position)) {
+            Double latitude = searchCursor.getDouble(2);
+            Double longitude = searchCursor.getDouble(3);
+
+            LatLng latLng = new LatLng(latitude,longitude);
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(latLng).zoom(17f).build();
+            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
     }
 
     private void initSavedLocationSpinner() {
@@ -103,9 +184,36 @@ public class AddPlaceActivity extends FragmentActivity {
 
                 for (br.unisc.caronasuniscegm.model.Location location : listLocation) {
                     if (parentView.getItemAtPosition(position).toString().equals(location.getmName())) {
-                        setUpMap();
-                        addStartMarkerOnMap(location.getmLatitude(), location.getmLongitude());
-                        new GetLocationAsync(location.getmLatitude(), location.getmLongitude()).execute();
+                        mMap.clear();
+                        mListMarkerOptions = new ArrayList<MarkerOptions>();
+
+                        LatLng latLng1 = new LatLng(location.getmInitialLatitude(), location.getmInitialLongitude());
+                        MarkerOptions newMarkerOptions = new MarkerOptions()
+                                .position(latLng1)
+                                .title(getResources().getString(R.string.lbl_start))
+                                .snippet("")
+                                .icon(BitmapDescriptorFactory
+                                        .fromResource(R.drawable.maps_marker_icon));
+                        mListMarkerOptions.add(newMarkerOptions);
+
+                        if( location.getmHashMapWaypoints() != null && location.getmHashMapWaypoints().size() > 0 ){
+                            for (Map.Entry<Double, Double> entry : location.getmHashMapWaypoints().entrySet()) {
+
+                                latLng1 = new LatLng(entry.getKey(), entry.getValue());
+
+                                newMarkerOptions = new MarkerOptions()
+                                        .position(latLng1)
+                                        .title(getResources().getString(R.string.lbl_start) + " " + mListMarkerOptions.size())
+                                        .snippet("")
+                                        .icon(BitmapDescriptorFactory
+                                                .fromResource(R.drawable.maps_marker_icon));
+
+                                mListMarkerOptions.add(newMarkerOptions);
+                            }
+                        }
+
+                        addPathMarkerOnMap(location.getmInitialLatitude(), location.getmInitialLongitude());
+                        new GetLocationAsync(location.getmInitialLatitude(), location.getmInitialLongitude()).execute();
                     }
                 }
             }
@@ -118,21 +226,94 @@ public class AddPlaceActivity extends FragmentActivity {
         });
     }
 
+    private class LoadSugestionAddressesAsync extends AsyncTask<String, Void, String> {
+
+        String text;
+        Context context;
+        MatrixCursor cursor;
+        List<Address> addresses;
+
+        public LoadSugestionAddressesAsync(String text, Context context) {
+            this.text = text;
+            this.context = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            mTxtStartingLocationAddress.setText(getString(R.string.getting_location));
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            this.addresses = null;
+            try {
+                this.addresses = mGeocoder.getFromLocationName(this.text, 5);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if(this.addresses.size() > 0)
+            {
+                // Cursor
+                String[] columns = new String[] { "_id", "address", "latitude", "longitude" };
+                Object[] temp = new Object[] { 0, "default", 0, 0 };
+                this.cursor = new MatrixCursor(columns);
+
+                for(int i = 0; i < this.addresses.size(); i++) {
+                    temp[0] = i;
+                    temp[1] = this.addresses.get(i).getAddressLine(0);
+                    temp[2] = this.addresses.get(i).getLatitude();
+                    temp[3] = this.addresses.get(i).getLongitude();
+
+                    this.cursor.addRow(temp);
+                }
+
+            }
+
+            return null;
+
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            mSuggestionsCursorAdapter = new SuggestionsCursosAdapter(this.context,this.cursor, this.addresses );
+            mSearchView.setSuggestionsAdapter(mSuggestionsCursorAdapter);
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+
+        }
+    }
+
     private void initUiElements() {
         mStartMarkerText = (TextView) findViewById(R.id.location_marker_text);
         mTxtStartingLocationAddress = (TextView) findViewById(R.id.adress_text);
-        mStartMarkerLayout = (LinearLayout) findViewById(R.id.locationMarker);
+        mMarkerLayout = (LinearLayout) findViewById(R.id.locationMarker);
         mBtnFinish = (Button) findViewById(R.id.btn_finish);
-        mBtnChangePin = (Button) findViewById(R.id.btn_change_pin);
+        mBtnAddPin = (Button) findViewById(R.id.btn_add_pin);
+        mBtnResetPin = (Button) findViewById(R.id.btn_change_pin);
         mSpinnerSavedLocations = (Spinner) findViewById(R.id.spinner_saved_locations);
 
         mBtnFinish.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                if (mStartRideMarker.getPosition() != null) {
+                if (mListMarkerOptions != null && mListMarkerOptions.size() > 0) {
+
+                    String waypoints = "";
+
+                    if( mListMarkerOptions.size() > 1 ){
+                        for (int i = 1; i < mListMarkerOptions.size(); i++) {
+                            waypoints += mListMarkerOptions.get(i).getPosition().latitude + ",";
+                            waypoints += mListMarkerOptions.get(i).getPosition().longitude + ";";
+                        }
+                    }
+
                     Intent returnIntent = new Intent();
-                    returnIntent.putExtra("latitude", mStartRideMarker.getPosition().latitude);
-                    returnIntent.putExtra("longitude", mStartRideMarker.getPosition().longitude);
+                    returnIntent.putExtra("latitude",  mListMarkerOptions.get(0).getPosition().latitude);
+                    returnIntent.putExtra("longitude", mListMarkerOptions.get(0).getPosition().longitude);
+                    returnIntent.putExtra("waypoints", waypoints);
                     returnIntent.putExtra("address", mTxtStartingLocationAddress.getText().toString());
 
                     // If user has selected a new custom location
@@ -150,13 +331,22 @@ public class AddPlaceActivity extends FragmentActivity {
             }
         });
 
-        mBtnChangePin.setOnClickListener(new View.OnClickListener() {
+        mBtnResetPin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Select first element
                 mSpinnerSavedLocations.setSelection(0);
                 setUpMap();
             }
         });
+
+        mBtnAddPin.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                mMarkerLayout.setVisibility(View.VISIBLE);
+            }
+        });
+
+
+
     }
 
     @Override
@@ -210,12 +400,12 @@ public class AddPlaceActivity extends FragmentActivity {
         pd.setCancelable(false);
         pd.setButton(pd.BUTTON_NEGATIVE, getString(android.R.string.cancel),
                 new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mMap.setOnMyLocationChangeListener(null);
-                dialog.dismiss();
-            }
-        });
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mMap.setOnMyLocationChangeListener(null);
+                        dialog.dismiss();
+                    }
+                });
         pd.show();
 
         // No primeiro retorno da API do My Location, posiciona usuário na localização retornada
@@ -253,15 +443,45 @@ public class AddPlaceActivity extends FragmentActivity {
     private void setUpMap() {
 
         // Just search for the location on map load
-        if( mStartRideMarker == null ){
+        if( mListMarkerOptions == null ){
             setUpWithCurrentLocation();
         }
 
         // Clears all the existing markers
         mMap.clear();
-        mStartRideMarker = null;
-        mStartMarkerLayout.setVisibility(View.VISIBLE);
+        mListMarkerOptions = null;
+        mMarkerLayout.setVisibility(View.VISIBLE);
 
+        initMarkersOnMap();
+
+        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+
+            @Override
+            public void onCameraChange(CameraPosition arg0) {
+
+                mScreenCenterPosition = mMap.getCameraPosition().target;
+
+                if (mListMarkerOptions == null) {
+                    mStartMarkerText.setText(getString(R.string.set_your_location));
+                    //mMap.clear();
+                    mMarkerLayout.setVisibility(View.VISIBLE);
+
+                    new GetLocationAsync(mScreenCenterPosition.latitude, mScreenCenterPosition.longitude).execute();
+                }
+
+            }
+        });
+
+        mMarkerLayout.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                addPathMarkerOnMap(mScreenCenterPosition.latitude, mScreenCenterPosition.longitude);
+            }
+        });
+    }
+
+    private void initMarkersOnMap() {
         // LatLong da unisc
         LatLng latLng1 = new LatLng(-29.6987289,  -52.4372599);
 
@@ -272,49 +492,34 @@ public class AddPlaceActivity extends FragmentActivity {
                 .icon(BitmapDescriptorFactory
                         .fromResource(R.drawable.maps_marker_icon)));
 
-        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-
-            @Override
-            public void onCameraChange(CameraPosition arg0) {
-
-                if (mStartRideMarker == null) {
-
-                    mScreenCenterPosition = mMap.getCameraPosition().target;
-
-                    mStartMarkerText.setText(getString(R.string.set_your_location));
-                    //mMap.clear();
-                    mStartMarkerLayout.setVisibility(View.VISIBLE);
-
-                    new GetLocationAsync(mScreenCenterPosition.latitude, mScreenCenterPosition.longitude).execute();
-                }
-
+        if( mListMarkerOptions != null && mListMarkerOptions.size() > 0 ){
+            for(MarkerOptions markerOptions : mListMarkerOptions){
+                mMap.addMarker(markerOptions);
             }
-        });
+        }
 
-        mStartMarkerLayout.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                addStartMarkerOnMap(mScreenCenterPosition.latitude, mScreenCenterPosition.longitude);
-            }
-        });
     }
 
-    private void addStartMarkerOnMap(double latitude, double longitude) {
+    private void addPathMarkerOnMap(double latitude, double longitude) {
         LatLng latLng1 = new LatLng(latitude,
                 longitude);
 
-        mStartRideMarker = mMap.addMarker(new MarkerOptions()
+        if( mListMarkerOptions == null ){
+            mListMarkerOptions = new ArrayList<MarkerOptions>();
+        }
+
+        MarkerOptions newMarkerOptions = new MarkerOptions()
                 .position(latLng1)
-                .title(getResources().getString(R.string.lbl_start))
+                .title(getResources().getString(R.string.lbl_start) + " " + mListMarkerOptions.size())
                 .snippet("")
                 .icon(BitmapDescriptorFactory
-                        .fromResource(R.drawable.maps_marker_icon)));
-        mStartRideMarker.setDraggable(true);
+                        .fromResource(R.drawable.maps_marker_icon));
 
-        mStartMarkerLayout.setVisibility(View.GONE);
+        mMarkerLayout.setVisibility(View.GONE);
 
-        String url = makeURL(mStartRideMarker.getPosition().latitude, mStartRideMarker.getPosition().longitude, mDestinationRideMarker.getPosition().latitude, mDestinationRideMarker.getPosition().longitude);
+        mListMarkerOptions.add(newMarkerOptions);
+
+        String url = makeURL();
         getJSONFromUrl(url);
     }
 
@@ -384,19 +589,31 @@ public class AddPlaceActivity extends FragmentActivity {
         }
     }
 
-    public String makeURL (double sourcelat, double sourcelog, double destlat, double destlog ){
+    public String makeURL () {
+
+        //mListMarker, mDestinationRideMarker.getPosition().latitude, mDestinationRideMarker.getPosition().longitude
         StringBuilder urlString = new StringBuilder();
         urlString.append("https://maps.googleapis.com/maps/api/directions/json");
+
         urlString.append("?origin=");// from
-        urlString.append(Double.toString(sourcelat));
+        urlString.append(Double.toString(mListMarkerOptions.get(0).getPosition().latitude));
         urlString.append(",");
         urlString
-                .append(Double.toString( sourcelog));
+                .append(Double.toString( mListMarkerOptions.get(0).getPosition().longitude));
         urlString.append("&destination=");// to
         urlString
-                .append(Double.toString( destlat));
+                .append(Double.toString( mDestinationRideMarker.getPosition().latitude));
         urlString.append(",");
-        urlString.append(Double.toString( destlog));
+        urlString.append(Double.toString( mDestinationRideMarker.getPosition().longitude));
+
+        if( mListMarkerOptions.size() > 1 ){
+            String wp = "&waypoints=optimize:true";
+            for (int i = 1; i < mListMarkerOptions.size(); i++) {
+                wp += "|" + mListMarkerOptions.get(i).getPosition().latitude + "," + mListMarkerOptions.get(i).getPosition().longitude;
+            }
+            urlString.append(wp);
+        }
+
         urlString.append("&sensor=false&mode=driving&alternatives=true");
         urlString.append("&key=" + getString(R.string.google_maps_key));
         return urlString.toString();
@@ -426,6 +643,10 @@ public class AddPlaceActivity extends FragmentActivity {
 
     public void drawPath(JSONObject  json) {
         try {
+            mMap.clear();
+
+            initMarkersOnMap();
+
             JSONArray routeArray = json.getJSONArray("routes");
             JSONObject routes = routeArray.getJSONObject(0);
             JSONObject overviewPolylines = routes.getJSONObject("overview_polyline");
@@ -437,16 +658,6 @@ public class AddPlaceActivity extends FragmentActivity {
                             .color(Color.parseColor("#05b1fb"))//Google maps blue color
                             .geodesic(true)
             );
-           /*
-           for(int z = 0; z<list.size()-1;z++){
-                LatLng src= list.get(z);
-                LatLng dest= list.get(z+1);
-                Polyline line = mMap.addPolyline(new PolylineOptions()
-                .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude,   dest.longitude))
-                .width(2)
-                .color(Color.BLUE).geodesic(true));
-            }
-           */
         }
         catch (JSONException e) {
 

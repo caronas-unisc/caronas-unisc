@@ -1,6 +1,6 @@
 package br.unisc.caronasuniscegm.model;
 
-import android.text.Editable;
+import java.util.HashMap;
 
 /**
  * Created by mfelipe on 04/11/2015.
@@ -8,17 +8,21 @@ import android.text.Editable;
 public class Location {
     private Long mId;
     private String mName;
-    private double mLatitude;
-    private double mLongitude;
+    private double mInitialLatitude;
+    private double mInitialLongitude;
+    private String mListWaypoints;
+
+    private HashMap<Double, Double> mHashMapWaypoints;
 
 
     public Location() {
     }
 
-    public Location(String name, Double latitude, Double longitude) {
+    public Location(String name, Double latitude, Double longitude, String mListWaypoints) {
         this.mName = name;
-        this.mLatitude = latitude;
-        this.mLongitude = longitude;
+        this.mInitialLatitude = latitude;
+        this.mInitialLongitude = longitude;
+        this.setmListWaypoints(mListWaypoints);
     }
 
     public Long getmId() {
@@ -37,19 +41,43 @@ public class Location {
         this.mName = mName;
     }
 
-    public double getmLatitude() {
-        return mLatitude;
+    public double getmInitialLatitude() {
+        return mInitialLatitude;
     }
 
-    public void setmLatitude(double mLatitude) {
-        this.mLatitude = mLatitude;
+    public void setmInitialLatitude(double mInitialLatitude) {
+        this.mInitialLatitude = mInitialLatitude;
     }
 
-    public double getmLongitude() {
-        return mLongitude;
+    public double getmInitialLongitude() {
+        return mInitialLongitude;
     }
 
-    public void setmLongitude(double mLongitude) {
-        this.mLongitude = mLongitude;
+    public void setmInitialLongitude(double mInitialLongitude) {
+        this.mInitialLongitude = mInitialLongitude;
+    }
+
+    public String getmListWaypoints() {
+        return mListWaypoints;
+    }
+
+    public void setmListWaypoints(String mListWaypoints) {
+        this.mListWaypoints = mListWaypoints;
+        mHashMapWaypoints = new HashMap<Double, Double>();
+
+        if( this.mListWaypoints != null && mListWaypoints.length() > 0  ){
+            String[] partsLocations = this.mListWaypoints.split(";");
+            for( String latLong : partsLocations ){
+                String[] partsLatLong = latLong.split(",");
+
+                Double lat = Double.valueOf(partsLatLong[0]);
+                Double lon = Double.valueOf(partsLatLong[1]);
+
+                getmHashMapWaypoints().put(lat, lon);
+            }
+        }
+    }
+    public HashMap<Double, Double> getmHashMapWaypoints() {
+        return mHashMapWaypoints;
     }
 }

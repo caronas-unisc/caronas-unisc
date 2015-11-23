@@ -68,7 +68,8 @@
     <string name="msg_action_success">The action was executed successfully.</string>
     <string name="lbl_your_saved_locations">Your saved locations</string>
     <string name="lbl_finish">Finish</string>
-    <string name="lbl_change_pin">Change pin</string>
+    <string name="lbl_reset_pin">Reset route</string>
+    <string name="lbl_add_pin">Add pin</string>
     <string name="msg_err_select_location">Select a starting location before moving on.</string>
     <string name="lbl_destination">Destination</string>
     <string name="lbl_start">Start</string>
@@ -77,5 +78,6 @@
     <string name="msg_last_week_empty_agenda">Last week, your agenda was empty.</string>
     <string name="msg_select_between_custom_location">Select between your custom locations</string>
     <string name="btn_select_location">Select Location</string>
-
+    <string name="search_hint">Search Places</string>
+    <string name="action_search">Search Places</string>
 </resources>

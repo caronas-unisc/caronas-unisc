@@ -50,6 +50,7 @@ public class ScreenSlidePageFragment extends Fragment {
     private Double latitude;
     private Double longitude;
     private String address;
+    private String waypoints;
     private LinearLayout mLayoutLblSaveNewPlace;
     private LinearLayout mLayoutLblPlaceName;
     private LinearLayout mLayoutBtnSavePlace;
@@ -75,6 +76,7 @@ public class ScreenSlidePageFragment extends Fragment {
     private EditText mTextPlacesInCar;
 
     static final int PICK_LOCATION_REQUEST = 1;  // The request code
+
 
     /**
      * Factory method for this fragment class. Constructs a new fragment for the given page number.
@@ -214,7 +216,7 @@ public class ScreenSlidePageFragment extends Fragment {
 
         mBtnSaveNewPlace.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Location location = new Location(mTextNewPlaceName.getText().toString(), latitude, longitude);
+                Location location = new Location(mTextNewPlaceName.getText().toString(), latitude, longitude, waypoints);
                 mLocationDataSource.open();
                 mLocationDataSource.insert(location);
                 mLocationDataSource.close();
@@ -242,6 +244,7 @@ public class ScreenSlidePageFragment extends Fragment {
                 latitude = data.getExtras().getDouble("latitude");
                 longitude = data.getExtras().getDouble("longitude");
                 address = data.getExtras().getString("address");
+                waypoints = data.getExtras().getString("waypoints");
 
                 if( data.hasExtra("newLocation") ){
                     setVisibilityLayoutAddPlace(View.VISIBLE);

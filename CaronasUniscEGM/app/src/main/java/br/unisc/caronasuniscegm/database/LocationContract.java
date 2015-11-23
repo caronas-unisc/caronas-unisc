@@ -14,6 +14,7 @@ public class LocationContract {
         public final static String NAME = "name";
         public final static String LATITUDE = "latitude";
         public final static String LONGITUDE = "longitude";
-        public final static String[] ALLCOLUMNS = { _ID, NAME, LATITUDE, LONGITUDE };
+        public final static String WAYPOINTS = "waypoints";
+        public final static String[] ALLCOLUMNS = { _ID, NAME, LATITUDE, LONGITUDE, WAYPOINTS };
     }
 }
