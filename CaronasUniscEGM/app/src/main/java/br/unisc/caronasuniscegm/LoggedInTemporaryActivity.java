@@ -216,12 +216,6 @@ public class LoggedInTemporaryActivity extends ActionBarActivity {
             return true;
         }
 
-        if (id == R.id.action_map) {
-            Intent intent = new Intent(this, AddPlaceActivity.class);
-            startActivity(intent);
-            return true;
-        }
-
         if (id == R.id.action_chat) {
             Intent intent = new Intent(this, ChatActivity.class);
             startActivity(intent);
