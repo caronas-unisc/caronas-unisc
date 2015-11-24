@@ -19,26 +19,18 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/icon_give_receive_ride"
-                android:src="@mipmap/ic_add_black_24dp"
-                />
-
             <TextView
                 android:id="@+id/txt_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.4"
-                android:layout_toRightOf="@+id/icon_give_receive_ride"
+                android:layout_weight="0.5"
                 android:ems="10" />
 
             <TextView
                 android:id="@+id/txt_period"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.6"
+                android:layout_weight="0.5"
                 android:layout_toRightOf="@+id/txt_date"
                 android:ems="10" />
 

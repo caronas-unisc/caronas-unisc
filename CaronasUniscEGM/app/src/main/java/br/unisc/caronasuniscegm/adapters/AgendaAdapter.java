@@ -33,8 +33,6 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.ViewHolder
         public TextView txtDate;
         public TextView txtPeriod;
         public TextView txtAvailabilityType;
-        public TextView txtPlacesInCar;
-        public TextView txtStartingLocationAddress;
         public TextView txtDataPosition;
 
         public ImageView iconGiveReceiveRide;
@@ -48,11 +46,7 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.ViewHolder
             txtDate = (TextView) v.findViewById(R.id.txt_date);
             txtPeriod = (TextView) v.findViewById(R.id.txt_period);
             txtAvailabilityType = (TextView) v.findViewById(R.id.txt_availability_type);
-            txtPlacesInCar = (TextView) v.findViewById(R.id.txt_places_in_car);
-            txtStartingLocationAddress = (TextView) v.findViewById(R.id.txt_starting_location_address);
             txtDataPosition = (TextView) v.findViewById(R.id.txt_data_position);
-            iconGiveReceiveRide = (ImageView) v.findViewById(R.id.icon_give_receive_ride);
-            //layoutAvaiablePlacesInCar = (LinearLayout) v.findViewById(R.id.layout_places_in_car);
 
             mListener = listener;
             v.setOnClickListener(this);
@@ -104,21 +98,6 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.ViewHolder
         holder.txtDate.setText( CalendarUtils.dateToString(rideIntention.getDate()) );
         holder.txtPeriod.setText(rideIntention.getPeriod());
         holder.txtAvailabilityType.setText(rideIntention.getAvailabilityType());
-        if( rideIntention.getAvailabilityType().equals(RideIntention.AVAILABILITY_TYPE_GIVE)){
-            holder.txtPlacesInCar.setText( rideIntention.getAvailablePlacesInCar() + "" );
-            holder.txtStartingLocationAddress.setText(rideIntention.getStartingLocationAddress());
-            Drawable drawable = mContext.getResources().getDrawable(android.R.mipmap.sym_def_app_icon);
-            holder.iconGiveReceiveRide.setImageDrawable(drawable);
-
-            //holder.layoutAddress.setVisibility(View.GONE);
-            //holder.layoutAvaiablePlacesInCar.setVisibility(View.VISIBLE);
-        }else{
-            holder.txtStartingLocationAddress.setText(rideIntention.getStartingLocationAddress());
-            Drawable drawable = mContext.getResources().getDrawable(android.R.mipmap.sym_def_app_icon);
-            holder.iconGiveReceiveRide.setImageDrawable(drawable);
-            //holder.layoutAvaiablePlacesInCar.setVisibility(View.GONE);
-            //holder.layoutAddress.setVisibility(View.VISIBLE);
-        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)
