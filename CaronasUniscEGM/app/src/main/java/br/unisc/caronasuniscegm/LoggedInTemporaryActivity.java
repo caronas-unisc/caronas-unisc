@@ -222,6 +222,12 @@ public class LoggedInTemporaryActivity extends ActionBarActivity {
             return true;
         }
 
+        if (id == R.id.action_chat) {
+            Intent intent = new Intent(this, ChatActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
         if (id == R.id.action_agenda) {
             Intent intent = new Intent(this, AgendaActivity.class);
             startActivity(intent);

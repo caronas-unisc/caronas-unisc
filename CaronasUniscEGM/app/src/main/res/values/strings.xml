@@ -80,4 +80,5 @@
     <string name="btn_select_location">Select Location</string>
     <string name="search_hint">Search Places</string>
     <string name="action_search">Search Places</string>
+    <string name="title_activity_chat">ChatActivity</string>
 </resources>
