@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -18,6 +19,8 @@ import br.unisc.caronasuniscegm.model.Message;
 
 public class ChatActivity extends AppCompatActivity {
 
+    private ListView messageListView;
+    private MessageListAdapter messageListAdapter;
     private final List<Message> messageList = new ArrayList<Message>();
 
     @Override
@@ -27,34 +30,33 @@ public class ChatActivity extends AppCompatActivity {
 
         setTitle("João");
 
-        final ListView lv = (ListView) findViewById(R.id.messages_list_view);
+        messageListAdapter = new MessageListAdapter();
+        messageListView = (ListView) findViewById(R.id.messages_list_view);
+        messageListView.setAdapter(messageListAdapter);
 
-        // Instanciating an array list (you don't need to do this,
-        // you already have yours).
-        messageList.add(new Message(1, "olar", "Gui", "05:30"));
-        messageList.add(new Message(1, "olar", "Gui", "05:30"));
-        messageList.add(new Message(1, "olar", "Gui", "05:30"));
-        messageList.add(new Message(1, "olar", "Gui", "05:30"));
-        messageList.add(new Message(1, "olar", "Gui", "05:30"));
-        messageList.add(new Message(1, "olar", "Gui", "05:30"));
-        messageList.add(new Message(1, "olar", "Gui", "05:30"));
-        messageList.add(new Message(1, "olar", "Gui", "05:30"));
-        messageList.add(new Message(1, "olar", "Gui", "05:30"));
-        messageList.add(new Message(1, "olar", "Gui", "05:30"));
-        messageList.add(new Message(1, "olar", "Gui", "05:30"));
-        messageList.add(new Message(1, "olar", "Gui", "05:30"));
-        messageList.add(new Message(1, "olar", "Gui", "05:30"));
-        messageList.add(new Message(1, "olar", "Gui", "05:30"));
+        scrollToEnd();
+    }
 
-        final MessageListAdapter adapter = new MessageListAdapter();
-        lv.setAdapter(adapter);
-
-        lv.post(new Runnable() {
+    public void scrollToEnd() {
+        messageListView.post(new Runnable() {
             @Override
             public void run() {
-                lv.setSelection(adapter.getCount() - 1);
+                messageListView.setSelection(messageListAdapter.getCount() - 1);
             }
         });
+    }
+
+    public void sendMessage(View view) {
+        EditText editText = (EditText)findViewById(R.id.chat_message_edit_text);
+        String message = editText.getText().toString();
+
+        if (message.isEmpty())
+            return;
+
+        editText.setText("");
+
+        messageList.add(new Message(1, message, "Você", "05:30"));
+        scrollToEnd();
     }
 
     public class MessageListAdapter extends ArrayAdapter<Message> {
