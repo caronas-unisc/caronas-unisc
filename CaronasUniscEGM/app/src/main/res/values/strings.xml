@@ -81,4 +81,10 @@
     <string name="search_hint">Search Places</string>
     <string name="action_search">Search Places</string>
     <string name="title_activity_chat">ChatActivity</string>
+    <string name="title_copy_last_week_agenda">Copy agenda</string>
+    <string name="msg_copy_last_week_agenda">Do you really wish to copy your agenda from last week?</string>
+    <string name="lbl_yes">Yes</string>
+    <string name="lbl_no">No</string>
+
+
 </resources>

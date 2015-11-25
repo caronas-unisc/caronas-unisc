@@ -182,7 +182,7 @@ public class UpdateRideActivity extends AppCompatActivity {
                 hideProgressDialog();
 
                 Toast.makeText(getApplicationContext(),
-                        getResources().getString(R.string.msg_last_week_empty_agenda), Toast.LENGTH_SHORT).show();
+                        getResources().getString(R.string.msg_action_success), Toast.LENGTH_SHORT).show();
 
                 finish();
             }

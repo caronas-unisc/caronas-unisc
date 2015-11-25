@@ -32,6 +32,7 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.ViewHolder
         // each data item is just a string in this case
         public TextView txtDate;
         public TextView txtPeriod;
+        public TextView txtAddress;
         public TextView txtAvailabilityType;
         public TextView txtDataPosition;
 
@@ -47,6 +48,7 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.ViewHolder
             txtPeriod = (TextView) v.findViewById(R.id.txt_period);
             txtAvailabilityType = (TextView) v.findViewById(R.id.txt_availability_type);
             txtDataPosition = (TextView) v.findViewById(R.id.txt_data_position);
+            txtAddress = (TextView) v.findViewById(R.id.txt_starting_location_address);
 
             mListener = listener;
             v.setOnClickListener(this);
@@ -98,6 +100,7 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.ViewHolder
         holder.txtDate.setText( CalendarUtils.dateToString(rideIntention.getDate()) );
         holder.txtPeriod.setText(rideIntention.getPeriod());
         holder.txtAvailabilityType.setText(rideIntention.getAvailabilityType());
+        holder.txtAddress.setText(rideIntention.getStartingLocationAddress());
     }
 
     // Return the size of your dataset (invoked by the layout manager)
