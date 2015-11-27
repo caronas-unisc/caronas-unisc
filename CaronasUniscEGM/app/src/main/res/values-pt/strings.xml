@@ -8,6 +8,7 @@
     <string name="field_name">Nome</string>
     <string name="field_email">E-mail</string>
     <string name="field_password">Senha</string>
+    <string name="loading">Carregando...</string>
     <string name="please_wait">Por favor aguarde</string>
     <string name="service_unavailable">Servidor indisponível. Verifique sua conexão com a internet.</string>
     <string name="title_activity_login">Login no Caronas UNISC</string>
@@ -36,4 +37,18 @@
     <string name="morning">Morning</string>
     <string name="field_afternoon">Afternoon</string>
     <string name="field_monday">Monday</string>
+    <string name="title_activity_chat">Carregando...</string>
+    <string name="view_map">Ver mapa</string>
+    <string name="send">Enviar</string>
+    <string name="day_monday">Segunda-feira</string>
+    <string name="day_tuesday">Terça-feira</string>
+    <string name="day_wednesday">Quarta-feira</string>
+    <string name="day_thursday">Quinta-feira</string>
+    <string name="day_friday">Sexta-feira</string>
+    <string name="day_saturday">Sábado</string>
+    <string name="day_sunday">Domingo</string>
+    <string name="period_morning">Manhã</string>
+    <string name="period_afternoon">Tarde</string>
+    <string name="period_night">Noite</string>
+
 </resources>

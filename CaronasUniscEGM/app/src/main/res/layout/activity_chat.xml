@@ -18,8 +18,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Carona de segunda-feira à noite\nEndereço: Rua Marechal Floriano, 123 "
-            android:id="@+id/textView3"
+            android:text="@string/loading"
+            android:id="@+id/chat_details"
             android:padding="6dp"
             android:layout_toLeftOf="@+id/map_button"
             android:layout_toStartOf="@+id/map_button" />
@@ -27,7 +27,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ver mapa"
+            android:text="@string/view_map"
             android:id="@+id/map_button"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true" />
@@ -67,7 +67,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Enviar"
+            android:text="@string/send"
             android:onClick="sendMessage"
             android:id="@+id/button"
             android:layout_alignBottom="@+id/editText"

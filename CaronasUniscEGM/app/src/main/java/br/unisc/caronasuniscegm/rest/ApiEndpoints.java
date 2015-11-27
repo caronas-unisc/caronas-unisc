@@ -9,6 +9,6 @@ public class ApiEndpoints {
     public static final String SESSION_INFO = "https://caronas-unisc.herokuapp.com/api/v1/sessions/info";
     public static final String PASSWORD_RESETS = "https://caronas-unisc.herokuapp.com/api/v1/password_resets";
     public static final String RIDE_AVAIABILITIES = "https://caronas-unisc.herokuapp.com/api/v1/ride_availabilities";
-    public static final String MESSAGES_AVAILABILITIES = "https://caronas-unisc.herokuapp.com/api/v1/messages";
+    public static final String RIDES = "https://caronas-unisc.herokuapp.com/api/v1/rides";
 
 }
