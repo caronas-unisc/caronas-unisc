@@ -90,5 +90,6 @@
     <string name="lbl_no">No</string>
     <string name="date_and_period">%1$s at %2$s</string>
     <string name="you">You</string>
+    <string name="title_activity_view_map">Map view</string>
 
 </resources>

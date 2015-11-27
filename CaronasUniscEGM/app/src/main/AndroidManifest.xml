@@ -33,6 +33,7 @@
             android:theme="@style/NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -93,10 +94,16 @@
         </activity>
         <activity
             android:name=".ChatActivity"
-            android:label="@string/title_activity_chat">
+            android:label="@string/title_activity_chat" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".LoggedInTemporaryActivity" />
+        </activity>
+        <activity android:name=".ViewMapActivity"
+            android:label="@string/title_activity_view_map" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ChatActivity" />
         </activity>
     </application>
 

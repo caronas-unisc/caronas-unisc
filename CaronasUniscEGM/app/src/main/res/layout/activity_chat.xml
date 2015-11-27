@@ -29,6 +29,7 @@
             android:layout_height="wrap_content"
             android:text="@string/view_map"
             android:id="@+id/map_button"
+            android:onClick="openMap"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:visibility="gone" />
@@ -71,7 +72,7 @@
             android:text="@string/send"
             android:onClick="sendMessage"
             android:id="@+id/button"
-            android:layout_alignBottom="@+id/editText"
+            android:layout_alignBottom="@+id/chat_message_edit_text"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
 

@@ -3,6 +3,7 @@ package br.unisc.caronasuniscegm;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -50,6 +51,9 @@ public class ChatActivity extends AppCompatActivity {
     private int availabilityType;
     private int lastMessageId;
     private boolean fetching;
+    private boolean loadedRideInformation;
+    private double mapLatitude;
+    private double mapLongitude;
 
     private ProgressDialog pd;
     private Timer timer;
@@ -70,6 +74,7 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
 
         fetching = false;
+        loadedRideInformation = false;
         lastMessageId = 0;
         rideId = getIntent().getIntExtra(EXTRA_RIDE_ID, 0);
         availabilityType = getIntent().getIntExtra(EXTRA_AVAILABILITY_TYPE, 0);
@@ -80,7 +85,6 @@ public class ChatActivity extends AppCompatActivity {
         messageListView.setSelector(android.R.color.transparent);
 
         loadRideInformation();
-        scrollToEnd();
     }
 
     public void scrollToEnd() {
@@ -95,7 +99,9 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        startTimer();
+
+        if (loadedRideInformation)
+            startTimer();
     }
 
     @Override
@@ -143,6 +149,7 @@ public class ChatActivity extends AppCompatActivity {
         Response.Listener<JSONArray> successListener = new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray responseJson) {
+                hideProgressDialog();
                 Log.d(LOG_TAG, "Resposta: " + responseJson.toString());
 
                 fetching = false;
@@ -198,7 +205,9 @@ public class ChatActivity extends AppCompatActivity {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
+                hideProgressDialog();
                 fetching = false;
+
                 Log.d(LOG_TAG, "Erro buscando novas mensagens");
                 Log.d(LOG_TAG, volleyError.toString());
             }
@@ -255,7 +264,8 @@ public class ChatActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                hideProgressDialog();
+                loadedRideInformation = true;
+                startTimer();
             }
         };
 
@@ -314,6 +324,9 @@ public class ChatActivity extends AppCompatActivity {
         sb.append(getString(R.string.date_and_period, dayOfWeek, period.toLowerCase()));
 
         if (availabilityType == AVAILABILITY_TYPE_GIVE) {
+            this.mapLatitude = availability.getDouble("starting_location_latitude");
+            this.mapLongitude = availability.getDouble("starting_location_longitude");
+
             Button button = (Button)findViewById(R.id.map_button);
             button.setVisibility(View.VISIBLE);
 
@@ -344,15 +357,14 @@ public class ChatActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        showProgressDialog();
+
         // Resposta de sucesso
         Response.Listener<JSONObject> successListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject responseJson) {
                 Log.d(LOG_TAG, "Sucesso");
                 Log.d(LOG_TAG, responseJson.toString());
-
-                // to-do: setar id
-
                 startTimer();
             }
         };
@@ -361,6 +373,7 @@ public class ChatActivity extends AppCompatActivity {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
+                hideProgressDialog();
                 Log.d(LOG_TAG, "Erro");
                 Log.d(LOG_TAG, volleyError.toString());
 
@@ -394,8 +407,10 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void hideProgressDialog() {
-        pd.dismiss();
-        pd = null;
+        if (pd != null) {
+            pd.dismiss();
+            pd = null;
+        }
     }
 
     private void showAlert(String message, final boolean finishOnOk) {
@@ -416,6 +431,14 @@ public class ChatActivity extends AppCompatActivity {
 
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    public void openMap(View view) {
+        Intent intent = new Intent(this, ViewMapActivity.class);
+        intent.putExtra(ViewMapActivity.EXTRA_LATITUDE, mapLatitude);
+        intent.putExtra(ViewMapActivity.EXTRA_LONGITUDE, mapLongitude);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     public class MessageListAdapter extends ArrayAdapter<Message> {
