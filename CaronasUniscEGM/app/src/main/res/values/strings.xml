@@ -84,15 +84,11 @@
     <string name="title_activity_chat">Loading...</string>
     <string name="view_map">View map</string>
     <string name="send">Send</string>
-    <string name="day_monday">Monday</string>
-    <string name="day_tuesday">Tuesday</string>
-    <string name="day_wednesday">Wednesday</string>
-    <string name="day_thursday">Thursday</string>
-    <string name="day_friday">Friday</string>
-    <string name="day_saturday">Saturday</string>
-    <string name="day_sunday">Sunday</string>
-    <string name="period_morning">Morning</string>
-    <string name="period_afternoon">Afternoon</string>
-    <string name="period_night">Night</string>
+    <string name="title_copy_last_week_agenda">Copy agenda</string>
+    <string name="msg_copy_last_week_agenda">Do you really wish to copy your agenda from last week?</string>
+    <string name="lbl_yes">Yes</string>
+    <string name="lbl_no">No</string>
+    <string name="date_and_period">%1$s at %2$s</string>
+    <string name="you">You</string>
 
 </resources>

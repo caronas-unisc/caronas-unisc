@@ -1,6 +1,9 @@
 package br.unisc.caronasuniscegm;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -45,7 +48,7 @@ import br.unisc.caronasuniscegm.rest.RideIntention;
 public class AgendaActivity extends AppCompatActivity {
 
     private FloatingActionButton mButtonConfigureRide;
-    private Button mButtonCopyLastWeekAgenda;
+    private FloatingActionButton mButtonCopyLastWeekAgenda;
     private List<RideIntention> mRideIntentionList;
     private List<RideIntention> thisWeekRideIntentionList;
     private ProgressDialog pd;
@@ -54,12 +57,15 @@ public class AgendaActivity extends AppCompatActivity {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
+    private Context mContext;
+
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_agenda);
+       super.onCreate(savedInstanceState);
+       setContentView(R.layout.activity_agenda);
+        this.mContext = getApplicationContext();
 
        mButtonConfigureRide = (FloatingActionButton) findViewById( R.id.add_ride );
-       mButtonCopyLastWeekAgenda = (Button) findViewById( R.id.btn_copy_last_week_ride );
+       mButtonCopyLastWeekAgenda = (FloatingActionButton) findViewById( R.id.btn_copy_last_week_ride );
 
        mButtonConfigureRide.setOnClickListener(new View.OnClickListener() {
            public void onClick(View v) {
@@ -70,10 +76,22 @@ public class AgendaActivity extends AppCompatActivity {
 
         mButtonCopyLastWeekAgenda.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                copyLastWeekAgenda();
+
+                new AlertDialog.Builder(v.getContext())
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle(R.string.title_copy_last_week_agenda)
+                        .setMessage(R.string.msg_copy_last_week_agenda)
+                        .setPositiveButton(R.string.lbl_yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                copyLastWeekAgenda();
+                            }
+                        })
+                        .setNegativeButton(R.string.lbl_no, null)
+                        .show();
             }
         });
-       mButtonCopyLastWeekAgenda.setVisibility(View.INVISIBLE);
+       mButtonCopyLastWeekAgenda.setVisibility(View.GONE);
 
        mRideIntentionList = new ArrayList<RideIntention>();
 
@@ -113,6 +131,7 @@ public class AgendaActivity extends AppCompatActivity {
                 }
 
                 ((AgendaAdapter) mAdapter).updateDataList(mRideIntentionList);
+                mButtonCopyLastWeekAgenda.setVisibility(View.GONE);
             }
         };
 

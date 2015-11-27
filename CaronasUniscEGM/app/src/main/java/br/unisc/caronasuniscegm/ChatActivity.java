@@ -3,46 +3,53 @@ package br.unisc.caronasuniscegm;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import br.unisc.caronasuniscegm.model.Message;
 import br.unisc.caronasuniscegm.rest.ApiEndpoints;
+import br.unisc.caronasuniscegm.rest.User;
+import br.unisc.caronasuniscegm.utils.CalendarUtils;
 import br.unisc.caronasuniscegm.utils.TokenUtils;
 
 public class ChatActivity extends AppCompatActivity {
 
     private int rideId;
-    private int availabilityType; // give = 0, receive = 1
+    private int availabilityType;
+    private int lastMessageId;
+    private boolean fetching;
 
     private ProgressDialog pd;
     private Timer timer;
@@ -54,17 +61,23 @@ public class ChatActivity extends AppCompatActivity {
     public final static String EXTRA_AVAILABILITY_TYPE = "br.unisc.caronasuniscegm.AVAILABILITY_TYPE";
     private final String LOG_TAG = "CaronasUNISC-Chat";
 
+    public final static int AVAILABILITY_TYPE_GIVE = 0;
+    public final static int AVAILABILITY_TYPE_RECEIVE = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        this.rideId = getIntent().getIntExtra(EXTRA_RIDE_ID, 0);
-        this.availabilityType = getIntent().getIntExtra(EXTRA_AVAILABILITY_TYPE, 0);
+        fetching = false;
+        lastMessageId = 0;
+        rideId = getIntent().getIntExtra(EXTRA_RIDE_ID, 0);
+        availabilityType = getIntent().getIntExtra(EXTRA_AVAILABILITY_TYPE, 0);
 
         messageListAdapter = new MessageListAdapter();
         messageListView = (ListView) findViewById(R.id.messages_list_view);
         messageListView.setAdapter(messageListAdapter);
+        messageListView.setSelector(android.R.color.transparent);
 
         loadRideInformation();
         scrollToEnd();
@@ -121,7 +134,95 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     public void fetchNewMessages() {
-        Toast.makeText(this, "Fetching...", Toast.LENGTH_SHORT).show();
+        if (fetching)
+            return;
+
+        fetching = true;
+
+        // Resposta de sucesso
+        Response.Listener<JSONArray> successListener = new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray responseJson) {
+                Log.d(LOG_TAG, "Resposta: " + responseJson.toString());
+
+                fetching = false;
+
+                int quantity = responseJson.length();
+                int maxId = 0;
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+                SimpleDateFormat hourFormat = new SimpleDateFormat("HH:mm");
+
+                try {
+                    for (int i = 0; i < quantity; i++) {
+                        JSONObject messageJson = (JSONObject)responseJson.get(i);
+
+                        Date date = dateFormat.parse(messageJson.getString("created_at"));
+
+                        int id = messageJson.getInt("id");
+                        int userId = messageJson.getInt("user_id");
+
+                        String userName;
+                        String time = hourFormat.format(date);
+                        String body = messageJson.getString("body");
+
+                        if (userId == User.getCurrent(ChatActivity.this).getId()) {
+                            userName = getString(R.string.you);
+                        } else {
+                            JSONObject user = messageJson.getJSONObject("user");
+                            userName = user.getString("name");
+                        }
+
+                        final Message message = new Message(id, body, userName, time);
+                        messageList.add(message);
+
+                        if (id > maxId)
+                            maxId = id;
+                    }
+
+                    if (quantity > 0) {
+                        scrollToEnd();
+                        lastMessageId = maxId;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        // Resposta de erro
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                fetching = false;
+                Log.d(LOG_TAG, "Erro buscando novas mensagens");
+                Log.d(LOG_TAG, volleyError.toString());
+            }
+        };
+
+        final String token = TokenUtils.getToken(this.getApplicationContext());
+        String url = ApiEndpoints.RIDES + "/" + rideId + "/messages?last_id=" + lastMessageId;
+
+        Log.d(LOG_TAG, "Buscando novas mensagens em " + url);
+
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url,
+                successListener, errorListener) {
+            @Override
+            public HashMap<String, String> getHeaders() {
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put("Authentication-Token", token);
+                return params;
+            }
+        };
+        request.setRetryPolicy(new DefaultRetryPolicy(ApiEndpoints.TIMEOUT,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(request);
     }
 
     public void loadRideInformation() {
@@ -133,19 +234,28 @@ public class ChatActivity extends AppCompatActivity {
             public void onResponse(JSONObject responseJson) {
                 Log.d(LOG_TAG, "Sucesso");
                 Log.d(LOG_TAG, responseJson.toString());
-                hideProgressDialog();
 
-                String availabilityKey = (availabilityType == 0) ? "receiver_availability" :
+                // Se usuário está dando carona, ele deve ver a availability do receiver.
+                // Se usuário está recebendo carona, ele deve ver a availability do giver.
+                String availabilityKey = (availabilityType == AVAILABILITY_TYPE_GIVE) ?
+                        "receiver_availability" :
                         "giver_availability";
 
                 try {
                     JSONObject availability = responseJson.getJSONObject(availabilityKey);
-                    String userId = availability.getString("user_id");
-                    setTitle(userId);
+
+                    JSONObject user = availability.getJSONObject("user");
+                    String userName = user.getString("name");
+
+                    setTitle(userName);
                     setRideDetails(availability);
                 } catch (JSONException e) {
                     e.printStackTrace();
+                } catch (ParseException e) {
+                    e.printStackTrace();
                 }
+
+                hideProgressDialog();
             }
         };
 
@@ -178,34 +288,104 @@ public class ChatActivity extends AppCompatActivity {
         queue.add(request);
     }
 
-    public void setRideDetails(JSONObject availability) throws JSONException {
+    public void setRideDetails(JSONObject availability) throws JSONException, ParseException {
         TextView chatDetails = (TextView)findViewById(R.id.chat_details);
 
-        StringBuilder sb = new StringBuilder();
-        String dayOfWeek = "";
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = format.parse(availability.getString("date"));
+        String dayOfWeek = CalendarUtils.dateToDayOfTheWeek(this, date);
+        String period = availability.getString("period");
 
-        availability.getString("date");
+        switch (period) {
+            case "morning":
+                period = getString(R.string.field_morning);
+                break;
 
-        switch (availability.getString("")) {
+            case "afternoon":
+                period = getString(R.string.field_afternoon);
+                break;
 
+            case "night":
+                period = getString(R.string.field_night);
+                break;
         }
 
-        sb.append("");
+        StringBuilder sb = new StringBuilder();
+        sb.append(getString(R.string.date_and_period, dayOfWeek, period.toLowerCase()));
+
+        if (availabilityType == AVAILABILITY_TYPE_GIVE) {
+            Button button = (Button)findViewById(R.id.map_button);
+            button.setVisibility(View.VISIBLE);
+
+            sb.append("\n" + availability.getString("starting_location_address"));
+        }
 
         chatDetails.setText(sb.toString());
     }
 
     public void sendMessage(View view) {
         EditText editText = (EditText)findViewById(R.id.chat_message_edit_text);
-        String message = editText.getText().toString();
+        String text = editText.getText().toString();
 
-        if (message.isEmpty())
+        if (text.isEmpty())
             return;
 
         editText.setText("");
+        stopTimer();
 
-        messageList.add(new Message(1, message, "Você", "05:30"));
-        scrollToEnd();
+        // Monta objeto JSON
+        JSONObject requestJson = new JSONObject();
+        JSONObject messageJson = new JSONObject();
+
+        try {
+            messageJson.put("body", text);
+            requestJson.put("message", messageJson);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Resposta de sucesso
+        Response.Listener<JSONObject> successListener = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject responseJson) {
+                Log.d(LOG_TAG, "Sucesso");
+                Log.d(LOG_TAG, responseJson.toString());
+
+                // to-do: setar id
+
+                startTimer();
+            }
+        };
+
+        // Resposta de erro
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Log.d(LOG_TAG, "Erro");
+                Log.d(LOG_TAG, volleyError.toString());
+
+                showAlert(getResources().getString(R.string.service_unavailable), false);
+                startTimer();
+            }
+        };
+
+        final String token = TokenUtils.getToken(this.getApplicationContext());
+
+        String url = ApiEndpoints.RIDES + "/" + rideId + "/messages";
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, requestJson,
+                successListener, errorListener) {
+            @Override
+            public HashMap<String, String> getHeaders() {
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put("Authentication-Token", token);
+                return params;
+            }
+        };
+        request.setRetryPolicy(new DefaultRetryPolicy(ApiEndpoints.TIMEOUT,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(request);
     }
 
     private void showProgressDialog() {

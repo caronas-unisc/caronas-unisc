@@ -51,6 +51,8 @@ public class ConfigureRideActivity extends AppCompatActivity {
     private List<String> selectedPeriodList;
     private List<String> selectedDayList;
 
+    private int numberOfPendingRequests = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -214,12 +216,14 @@ public class ConfigureRideActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         // Resposta de sucesso
         Response.Listener<JSONObject> successListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject responseJson) {
-                finish();
+                numberOfPendingRequests--;
+                if(numberOfPendingRequests == 0){
+                    finish();
+                }
             }
         };
 
@@ -237,6 +241,7 @@ public class ConfigureRideActivity extends AppCompatActivity {
 
             for( String period : selectedPeriodList ){
 
+                numberOfPendingRequests++;
                 // Envia requisição
                 showProgressDialog();
 

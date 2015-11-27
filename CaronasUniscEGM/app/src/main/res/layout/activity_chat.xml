@@ -30,7 +30,8 @@
             android:text="@string/view_map"
             android:id="@+id/map_button"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true" />
+            android:layout_alignParentRight="true"
+            android:visibility="gone" />
 
     </RelativeLayout>
 

@@ -34,21 +34,18 @@
     <string name="action_next">Proxima</string>
     <string name="action_finish">Salvar</string>
     <string name="config_ride">Configurar carona</string>
-    <string name="morning">Morning</string>
-    <string name="field_afternoon">Afternoon</string>
-    <string name="field_monday">Monday</string>
     <string name="title_activity_chat">Carregando...</string>
     <string name="view_map">Ver mapa</string>
     <string name="send">Enviar</string>
-    <string name="day_monday">Segunda-feira</string>
-    <string name="day_tuesday">Terça-feira</string>
-    <string name="day_wednesday">Quarta-feira</string>
-    <string name="day_thursday">Quinta-feira</string>
-    <string name="day_friday">Sexta-feira</string>
-    <string name="day_saturday">Sábado</string>
-    <string name="day_sunday">Domingo</string>
-    <string name="period_morning">Manhã</string>
-    <string name="period_afternoon">Tarde</string>
-    <string name="period_night">Noite</string>
+    <string name="date_and_period">%1$s à %2$s</string>
+    <string name="field_morning">Manhã</string>
+    <string name="field_afternoon">Tarde</string>
+    <string name="field_night">Noite</string>
+    <string name="field_monday">Segunda-feira</string>
+    <string name="field_tuesday">Terça-feira</string>
+    <string name="field_wednesday">Quarta-feira</string>
+    <string name="field_thursday">Quinta-feira</string>
+    <string name="field_friday">Sexta-feira</string>
+    <string name="you">Você</string>
 
 </resources>
