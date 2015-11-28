@@ -26,22 +26,22 @@
     <string name="reset_password_email_sent">Um e-mail de redefinição de senha foi enviado para %1$s</string>
     <string name="title_activity_add_place">Selecionar local</string>
     <string name="title_activity_agenda">Agenda</string>
-    <string name="title_activity_configure_ride">Configure a carona</string>
+    <string name="title_activity_configure_ride">Adicionar dias</string>
     <string name="finding_your_location">Procurando sua localização...</string>
     <string name="set_your_location">Definir local aqui</string>
     <string name="selected_location">Local escolhido</string>
     <string name="getting_location">Buscando endereço</string>
-    <string name="action_previous">Anterior</string>
-    <string name="action_next">Proxima</string>
+    <string name="action_previous">Ant.</string>
+    <string name="action_next">Próx.</string>
     <string name="action_finish">Salvar</string>
     <string name="config_ride">Configurar carona</string>
     <string name="title_activity_chat">Carregando...</string>
     <string name="view_map">Ver mapa</string>
     <string name="send">Enviar</string>
-    <string name="date_and_period">%1$s à %2$s</string>
-    <string name="field_morning">Morning</string>
-    <string name="field_afternoon">Afternoon</string>
-    <string name="field_night">Night</string>
+    <string name="date_and_period">%1$s de %2$s</string>
+    <string name="field_morning">Manhã</string>
+    <string name="field_afternoon">Tarde</string>
+    <string name="field_night">Noite</string>
     <string name="field_monday">Segunda-feira</string>
     <string name="field_tuesday">Terça-feira</string>
     <string name="field_wednesday">Quarta-feira</string>
@@ -73,5 +73,10 @@
     <string name="lbl_address">Endereço</string>
     <string name="msg_select_between_custom_location">Selecionar de meus locais salvos</string>
     <string name="lbl_places_in_car">Locais disponíveis no carro</string>
+    <string name="error_select_place">Selecione um local para prosseguir.</string>
+    <string name="error_select_places_car">Selecione a quantidade de locais no carro para prosseguir.</string>
+    <string name="error_availability_type">Selecione o tipo de disponibilidade para prosseguir.</string>
+    <string name="error_select_day">Selecione ao menos um dia para prosseguir.</string>
+    <string name="error_select_period">Selecione ao menos um período do dia para prosseguir.</string>
 
 </resources>

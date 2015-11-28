@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         card_view:cardBackgroundColor="@android:color/white"
-        card_view:cardElevation="2dp"
+        card_view:cardElevation="0dp"
         card_view:cardUseCompatPadding="true">
 
     <LinearLayout

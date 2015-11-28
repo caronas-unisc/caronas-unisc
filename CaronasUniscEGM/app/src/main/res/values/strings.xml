@@ -31,7 +31,7 @@
     <string name="reset_password_email_sent">A password reset email was sent to %1$s</string>
     <string name="title_activity_add_place">Select place</string>
     <string name="title_activity_agenda">Agenda</string>
-    <string name="title_activity_configure_ride">Configure a Ride</string>
+    <string name="title_activity_configure_ride">Add availability</string>
     <string name="action_previous">Previous</string>
     <string name="action_next">Next</string>
     <string name="action_finish">Finish</string>
@@ -102,5 +102,10 @@
     <string name="lbl_agenda">Agenda</string>
     <string name="lbl_atualizar">Refresh</string>
     <string name="last_week_agenda_empty">Last week your agenda was empty.</string>
+    <string name="error_select_place">Select a place before moving on.</string>
+    <string name="error_select_places_car">Select a valid amount of places in your car before moving on.</string>
+    <string name="error_availability_type">Select one availability type before moving on.</string>
+    <string name="error_select_day">Select at least one day before moving on.</string>
+    <string name="error_select_period">Select at least one period before moving on.</string>
 
 </resources>
