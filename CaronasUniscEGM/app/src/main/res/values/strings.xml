@@ -49,8 +49,8 @@
     <string name="lbl_latitude">Latitude:</string>
     <string name="lbl_longitude">Longitude:</string>
     <string name="lbl_ride_intention">Ride Intention:</string>
-    <string name="lbl_give_ride">Give</string>
-    <string name="lbl_receive_ride">Receive</string>
+    <string name="lbl_give_ride">I want to give ride</string>
+    <string name="lbl_receive_ride">I want to receive ride</string>
     <string name="lbl_places_in_car">Places in Car</string>
     <string name="txt_no_ride_intentions">No ride intentions recorded for this week.</string>
     <string name="text_title_agenda_list">Agenda for this week:</string>
@@ -108,5 +108,7 @@
     <string name="error_select_day">Select at least one day before moving on.</string>
     <string name="error_select_period">Select at least one period before moving on.</string>
     <string name="search_address">Search address...</string>
+    <string name="hint_place_name">Place name</string>
+    <string name="help_chat">Use the chat to communicate with the person that you will give/receive ride.</string>
 
 </resources>

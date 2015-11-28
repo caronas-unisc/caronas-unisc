@@ -198,6 +198,10 @@ public class ChatActivity extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
+
+                if (lastMessageId == 0 && messageList.isEmpty()) {
+                    addHelpMessage();
+                }
             }
         };
 
@@ -232,6 +236,15 @@ public class ChatActivity extends AppCompatActivity {
 
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(request);
+    }
+
+    public void addHelpMessage() {
+        SimpleDateFormat hourFormat = new SimpleDateFormat("HH:mm");
+        String hours = hourFormat.format(new Date());
+
+        Message message = new Message(-1, getString(R.string.help_chat), null, hours);
+        messageList.add(message);
+        messageListView.requestLayout();
     }
 
     public void loadRideInformation() {
