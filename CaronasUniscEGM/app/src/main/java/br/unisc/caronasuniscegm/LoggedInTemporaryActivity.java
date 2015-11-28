@@ -717,19 +717,15 @@ public class LoggedInTemporaryActivity extends ActionBarActivity {
     private String getDayOfWeek(Integer index){
         switch (index) {
             case Calendar.MONDAY:
-                return "Monday";
+                return getString(R.string.field_monday);
             case Calendar.TUESDAY:
-                return "Tuesday";
+                return getString(R.string.field_tuesday);
             case Calendar.WEDNESDAY:
-                return "Wednesday";
+                return getString(R.string.field_wednesday);
             case Calendar.THURSDAY:
-                return "Thursday";
+                return getString(R.string.field_thursday);
             case Calendar.FRIDAY:
-                return "Friday";
-            case Calendar.SATURDAY:
-                return "Saturday";
-            case Calendar.SUNDAY:
-                return "Sunday";
+                return getString(R.string.field_friday);
             default: return "";
 
         }
@@ -738,11 +734,11 @@ public class LoggedInTemporaryActivity extends ActionBarActivity {
     private String getStringByPeriod(String period){
         switch (period){
             case "morning":
-                return "Morning";
+                return getString(R.string.field_morning);
             case "afternoon":
-                return "Afternoon";
+                return getString(R.string.field_afternoon);
             case "night":
-                return "Night";
+                return getString(R.string.field_night);
             default: return period;
         }
     }

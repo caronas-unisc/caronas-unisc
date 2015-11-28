@@ -48,5 +48,10 @@
     <string name="field_friday">Sexta-feira</string>
     <string name="you">Você</string>
     <string name="title_activity_view_map">Visualização no mapa</string>
+    <string name="title_accept_ride_confirmation">Confirmação</string>
+    <string name="msg_accept_ride_confirmation">Tem certeza que deseja aceitar a carona?</string>
+    <string name="title_ask_ride_confirmation">Confirmação</string>
+    <string name="msg_ask_ride_confirmation">Tem certeza que deseja pedir a carona?</string>
+
 
 </resources>
