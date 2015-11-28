@@ -17,7 +17,8 @@
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:padding="14dp">
 
             <TextView
                 android:id="@+id/txt_date"
@@ -25,60 +26,23 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:ems="10"
+                android:text="Date here"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/txt_period"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:layout_toRightOf="@+id/txt_date"
-                android:ems="10"
-                android:textStyle="bold" />
-
-
-
-            <TextView
-                android:id="@+id/lbl_availability_type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.40"
-                android:text="@string/lbl_availability_type"
-                android:layout_below="@+id/txt_date"
-                android:ems="10"
-                android:textStyle="bold" />
-
-            <TextView
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Type here"
                 android:id="@+id/txt_availability_type"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.60"
-                android:layout_toRightOf="@+id/lbl_availability_type"
-                android:layout_below="@+id/txt_period"
-                android:ems="10" />
-
-            <TextView
-                android:id="@+id/lbl_address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.20"
-                android:text="@string/lbl_address"
-                android:ems="10"
-                android:layout_below="@+id/lbl_availability_type"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/txt_starting_location_address"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_below="@+id/lbl_address"
-                android:ems="10"  />
-
-            <TextView
                 android:id="@+id/txt_data_position"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:visibility="gone" />
 
         </RelativeLayout>

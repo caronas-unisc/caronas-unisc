@@ -11,6 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.util.Calendar;
 import java.util.List;
 
 import br.unisc.caronasuniscegm.AgendaActivity;
@@ -31,8 +33,6 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.ViewHolder
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         // each data item is just a string in this case
         public TextView txtDate;
-        public TextView txtPeriod;
-        public TextView txtAddress;
         public TextView txtAvailabilityType;
         public TextView txtDataPosition;
 
@@ -45,10 +45,8 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.ViewHolder
         public ViewHolder(View v, IMyViewHolderClicks listener) {
             super(v);
             txtDate = (TextView) v.findViewById(R.id.txt_date);
-            txtPeriod = (TextView) v.findViewById(R.id.txt_period);
             txtAvailabilityType = (TextView) v.findViewById(R.id.txt_availability_type);
             txtDataPosition = (TextView) v.findViewById(R.id.txt_data_position);
-            txtAddress = (TextView) v.findViewById(R.id.txt_starting_location_address);
 
             mListener = listener;
             v.setOnClickListener(this);
@@ -73,7 +71,7 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.ViewHolder
     // Create new views (invoked by the layout manager)
     @Override
     public AgendaAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-    int viewType) {
+                                                       int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.activity_agenda_item_row, parent, false);
@@ -94,13 +92,31 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.ViewHolder
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-
         RideIntention rideIntention = getData().get(position);
+
+        String dayOfWeek = CalendarUtils.dateToDayOfTheWeek(mContext, rideIntention.getDate());
+        String period = rideIntention.getPeriod();
+
+        switch (period) {
+            case "morning":
+                period = mContext.getString(R.string.field_morning);
+                break;
+
+            case "afternoon":
+                period = mContext.getString(R.string.field_afternoon);
+                break;
+
+            case "night":
+                period = mContext.getString(R.string.field_night);
+                break;
+        }
+
+        String dateAndPeriod = mContext.getString(R.string.date_and_period, dayOfWeek,
+                period.toLowerCase());
+
         holder.txtDataPosition.setText(position + "");
-        holder.txtDate.setText( CalendarUtils.dateToString(rideIntention.getDate()) );
-        holder.txtPeriod.setText(rideIntention.getPeriod());
+        holder.txtDate.setText(dateAndPeriod);
         holder.txtAvailabilityType.setText(rideIntention.getAvailabilityType());
-        holder.txtAddress.setText(rideIntention.getStartingLocationAddress());
     }
 
     // Return the size of your dataset (invoked by the layout manager)
