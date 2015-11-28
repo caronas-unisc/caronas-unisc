@@ -310,6 +310,8 @@ public class ConfigureRideActivity extends AppCompatActivity {
     }
 
     private void showProgressDialog() {
+        hideProgressDialog();
+
         String message = getResources().getString(R.string.please_wait);
         pd = ProgressDialog.show(this, "", message, false);
     }
