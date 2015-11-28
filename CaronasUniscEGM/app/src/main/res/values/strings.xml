@@ -29,7 +29,7 @@
     <string name="reset_password">Reset password</string>
     <string name="title_activity_reset_password">Reset password</string>
     <string name="reset_password_email_sent">A password reset email was sent to %1$s</string>
-    <string name="title_activity_add_place">AddPlaceActivity</string>
+    <string name="title_activity_add_place">Select place</string>
     <string name="title_activity_agenda">Agenda</string>
     <string name="title_activity_configure_ride">Configure a Ride</string>
     <string name="action_previous">Previous</string>
@@ -54,7 +54,7 @@
     <string name="lbl_places_in_car">Places in Car</string>
     <string name="txt_no_ride_intentions">No ride intentions recorded for this week.</string>
     <string name="text_title_agenda_list">Agenda for this week:</string>
-    <string name="lbl_availability_type">Availability Type</string>
+    <string name="lbl_availability_type">Availability type:</string>
     <string name="finding_your_location">Finding your location...</string>
     <string name="set_your_location">Set location here</string>
     <string name="selected_location">Selected location</string>
@@ -65,7 +65,7 @@
     <string name="lbl_change">Change</string>
     <string name="lbl_save">Save</string>
     <string name="lbl_delete">Delete</string>
-    <string name="title_activity_update_ride">Update Ride</string>
+    <string name="title_activity_update_ride">Update availability</string>
     <string name="msg_action_success">The action was executed successfully.</string>
     <string name="lbl_your_saved_locations">Your saved locations</string>
     <string name="lbl_finish">Finish</string>

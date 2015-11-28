@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -256,11 +257,25 @@ public class UpdateRideActivity extends AppCompatActivity {
             mLayoutPlacesInCar.setVisibility(View.GONE);
         }
 
-        mTextDate = (TextView) findViewById(R.id.txt_date);
-        mTextDate.setText(CalendarUtils.dateToString(rideIntention.getDate()));
+        String dayOfWeek = CalendarUtils.dateToDayOfTheWeek(this, rideIntention.getDate());
+        String period = rideIntention.getPeriod();
 
-        mTextPeriod = (TextView) findViewById(R.id.txt_period);
-        mTextPeriod.setText( capitalizeFirstLetter(rideIntention.getPeriod()));
+        switch (period) {
+            case "morning":
+                period = getString(R.string.field_morning);
+                break;
+
+            case "afternoon":
+                period = getString(R.string.field_afternoon);
+                break;
+
+            case "night":
+                period = getString(R.string.field_night);
+                break;
+        }
+
+        String dateAndPeriod = getString(R.string.date_and_period, dayOfWeek, period.toLowerCase());
+        setTitle(dateAndPeriod);
 
         mTextPlacesInCar = (EditText) findViewById(R.id.txt_places_in_car);
         mTextPlacesInCar.setText(rideIntention.getAvailablePlacesInCar() + "");
@@ -304,4 +319,22 @@ public class UpdateRideActivity extends AppCompatActivity {
         pd.dismiss();
         pd = null;
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 }

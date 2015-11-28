@@ -24,7 +24,7 @@
     <string name="reset_password">Redefinir senha</string>
     <string name="title_activity_reset_password">Redefinir senha do Caronas UNISC</string>
     <string name="reset_password_email_sent">Um e-mail de redefinição de senha foi enviado para %1$s</string>
-    <string name="title_activity_add_place">AddPlaceActivity</string>
+    <string name="title_activity_add_place">Selecionar local</string>
     <string name="title_activity_agenda">Agenda</string>
     <string name="title_activity_configure_ride">Configure a carona</string>
     <string name="finding_your_location">Procurando sua localização...</string>
@@ -60,5 +60,17 @@
     <string name="lbl_agenda">Agenda</string>
     <string name="lbl_atualizar">Atualizar</string>
     <string name="last_week_agenda_empty">Na última semana a sua agenda estava vazia.</string>
+    <string name="title_activity_update_ride">Atualizar disponibilidade</string>
+    <string name="msg_action_success">A ação foi executada com sucesso.</string>
+    <string name="lbl_your_saved_locations">Meus locais salvos</string>
+    <string name="lbl_finish">Finalizar</string>
+    <string name="lbl_reset_pin">Limpar rota</string>
+    <string name="lbl_add_pin">Adc. ponto</string>
+    <string name="lbl_change">Trocar</string>
+    <string name="lbl_save">Salvar</string>
+    <string name="lbl_delete">Excluir</string>
+    <string name="lbl_availability_type">Tipo de disponibilidade:</string>
+    <string name="lbl_address">Endereço:</string>
+    <string name="msg_select_between_custom_location">Selecionar de meus locais salvos</string>
 
 </resources>

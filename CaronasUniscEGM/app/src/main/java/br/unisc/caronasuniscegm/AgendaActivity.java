@@ -280,6 +280,8 @@ public class AgendaActivity extends AppCompatActivity {
         intent.putExtra("startingLocationLatitude", rideIntention.getStartingLocationLatitude());
         intent.putExtra("startingLocationLongitude", rideIntention.getStartingLocationLongitude());
         intent.putExtra("availablePlacesInCar", rideIntention.getAvailablePlacesInCar());
+
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 }
