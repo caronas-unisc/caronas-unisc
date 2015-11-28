@@ -52,6 +52,11 @@
     <string name="msg_accept_ride_confirmation">Tem certeza que deseja aceitar a carona?</string>
     <string name="title_ask_ride_confirmation">Confirmação</string>
     <string name="msg_ask_ride_confirmation">Tem certeza que deseja pedir a carona?</string>
+    <string name="btn_ask_ride">Pedir carona</string>
+    <string name="btn_ride_pending">Carona pendente</string>
+    <string name="btn_chat">Chat</string>
+    <string name="btn_accept_ride">Aceitar carona</string>
+
 
 
 </resources>

@@ -95,5 +95,9 @@
     <string name="msg_accept_ride_confirmation">Are you sure you want to accept the ride?</string>
     <string name="title_ask_ride_confirmation">Confirmation</string>
     <string name="msg_ask_ride_confirmation">Are you sure you want to ask the ride?</string>
+    <string name="btn_ask_ride">Ask Ride</string>
+    <string name="btn_ride_pending">Ride Pending</string>
+    <string name="btn_chat">Chat</string>
+    <string name="btn_accept_ride">Accept Ride</string>
 
 </resources>
