@@ -59,7 +59,6 @@
     <string name="btn_accept_ride">Aceitar carona</string>
     <string name="lbl_agenda">Agenda</string>
     <string name="lbl_atualizar">Atualizar</string>
-
-
+    <string name="last_week_agenda_empty">Na última semana a sua agenda estava vazia.</string>
 
 </resources>

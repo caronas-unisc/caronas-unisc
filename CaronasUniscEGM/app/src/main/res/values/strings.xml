@@ -101,5 +101,6 @@
     <string name="btn_accept_ride">Accept Ride</string>
     <string name="lbl_agenda">Agenda</string>
     <string name="lbl_atualizar">Refresh</string>
+    <string name="last_week_agenda_empty">Last week your agenda was empty.</string>
 
 </resources>

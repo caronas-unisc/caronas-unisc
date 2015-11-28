@@ -127,7 +127,7 @@ public class AgendaActivity extends AppCompatActivity {
                 }
                 if( mRideIntentionList.size() == 0 ){
                     Toast.makeText(getApplicationContext(),
-                            "Last week, your agenda was empty." , Toast.LENGTH_SHORT).show();
+                            getString(R.string.last_week_agenda_empty), Toast.LENGTH_SHORT).show();
                 }
 
                 ((AgendaAdapter) mAdapter).updateDataList(mRideIntentionList);
