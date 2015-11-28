@@ -12,5 +12,5 @@
         android:layout_width="fill_parent"
         android:textColor="#444"
         android:padding="10dp"
-        android:background="#CCC" />
+        android:background="#D3E1F2" />
 </LinearLayout>
