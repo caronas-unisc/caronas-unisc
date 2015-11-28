@@ -149,7 +149,7 @@ public class AgendaActivity extends AppCompatActivity {
         Date date = new Date();
 
         String url = ApiEndpoints.RIDE_AVAIABILITIES + "/week/repeat";
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.PATCH, url,
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.PUT, url,
                 successListener, errorListener){
             @Override
             public HashMap<String, String> getHeaders() {

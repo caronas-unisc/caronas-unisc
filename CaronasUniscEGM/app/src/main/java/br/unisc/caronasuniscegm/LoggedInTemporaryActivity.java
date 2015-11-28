@@ -1,6 +1,7 @@
 package br.unisc.caronasuniscegm;
 
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,21 +21,45 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.TreeSet;
 
+import br.unisc.caronasuniscegm.adapters.AgendaAdapter;
+import br.unisc.caronasuniscegm.model.Ride;
 import br.unisc.caronasuniscegm.model.RideAvailability;
 import br.unisc.caronasuniscegm.rest.ApiEndpoints;
+import br.unisc.caronasuniscegm.rest.RideIntention;
 import br.unisc.caronasuniscegm.rest.User;
+import br.unisc.caronasuniscegm.utils.CalendarUtils;
+import br.unisc.caronasuniscegm.utils.TokenUtils;
 
 public class LoggedInTemporaryActivity extends ActionBarActivity {
 
     private User currentUser;
     private final String LOG_TAG = "CaronasUNISC-LoggedIn";
     private MyCustomAdapter mAdapter;
+    private ProgressDialog pd;
+    private ArrayList<RideAvailability> mData;
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
 
     ListView listView;
 
@@ -49,47 +74,12 @@ public class LoggedInTemporaryActivity extends ActionBarActivity {
         this.currentUser = User.getCurrent(this);
         setActionBarMessage();
 
+        mData = new ArrayList<>();
         mAdapter = new MyCustomAdapter();
 
-        RideAvailability rideAvailability = new RideAvailability();
-        rideAvailability.setNmUserRequest("Monday Night");
-
-        mAdapter.addSeparatorItem(rideAvailability);
-
-        RideAvailability rideAvailability2 = new RideAvailability();
-        rideAvailability2.setStatus(1);
-        rideAvailability2.setNmUserRequest("Fulano");
-        mAdapter.addItem(rideAvailability2);
-
-        RideAvailability rideAvailability3 = new RideAvailability();
-        rideAvailability3.setStatus(2);
-        rideAvailability3.setNmUserRequest("João");
-        mAdapter.addItem(rideAvailability3);
-
-
-        RideAvailability rideAvailability4 = new RideAvailability();
-        rideAvailability4.setNmUserRequest("Tuesday Afternoon");
-
-        mAdapter.addSeparatorItem(rideAvailability4);
-
-        RideAvailability rideAvailability5 = new RideAvailability();
-        rideAvailability5.setNmUserRequest("João");
-        rideAvailability5.setStatus(1);
-
-        mAdapter.addItem(rideAvailability5);
-
-
-        RideAvailability rideAvailability6 = new RideAvailability();
-        rideAvailability6.setNmUserRequest("Wednesday Morning");
-        rideAvailability6.setStatus(1);
-        mAdapter.addSeparatorItem(rideAvailability6);
-
-        RideAvailability rideAvailability7 = new RideAvailability();
-        rideAvailability7.setNmUserRequest("André");
-        rideAvailability7.setStatus(3);
-        mAdapter.addItem(rideAvailability7);
-
         listView.setAdapter(mAdapter);
+
+        updateThisWeekMatchList();
     }
 
 
@@ -100,13 +90,17 @@ public class LoggedInTemporaryActivity extends ActionBarActivity {
         private static final int TYPE_SEPARATOR = 1;
         private static final int TYPE_MAX_COUNT = TYPE_SEPARATOR + 1;
 
-        private ArrayList<RideAvailability> mData = new ArrayList<RideAvailability>();
         private LayoutInflater mInflater;
 
         private TreeSet<Integer> mSeparatorsSet = new TreeSet<Integer>();
 
         public MyCustomAdapter() {
             mInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+
+        public void clear(){
+            mData.clear();
+            this.notifyDataSetChanged();
         }
 
         public void addItem(final RideAvailability item) {
@@ -163,41 +157,450 @@ public class LoggedInTemporaryActivity extends ActionBarActivity {
             } else {
                 holder = (ViewHolder)convertView.getTag();
             }
+
+            final RideAvailability rideAvailability = mData.get(position);
+
             holder.textView.setText(mData.get(position).getNmUserRequest());
 
+            if (rideAvailability.getDate() != null) {
+                    holder.textView.setText(mData.get(position).getName());
+            }
             Button btnAskRide = (Button) convertView.findViewById(R.id.btn_ask_ride);
+
             Button btnChat = (Button) convertView.findViewById(R.id.btn_chat);
             TextView txtPending = (TextView) convertView.findViewById(R.id.txt_pending);
+            Button btnAcceptRide = (Button)convertView.findViewById(R.id.btn_accept);
 
-            RideAvailability rideAvailability = mData.get(position);
 
-            if (type == TYPE_ITEM){
-                if (rideAvailability.getStatus() != null) {
-                    if (rideAvailability.getStatus() == 1) {
-                        btnAskRide.setVisibility(View.VISIBLE);
-                        btnChat.setVisibility(View.GONE);
-                        txtPending.setVisibility(View.GONE);
+            // caso nao for apenas um item de separacao
+            if (rideAvailability.getDate() != null) {
+                btnAskRide.setOnClickListener( new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final int position = listView.getPositionForView((View) v.getParent());
+                        RideAvailability rideAvailabilityClicked = mData.get(position);
+                        askRide(rideAvailabilityClicked);
+                    }});
+                btnAcceptRide.setOnClickListener( new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final int position = listView.getPositionForView((View) v.getParent());
+                        RideAvailability rideAvailabilityClicked = mData.get(position);
+                        acceptRide(rideAvailabilityClicked);
+                    }});
+                btnChat.setOnClickListener( new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final int position = listView.getPositionForView((View) v.getParent());
+                        RideAvailability rideAvailabilityClicked = mData.get(position);
+                        chatRide(rideAvailabilityClicked);
+                    }});
+                btnAcceptRide.setVisibility(View.GONE);
+                btnAskRide.setVisibility(View.GONE);
+                btnChat.setVisibility(View.GONE);
+                txtPending.setVisibility(View.GONE);
+                if (rideAvailability.getType().equals("receive")) {
+                    if (type == TYPE_ITEM) {
+                        if (rideAvailability.getRide() == null) {
+                            btnAskRide.setVisibility(View.VISIBLE);
+                        } else {
+                            if (rideAvailability.getRide().getStatus().equals("pending")) {
+                                txtPending.setVisibility(View.VISIBLE);
+                            }
+                            if (rideAvailability.getRide().getStatus().equals("accepted")) {
+                                btnChat.setVisibility(View.VISIBLE);
+                            }
+                        }
                     }
-                    if (rideAvailability.getStatus() == 2) {
-                        btnAskRide.setVisibility(View.GONE);
-                        btnChat.setVisibility(View.GONE);
-                        txtPending.setVisibility(View.VISIBLE);
+                } else {
+                    if (rideAvailability.getRide().getStatus().equals("pending")){
+                        btnAcceptRide.setVisibility(View.VISIBLE);
                     }
-                    if (rideAvailability.getStatus() == 3) {
-                        btnAskRide.setVisibility(View.GONE);
+                    if (rideAvailability.getRide().getStatus().equals("accepted")){
                         btnChat.setVisibility(View.VISIBLE);
-                        txtPending.setVisibility(View.GONE);
                     }
                 }
             }
-
             return convertView;
         }
 
     }
 
+    private void askRide(RideAvailability rideAvailability){
+       final String token = TokenUtils.getToken(this.getApplicationContext());
+
+        // Resposta de sucesso
+        Response.Listener<JSONObject> successListener = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonObjectResponse) {
+                hideProgressDialog();
+                updateThisWeekMatchList();
+                //try {
+                //    formatMatchList(jsonObjectResponse);
+                //} catch (JSONException e) {
+                //    e.printStackTrace();
+                //} catch (ParseException e) {
+                //    e.printStackTrace();
+                // }
+                //if( mData.size() == 0 ){
+                //    mButtonCopyLastWeekAgenda.setVisibility(View.VISIBLE);
+                // }
+            }
+        };
+
+        // Resposta de erro
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                hideProgressDialog();
+                volleyError.printStackTrace();
+            }
+        };
+
+        // Envia requisição
+        showProgressDialog();
+        Date date = new Date();
+
+        JSONObject requestJson = new JSONObject();
+        try{
+            requestJson.put("ride_availability_id", rideAvailability.getAvailabilityId().toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String url = ApiEndpoints.RIDES;
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url,requestJson,
+                successListener, errorListener){
+            @Override
+            public HashMap<String, String> getHeaders() {
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put("Authentication-Token", token);
+                return params;
+            }
+
+        };
+
+
+        request.setRetryPolicy(new DefaultRetryPolicy(ApiEndpoints.TIMEOUT,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(request);
+
+
+
+        Log.v(String.valueOf(Log.INFO), "askRide: " + rideAvailability.getAvailabilityId());
+    }
+
+
+
+    private void acceptRide(RideAvailability rideAvailability){
+        final String token = TokenUtils.getToken(this.getApplicationContext());
+
+        // Resposta de sucesso
+        Response.Listener<JSONObject> successListener = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonObjectResponse) {
+                hideProgressDialog();
+                updateThisWeekMatchList();
+                //try {
+                //    formatMatchList(jsonObjectResponse);
+                //} catch (JSONException e) {
+                //    e.printStackTrace();
+                //} catch (ParseException e) {
+                //    e.printStackTrace();
+                // }
+                //if( mData.size() == 0 ){
+                //    mButtonCopyLastWeekAgenda.setVisibility(View.VISIBLE);
+                // }
+            }
+        };
+
+        // Resposta de erro
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                hideProgressDialog();
+                volleyError.printStackTrace();
+            }
+        };
+
+        // Envia requisição
+        showProgressDialog();
+        Date date = new Date();
+
+        //'{"ride":{"status":"accepted"}}'
+
+        JSONObject requestJson = new JSONObject();
+        try{
+            JSONObject ride = new JSONObject();
+            ride.put("status", "accepted");
+            requestJson.put("ride", ride);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String url = ApiEndpoints.RIDES + "/"+rideAvailability.getRide().getIdRide();
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url,requestJson,
+                successListener, errorListener){
+            @Override
+            public HashMap<String, String> getHeaders() {
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put("Authentication-Token", token);
+                return params;
+            }
+
+        };
+
+
+        request.setRetryPolicy(new DefaultRetryPolicy(ApiEndpoints.TIMEOUT,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(request);
+
+
+
+        Log.v(String.valueOf(Log.INFO), "askRide: " + rideAvailability.getAvailabilityId());    }
+
+    private void chatRide(RideAvailability rideAvailability){
+        Intent intent = new Intent(this, ChatActivity.class);
+        intent.putExtra(ChatActivity.EXTRA_RIDE_ID, rideAvailability.getRide().getIdRide());
+        if (rideAvailability.getType().equals("give")){
+            intent.putExtra(ChatActivity.EXTRA_AVAILABILITY_TYPE, ChatActivity.AVAILABILITY_TYPE_GIVE); // passar aqui a relação do usuário atual com essa carona. ChatActivity.AVAILABILITY_TYPE_GIVE se o usuário atual estiver dando a carona, ChatActivity.AVAILABILITY_TYPE_RECEIVE se usuário atual estiver recebendo a carona.
+        } else {
+            intent.putExtra(ChatActivity.EXTRA_AVAILABILITY_TYPE, ChatActivity.AVAILABILITY_TYPE_RECEIVE); // passar aqui a relação do usuário atual com essa carona. ChatActivity.AVAILABILITY_TYPE_GIVE se o usuário atual estiver dando a carona, ChatActivity.AVAILABILITY_TYPE_RECEIVE se usuário atual estiver recebendo a carona.
+        }
+        startActivity(intent);
+        Log.v(String.valueOf(Log.INFO), "chatRide: " + rideAvailability.getAvailabilityId());
+    }
+
+
+    public void updateThisWeekMatchList() {
+
+        final String token = TokenUtils.getToken(this.getApplicationContext());
+
+        // Resposta de sucesso
+        Response.Listener<JSONObject> successListener = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject jsonObjectResponse) {
+                hideProgressDialog();
+                try {
+                    formatMatchList(jsonObjectResponse);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                //if( mData.size() == 0 ){
+                //    mButtonCopyLastWeekAgenda.setVisibility(View.VISIBLE);
+               // }
+            }
+        };
+
+        // Resposta de erro
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                hideProgressDialog();
+                volleyError.printStackTrace();
+            }
+        };
+
+        // Envia requisição
+        showProgressDialog();
+        Date date = new Date();
+
+        String url = ApiEndpoints.MATCHES;
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url,
+                successListener, errorListener){
+            @Override
+            public HashMap<String, String> getHeaders() {
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put("Authentication-Token", token);
+                return params;
+            }
+        };
+
+        request.setRetryPolicy(new DefaultRetryPolicy(ApiEndpoints.TIMEOUT,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(request);
+    }
+
+    private void formatMatchList(JSONObject jsonArrayObject) throws JSONException, ParseException {
+
+
+        String json = "{\n" +
+                "    \"receive\": [\n" +
+                "        {\n" +
+                "            \"availability_id\": 1,\n" +
+                "            \"period\": \"night\",\n" +
+                "            \"date\": \"2015-11-23\", // segunda-feira\n" +
+                "            \"user_name\": \"João\",\n" +
+                "            \"remaining_places_in_car\": 1,\n" +
+                "            \"ride\": null // ride é null nesse registro porque o usuário atual não pediu carona para o Fulano\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"availability_id\": 2,\n" +
+                "            \"period\": \"night\",\n" +
+                "            \"date\": \"2015-11-23\", // segunda-feira\n" +
+                "            \"user_name\": \"Felipe\",\n" +
+                "            \"remaining_places_in_car\": 3,\n" +
+                "            \"ride\": { // usuário atual pediu carona para o Felipe\n" +
+                "                \"id\": 5,\n" +
+                "                \"status\": \"pending\" // a carona requisitada está pendente (o Felipe, outro usuário, precisa aprovar)\n" +
+                "            }\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"availability_id\": 3,\n" +
+                "            \"period\": \"night\",\n" +
+                "            \"date\": \"2015-11-24\", // terça-feira\n" +
+                "            \"user_name\": \"Felipe\",\n" +
+                "            \"remaining_places_in_car\": 2,\n" +
+                "            \"ride\": { // usuário atual pediu carona para o Felipe\n" +
+                "                \"id\": 6,\n" +
+                "                \"status\": \"accepted\" // o Felipe (outro usuário) aceitou dar a carona\n" +
+                "            }\n" +
+                "        }\n" +
+                "    ],\n" +
+                "    \"give\": [\n" +
+                "        {\n" +
+                "            \"availability_id\": 4,\n" +
+                "            \"period\": \"night\",\n" +
+                "            \"date\": \"2015-11-25\", // quarta-feira\n" +
+                "            \"user_name\": \"André\", // o André pediu carona para o usuário atual\n" +
+                "            \"ride\": {\n" +
+                "                \"id\": 7,\n" +
+                "                \"status\": \"pending\" // o usuário atual ainda não aceitou o pedido de carona do André\n" +
+                "            }\n" +
+                "        }\n" +
+                "    ]\n" +
+                "}";
+
+        //jsonArrayObject = new JSONObject(json);
+
+
+        mAdapter.clear();
+
+        JSONArray receiveList = jsonArrayObject.getJSONArray("receive");
+        JSONArray giveList = jsonArrayObject.getJSONArray("give");
+
+        List<RideAvailability> rideAvailabilityList = new ArrayList<>();
+
+        for(int i = 0; i < receiveList.length(); i++){
+            JSONObject jsonRideAvailability = receiveList.getJSONObject(i);
+            rideAvailabilityList.add(parseJsonRideAvailability(jsonRideAvailability, "receive"));
+        }
+
+        for(int i = 0; i < giveList.length(); i++){
+            JSONObject jsonRideAvailability = giveList.getJSONObject(i);
+            rideAvailabilityList.add(parseJsonRideAvailability(jsonRideAvailability, "give"));
+        }
+
+        Collections.sort(rideAvailabilityList, new Comparator<RideAvailability>() {
+
+            @Override
+            public int compare(RideAvailability r1, RideAvailability r2) {
+                int c;
+                c = r1.getDate().compareTo(r2.getDate());
+                if (c == 0)
+                    if (r1.getPeriod().equals(r2.getPeriod())){
+                        c=0;
+                    } else {
+                        if (r1.getPeriod().equals("morning")) {
+                            c= -1;
+                        }
+
+                        if (r1.getPeriod().equals("afternoon")){
+                            if (r2.getPeriod().equals("morning")){
+                                c= 1;
+                            }
+                        }
+
+                        if (r1.getPeriod().equals("night")){
+                            c= 1;
+                        }
+                    }
+                if (c==0){
+                    return r1.getName().compareTo(r2.getName());
+
+                }
+                return c;
+            }
+
+
+        });
+
+        String currentDayPeriod = null;
+
+        for (RideAvailability rideAvailability : rideAvailabilityList){
+            Calendar c = Calendar.getInstance();
+            c.setTime(rideAvailability.getDate());
+            int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+
+
+
+            String dayPeriod = getDayOfWeek(dayOfWeek) + " " + getStringByPeriod(rideAvailability.getPeriod());
+
+            if (currentDayPeriod == null || !currentDayPeriod.equals(dayPeriod)){
+                RideAvailability separatorRide = new RideAvailability();
+                separatorRide.setNmUserRequest(dayPeriod);
+                mAdapter.addSeparatorItem(separatorRide);
+                currentDayPeriod = dayPeriod;
+            }
+
+            mAdapter.addItem(rideAvailability);
+        }
+
+
+    }
+
+    public RideAvailability parseJsonRideAvailability(JSONObject jsonRideAvailability, String type) throws JSONException, ParseException {
+        RideAvailability rideAvailability = new RideAvailability();
+
+        rideAvailability.setType(type);
+
+        if (type.equals("receive")){
+            rideAvailability.setNmUserResponse(jsonRideAvailability.getString("user_name"));
+            rideAvailability.setNmUserRequest(currentUser.getName());
+        } else {
+            rideAvailability.setNmUserRequest(jsonRideAvailability.getString("user_name"));
+            rideAvailability.setNmUserResponse(currentUser.getName());
+        }
+
+
+
+        rideAvailability.setDate(sdf.parse(jsonRideAvailability.getString("date")));
+        rideAvailability.setPeriod(jsonRideAvailability.getString("period"));
+        if (!type.equals("give")) {
+            rideAvailability.setRemainingPlacesInCar(jsonRideAvailability.getInt("remaining_places_in_car"));
+        }
+        rideAvailability.setAvailabilityId(jsonRideAvailability.getInt("availability_id"));
+
+        JSONObject jsonRide = jsonRideAvailability.optJSONObject("ride");
+        if (jsonRide != null){
+            Ride ride = new Ride();
+            ride.setIdRide(jsonRide.getInt("id"));
+            ride.setStatus(jsonRide.getString("status"));
+            rideAvailability.setRide(ride);
+        }
+        return rideAvailability;
+        //mAdapter.addItem(rideAvailability);
+    }
+
     public static class ViewHolder {
         public TextView textView;
+    }
+
+    private void showProgressDialog() {
+        String message = getResources().getString(R.string.please_wait);
+        pd = ProgressDialog.show(this, "", message, false);
+    }
+
+    private void hideProgressDialog() {
+        pd.dismiss();
+        pd = null;
     }
 
 
@@ -279,6 +682,39 @@ public class LoggedInTemporaryActivity extends ActionBarActivity {
 
         String welcomeMessage = getString(R.string.welcome_with_name, currentUser.getName());
         this.setTitle(welcomeMessage);
+    }
+
+    private String getDayOfWeek(Integer index){
+        switch (index) {
+            case Calendar.MONDAY:
+                return "Monday";
+            case Calendar.TUESDAY:
+                return "Tuesday";
+            case Calendar.WEDNESDAY:
+                return "Wednesday";
+            case Calendar.THURSDAY:
+                return "Thursday";
+            case Calendar.FRIDAY:
+                return "Friday";
+            case Calendar.SATURDAY:
+                return "Saturday";
+            case Calendar.SUNDAY:
+                return "Sunday";
+            default: return "";
+
+        }
+    }
+
+    private String getStringByPeriod(String period){
+        switch (period){
+            case "morning":
+                return "Morning";
+            case "afternoon":
+                return "Afternoon";
+            case "night":
+                return "Night";
+            default: return period;
+        }
     }
 
 }

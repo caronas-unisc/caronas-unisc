@@ -33,4 +33,11 @@
         android:text="Chat"
         android:id="@+id/btn_chat"
         android:layout_weight="0.64" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Accept Ride"
+        android:id="@+id/btn_accept"
+        android:layout_weight="0.64" />
 </LinearLayout>
