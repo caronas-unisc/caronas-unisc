@@ -78,5 +78,7 @@
     <string name="error_availability_type">Selecione o tipo de disponibilidade para prosseguir.</string>
     <string name="error_select_day">Selecione ao menos um dia para prosseguir.</string>
     <string name="error_select_period">Selecione ao menos um período do dia para prosseguir.</string>
+    <string name="search_address">Pesquisar endereço...</string>
+
 
 </resources>

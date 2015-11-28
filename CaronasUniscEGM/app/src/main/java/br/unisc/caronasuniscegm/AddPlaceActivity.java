@@ -97,7 +97,7 @@ public class AddPlaceActivity extends ActionBarActivity {
 
         mSearchView =
                 new SearchView(getSupportActionBar().getThemedContext());
-        mSearchView.setQueryHint("Search for Places…");
+        mSearchView.setQueryHint(getString(R.string.search_address));
         mSearchView.clearFocus();
         mSearchView.setIconified(true);
 

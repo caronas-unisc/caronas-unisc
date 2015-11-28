@@ -401,9 +401,9 @@ public class LoggedInTemporaryActivity extends ActionBarActivity {
         Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtra(ChatActivity.EXTRA_RIDE_ID, rideAvailability.getRide().getIdRide());
         if (rideAvailability.getType().equals("give")){
-            intent.putExtra(ChatActivity.EXTRA_AVAILABILITY_TYPE, ChatActivity.AVAILABILITY_TYPE_GIVE); // passar aqui a relação do usuário atual com essa carona. ChatActivity.AVAILABILITY_TYPE_GIVE se o usuário atual estiver dando a carona, ChatActivity.AVAILABILITY_TYPE_RECEIVE se usuário atual estiver recebendo a carona.
+            intent.putExtra(ChatActivity.EXTRA_AVAILABILITY_TYPE, ChatActivity.AVAILABILITY_TYPE_GIVE);
         } else {
-            intent.putExtra(ChatActivity.EXTRA_AVAILABILITY_TYPE, ChatActivity.AVAILABILITY_TYPE_RECEIVE); // passar aqui a relação do usuário atual com essa carona. ChatActivity.AVAILABILITY_TYPE_GIVE se o usuário atual estiver dando a carona, ChatActivity.AVAILABILITY_TYPE_RECEIVE se usuário atual estiver recebendo a carona.
+            intent.putExtra(ChatActivity.EXTRA_AVAILABILITY_TYPE, ChatActivity.AVAILABILITY_TYPE_RECEIVE);
         }
         startActivity(intent);
         Log.v(String.valueOf(Log.INFO), "chatRide: " + rideAvailability.getAvailabilityId());
@@ -574,9 +574,9 @@ public class LoggedInTemporaryActivity extends ActionBarActivity {
             c.setTime(rideAvailability.getDate());
             int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
 
-
-
-            String dayPeriod = getDayOfWeek(dayOfWeek) + " " + getStringByPeriod(rideAvailability.getPeriod());
+            String dayOfWeekText = getDayOfWeek(dayOfWeek);
+            String periodText = getStringByPeriod(rideAvailability.getPeriod()).toLowerCase();
+            String dayPeriod = getString(R.string.date_and_period, dayOfWeekText, periodText);
 
             if (currentDayPeriod == null || !currentDayPeriod.equals(dayPeriod)){
                 RideAvailability separatorRide = new RideAvailability();
