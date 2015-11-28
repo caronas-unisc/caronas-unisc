@@ -16,7 +16,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ask Ride"
+        android:text="@string/btn_ask_ride"
         android:id="@+id/btn_ask_ride"
         android:layout_weight="0.64" />
 
@@ -24,20 +24,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Ride Pending"
+        android:text="@string/btn_ride_pending"
         android:id="@+id/txt_pending" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Chat"
+        android:text="@string/btn_chat"
         android:id="@+id/btn_chat"
         android:layout_weight="0.64" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Accept Ride"
+        android:text="@string/btn_accept_ride"
         android:id="@+id/btn_accept"
         android:layout_weight="0.64" />
 </LinearLayout>
