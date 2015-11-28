@@ -91,5 +91,9 @@
     <string name="date_and_period">%1$s at %2$s</string>
     <string name="you">You</string>
     <string name="title_activity_view_map">Map view</string>
+    <string name="title_accept_ride_confirmation">Confirmation</string>
+    <string name="msg_accept_ride_confirmation">Are you sure you want to accept the ride?</string>
+    <string name="title_ask_ride_confirmation">Confirmation</string>
+    <string name="msg_ask_ride_confirmation">Are you sure you want to ask the ride?</string>
 
 </resources>

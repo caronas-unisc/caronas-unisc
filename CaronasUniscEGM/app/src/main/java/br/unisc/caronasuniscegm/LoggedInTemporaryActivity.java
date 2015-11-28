@@ -1,7 +1,9 @@
 package br.unisc.caronasuniscegm;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,6 +61,7 @@ public class LoggedInTemporaryActivity extends ActionBarActivity {
     private ProgressDialog pd;
     private ArrayList<RideAvailability> mData;
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    private RideAvailability rideAvailabilityClicked;
 
 
     ListView listView;
@@ -178,15 +181,42 @@ public class LoggedInTemporaryActivity extends ActionBarActivity {
                     @Override
                     public void onClick(View v) {
                         final int position = listView.getPositionForView((View) v.getParent());
-                        RideAvailability rideAvailabilityClicked = mData.get(position);
-                        askRide(rideAvailabilityClicked);
+                        rideAvailabilityClicked = mData.get(position);
+
+                        new AlertDialog.Builder(v.getContext())
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .setTitle(R.string.title_ask_ride_confirmation)
+                                .setMessage(R.string.msg_ask_ride_confirmation)
+                                .setPositiveButton(R.string.lbl_yes, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        askRide(rideAvailabilityClicked);
+                                    }
+                                })
+                                .setNegativeButton(R.string.lbl_no, null)
+                                .show();
+
+
                     }});
                 btnAcceptRide.setOnClickListener( new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         final int position = listView.getPositionForView((View) v.getParent());
-                        RideAvailability rideAvailabilityClicked = mData.get(position);
-                        acceptRide(rideAvailabilityClicked);
+                        rideAvailabilityClicked = mData.get(position);
+
+                        new AlertDialog.Builder(v.getContext())
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .setTitle(R.string.title_accept_ride_confirmation)
+                                .setMessage(R.string.msg_accept_ride_confirmation)
+                                .setPositiveButton(R.string.lbl_yes, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        acceptRide(rideAvailabilityClicked);
+                                    }
+                                })
+                                .setNegativeButton(R.string.lbl_no, null)
+                                .show();
+
                     }});
                 btnChat.setOnClickListener( new View.OnClickListener() {
                     @Override
