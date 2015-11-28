@@ -177,9 +177,8 @@ public class LoggedInTemporaryActivity extends ActionBarActivity {
             Button btnAskRide = (Button) convertView.findViewById(R.id.btn_ask_ride);
 
             Button btnChat = (Button) convertView.findViewById(R.id.btn_chat);
-            TextView txtPending = (TextView) convertView.findViewById(R.id.txt_pending);
             Button btnAcceptRide = (Button)convertView.findViewById(R.id.btn_accept);
-
+            Button btnMap = (Button) convertView.findViewById(R.id.map_button2);
 
             // caso nao for apenas um item de separacao
             if (rideAvailability.getDate() != null) {
@@ -224,36 +223,57 @@ public class LoggedInTemporaryActivity extends ActionBarActivity {
                                 .show();
 
                     }});
-                btnChat.setOnClickListener( new View.OnClickListener() {
+                btnChat.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         final int position = listView.getPositionForView((View) v.getParent());
                         RideAvailability rideAvailabilityClicked = mData.get(position);
                         chatRide(rideAvailabilityClicked);
-                    }});
+                    }
+                });
+
+                btnMap.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final int position = listView.getPositionForView((View) v.getParent());
+                        RideAvailability rideAvailabilityClicked = mData.get(position);
+                        openMap(rideAvailabilityClicked.getStartingLocationLatitude(), rideAvailabilityClicked.getStartingLocationLongitude());
+                    }
+                });
+
                 btnAcceptRide.setVisibility(View.GONE);
                 btnAskRide.setVisibility(View.GONE);
                 btnChat.setVisibility(View.GONE);
-                txtPending.setVisibility(View.GONE);
+                btnMap.setVisibility(View.VISIBLE);
+
+                TextView msgInfoRide = (TextView) convertView.findViewById(R.id.msg_infoRide);
+
+
                 if (rideAvailability.getType().equals("receive")) {
+                    btnMap.setVisibility(View.GONE);
+
                     if (type == TYPE_ITEM) {
                         if (rideAvailability.getRide() == null) {
                             btnAskRide.setVisibility(View.VISIBLE);
+                            msgInfoRide.setText(rideAvailability.getRemainingPlacesInCar() + " "+getString(R.string.msg_available_places));
                         } else {
                             if (rideAvailability.getRide().getStatus().equals("pending")) {
-                                txtPending.setVisibility(View.VISIBLE);
+                                msgInfoRide.setText(getString(R.string.msg_waiting_confirmation));
                             }
                             if (rideAvailability.getRide().getStatus().equals("accepted")) {
                                 btnChat.setVisibility(View.VISIBLE);
+                                msgInfoRide.setText(getString(R.string.msg_ride_confirmed));
                             }
                         }
                     }
                 } else {
                     if (rideAvailability.getRide().getStatus().equals("pending")){
                         btnAcceptRide.setVisibility(View.VISIBLE);
+                        msgInfoRide.setText(getString(R.string.msg_asking_ride));
                     }
                     if (rideAvailability.getRide().getStatus().equals("accepted")){
                         btnChat.setVisibility(View.VISIBLE);
+                        msgInfoRide.setText(getString(R.string.msg_ride_confirmed));
                     }
                 }
             }
@@ -541,24 +561,24 @@ public class LoggedInTemporaryActivity extends ActionBarActivity {
                 int c;
                 c = r1.getDate().compareTo(r2.getDate());
                 if (c == 0)
-                    if (r1.getPeriod().equals(r2.getPeriod())){
-                        c=0;
+                    if (r1.getPeriod().equals(r2.getPeriod())) {
+                        c = 0;
                     } else {
                         if (r1.getPeriod().equals("morning")) {
-                            c= -1;
+                            c = -1;
                         }
 
-                        if (r1.getPeriod().equals("afternoon")){
-                            if (r2.getPeriod().equals("morning")){
-                                c= 1;
+                        if (r1.getPeriod().equals("afternoon")) {
+                            if (r2.getPeriod().equals("morning")) {
+                                c = 1;
                             }
                         }
 
-                        if (r1.getPeriod().equals("night")){
-                            c= 1;
+                        if (r1.getPeriod().equals("night")) {
+                            c = 1;
                         }
                     }
-                if (c==0){
+                if (c == 0) {
                     return r1.getName().compareTo(r2.getName());
 
                 }
@@ -612,6 +632,14 @@ public class LoggedInTemporaryActivity extends ActionBarActivity {
 
     }
 
+    public void openMap(Double mapLatitude, Double mapLongitude) {
+        Intent intent = new Intent(this, ViewMapActivity.class);
+        intent.putExtra(ViewMapActivity.EXTRA_LATITUDE, mapLatitude);
+        intent.putExtra(ViewMapActivity.EXTRA_LONGITUDE, mapLongitude);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
+
     public RideAvailability parseJsonRideAvailability(JSONObject jsonRideAvailability, String type) throws JSONException, ParseException {
         RideAvailability rideAvailability = new RideAvailability();
 
@@ -633,6 +661,9 @@ public class LoggedInTemporaryActivity extends ActionBarActivity {
             rideAvailability.setRemainingPlacesInCar(jsonRideAvailability.getInt("remaining_places_in_car"));
         }
         rideAvailability.setAvailabilityId(jsonRideAvailability.getInt("availability_id"));
+
+        rideAvailability.setStartingLocationLatitude(jsonRideAvailability.optDouble("starting_location_latitude"));
+        rideAvailability.setStartingLocationLongitude(jsonRideAvailability.optDouble("starting_location_longitude"));
 
         JSONObject jsonRide = jsonRideAvailability.optJSONObject("ride");
         if (jsonRide != null){

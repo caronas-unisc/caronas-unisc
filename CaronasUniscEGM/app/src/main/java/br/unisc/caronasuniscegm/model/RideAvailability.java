@@ -16,6 +16,9 @@ public class RideAvailability {
     private String type; //give or receive
 
 
+    private double startingLocationLatitude;
+    private double startingLocationLongitude;
+
     private Ride ride;
     // 0 - Carona não requisitada
     // 1 - Carona pendente
@@ -94,5 +97,19 @@ public class RideAvailability {
         }
     }
 
+    public double getStartingLocationLatitude() {
+        return startingLocationLatitude;
+    }
 
+    public void setStartingLocationLatitude(double startingLocationLatitude) {
+        this.startingLocationLatitude = startingLocationLatitude;
+    }
+
+    public double getStartingLocationLongitude() {
+        return startingLocationLongitude;
+    }
+
+    public void setStartingLocationLongitude(double startingLocationLongitude) {
+        this.startingLocationLongitude = startingLocationLongitude;
+    }
 }

@@ -111,4 +111,8 @@
     <string name="hint_place_name">Place name</string>
     <string name="help_chat">Use the chat to communicate with the person that you will give/receive ride.</string>
     <string name="msg_no_rides">\nThis interface will show people that can give and receive rides to UNISC. Until now, no one was found with the same preferences as you.\n\nIf you have not configured your preferences, select the option Agenda in the upper right menu.</string>
+    <string name="msg_waiting_confirmation">Waiting driver confirmation</string>
+    <string name="msg_ride_confirmed">Ride confirmed</string>
+    <string name="msg_asking_ride">Is asking a ride</string>
+    <string name="msg_available_places"> available place(s)"</string>
 </resources>

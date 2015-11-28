@@ -56,7 +56,7 @@
     <string name="btn_ask_ride">Pedir carona</string>
     <string name="btn_ride_pending">Carona pendente</string>
     <string name="btn_chat">Chat</string>
-    <string name="btn_accept_ride">Aceitar carona</string>
+    <string name="btn_accept_ride">Aceitar</string>
     <string name="lbl_agenda">Agenda</string>
     <string name="lbl_atualizar">Atualizar</string>
     <string name="last_week_agenda_empty">Na última semana a sua agenda estava vazia.</string>
@@ -88,5 +88,8 @@
     <string name="help_chat">Use o chat para se comunicar e combinar detalhes com a pessoa que está dando/recebendo carona.</string>
     <string name="msg_copy_last_week_agenda">Tem certeza que deseja repetir caronas da semana anterior?</string>
     <string name="msg_no_rides">\nEsta tela mostrará outras pessoas que podem dar e receber carona para a UNISC. Até o momento, ninguém foi encontrado com as mesmas preferências que você.\n\nCaso não tenha cadastrado suas disponibilidades de carona, selecione a opção Agenda no menu superior direito.</string>
-
+    <string name="msg_waiting_confirmation">Esperando confirmação do motorista</string>
+    <string name="msg_ride_confirmed">Carona confirmada</string>
+    <string name="msg_asking_ride">Está pedindo carona</string>
+    <string name="msg_available_places">lugar(es) disponíveis"</string>
 </resources>
