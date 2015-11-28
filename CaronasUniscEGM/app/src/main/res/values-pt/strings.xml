@@ -79,6 +79,6 @@
     <string name="error_select_day">Selecione ao menos um dia para prosseguir.</string>
     <string name="error_select_period">Selecione ao menos um período do dia para prosseguir.</string>
     <string name="search_address">Pesquisar endereço...</string>
-
+    <string name="msg_no_rides">\nEsta tela mostrará outras pessoas que podem dar e receber carona para a UNISC. Até o momento, ninguém foi encontrado com as mesmas preferências que você.\n\nCaso não tenha cadastrado suas disponibilidades de carona, selecione a opção Agenda no menu superior direito.</string>
 
 </resources>

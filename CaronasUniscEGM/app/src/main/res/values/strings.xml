@@ -108,5 +108,5 @@
     <string name="error_select_day">Select at least one day before moving on.</string>
     <string name="error_select_period">Select at least one period before moving on.</string>
     <string name="search_address">Search address...</string>
-
+    <string name="msg_no_rides">\nThis interface will show people that can give and receive rides to UNISC. Until now, no one was found with the same preferences as you.\n\nIf you have not configured your preferences, select the option Agenda in the upper right menu.</string>
 </resources>

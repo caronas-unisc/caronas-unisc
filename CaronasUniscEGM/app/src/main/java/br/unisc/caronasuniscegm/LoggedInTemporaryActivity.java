@@ -31,6 +31,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -569,23 +570,43 @@ public class LoggedInTemporaryActivity extends ActionBarActivity {
 
         String currentDayPeriod = null;
 
+        Boolean showAtLeastOneRide = false;
+        Boolean showRide = true;
         for (RideAvailability rideAvailability : rideAvailabilityList){
-            Calendar c = Calendar.getInstance();
-            c.setTime(rideAvailability.getDate());
-            int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
 
-            String dayOfWeekText = getDayOfWeek(dayOfWeek);
-            String periodText = getStringByPeriod(rideAvailability.getPeriod()).toLowerCase();
-            String dayPeriod = getString(R.string.date_and_period, dayOfWeekText, periodText);
-
-            if (currentDayPeriod == null || !currentDayPeriod.equals(dayPeriod)){
-                RideAvailability separatorRide = new RideAvailability();
-                separatorRide.setNmUserRequest(dayPeriod);
-                mAdapter.addSeparatorItem(separatorRide);
-                currentDayPeriod = dayPeriod;
+            if (rideAvailability.getType().equals("receive") && rideAvailability.getRemainingPlacesInCar() == 0){
+                if (rideAvailability.getRide() == null || rideAvailability.getRide().getStatus().equals("pending")){
+                    showRide = false;
+                }
             }
 
-            mAdapter.addItem(rideAvailability);
+            if (showRide) {
+                showAtLeastOneRide = true;
+                Calendar c = Calendar.getInstance();
+                c.setTime(rideAvailability.getDate());
+                int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+
+                String dayOfWeekText = getDayOfWeek(dayOfWeek);
+                String periodText = getStringByPeriod(rideAvailability.getPeriod()).toLowerCase();
+                String dayPeriod = getString(R.string.date_and_period, dayOfWeekText, periodText);
+                showAtLeastOneRide = true;
+
+                if (currentDayPeriod == null || !currentDayPeriod.equals(dayPeriod)) {
+                    RideAvailability separatorRide = new RideAvailability();
+                    separatorRide.setNmUserRequest(dayPeriod);
+                    mAdapter.addSeparatorItem(separatorRide);
+                    currentDayPeriod = dayPeriod;
+                }
+
+                mAdapter.addItem(rideAvailability);
+            }
+        }
+
+        TextView textView = (TextView) findViewById(R.id.msg_noRides);
+        if (!showAtLeastOneRide){
+            textView.setVisibility(View.VISIBLE);
+        } else {
+            textView.setVisibility(View.GONE);
         }
 
 

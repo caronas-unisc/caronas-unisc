@@ -3,6 +3,13 @@
     android:layout_height="match_parent"
     tools:context="br.unisc.caronasuniscegm.LoggedInTemporaryActivity">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/msg_no_rides"
+        android:visibility="gone"
+        android:id="@+id/msg_noRides"/>
+
     <ListView
         android:id="@+id/listView"
         android:layout_height="match_parent"
