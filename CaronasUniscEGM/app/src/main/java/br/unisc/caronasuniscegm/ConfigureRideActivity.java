@@ -315,7 +315,9 @@ public class ConfigureRideActivity extends AppCompatActivity {
     }
 
     private void hideProgressDialog() {
-        pd.dismiss();
-        pd = null;
+        if (pd != null) {
+            pd.dismiss();
+            pd = null;
+        }
     }
 }

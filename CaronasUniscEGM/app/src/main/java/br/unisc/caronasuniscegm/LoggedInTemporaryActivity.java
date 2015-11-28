@@ -649,14 +649,6 @@ public class LoggedInTemporaryActivity extends ActionBarActivity {
             return true;
         }
 
-        if (id == R.id.action_chat) {
-            Intent intent = new Intent(this, ChatActivity.class);
-            intent.putExtra(ChatActivity.EXTRA_RIDE_ID, 1);
-            intent.putExtra(ChatActivity.EXTRA_AVAILABILITY_TYPE, ChatActivity.AVAILABILITY_TYPE_GIVE);
-            startActivity(intent);
-            return true;
-        }
-
         if (id == R.id.action_agenda) {
             Intent intent = new Intent(this, AgendaActivity.class);
             startActivity(intent);
