@@ -45,7 +45,7 @@
     <string name="field_thursday">Thursday</string>
     <string name="field_friday">Friday</string>
     <string name="btn_add_place">Add place</string>
-    <string name="lbl_address">Address:</string>
+    <string name="lbl_address">Address</string>
     <string name="lbl_latitude">Latitude:</string>
     <string name="lbl_longitude">Longitude:</string>
     <string name="lbl_ride_intention">Ride Intention:</string>
@@ -77,7 +77,7 @@
     <string name="lbl_save_new_place">Save in your favorite places?</string>
     <string name="lbl_name">Name</string>
     <string name="msg_last_week_empty_agenda">Last week, your agenda was empty.</string>
-    <string name="msg_select_between_custom_location">Select between your custom locations</string>
+    <string name="msg_select_between_custom_location">Select from saved locations</string>
     <string name="btn_select_location">Select Location</string>
     <string name="search_hint">Search Places</string>
     <string name="action_search">Search Places</string>

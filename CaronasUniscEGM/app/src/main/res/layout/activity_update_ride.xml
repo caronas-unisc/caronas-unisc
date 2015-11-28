@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
@@ -7,7 +7,9 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:id="@+id/layout_availability">
 
         <TextView
             android:id="@+id/lbl_availability_type"
@@ -27,7 +29,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:id="@+id/layout_places_in_car"
-        android:layout_marginTop="10dp">
+        android:layout_below="@+id/layout_availability"
+        android:layout_marginTop="20dp">
 
         <TextView
             android:id="@+id/lbl_places_in_car"
@@ -47,7 +50,11 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="10dp">
+        android:id="@+id/layout_address"
+        android:layout_below="@+id/layout_places_in_car"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="20dp">
 
         <TextView
             android:id="@+id/lbl_address"
@@ -69,24 +76,23 @@
             />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="fill_parent"
+    <Button
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:text="@string/lbl_save"
+        android:id="@+id/btn_save"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lbl_save"
-            android:id="@+id/btn_save" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lbl_delete"
-            android:id="@+id/btn_delete" />
-    </LinearLayout>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lbl_delete"
+        android:id="@+id/btn_delete"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/layout_address"
+        android:layout_alignEnd="@+id/layout_address" />
 
 
-
-</LinearLayout>
+</RelativeLayout>
