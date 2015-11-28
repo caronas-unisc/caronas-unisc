@@ -107,6 +107,12 @@ public class AddPlaceActivity extends ActionBarActivity {
                 .setActionView(mSearchView)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
+        // Troca ícone da busca para branco
+        int searchImgId = getResources().getIdentifier("android:id/search_button", null, null);
+        ImageView v = (ImageView) mSearchView.findViewById(searchImgId);
+        if (v != null)
+            v.setImageResource(R.drawable.abc_ic_search_api_mtrl_alpha);
+
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             @Override
