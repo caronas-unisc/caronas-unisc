@@ -99,5 +99,7 @@
     <string name="btn_ride_pending">Ride Pending</string>
     <string name="btn_chat">Chat</string>
     <string name="btn_accept_ride">Accept Ride</string>
+    <string name="lbl_agenda">Agenda</string>
+    <string name="lbl_atualizar">Refresh</string>
 
 </resources>

@@ -82,9 +82,14 @@ public class LoggedInTemporaryActivity extends ActionBarActivity {
 
         listView.setAdapter(mAdapter);
 
-        updateThisWeekMatchList();
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        updateThisWeekMatchList();
+
+    }
 
     //Adapter Class
     private class MyCustomAdapter extends BaseAdapter {
@@ -653,6 +658,10 @@ public class LoggedInTemporaryActivity extends ActionBarActivity {
             Intent intent = new Intent(this, AgendaActivity.class);
             startActivity(intent);
             return true;
+        }
+
+        if (id == R.id.action_sincronizar) {
+            updateThisWeekMatchList();
         }
 
         return super.onOptionsItemSelected(item);
