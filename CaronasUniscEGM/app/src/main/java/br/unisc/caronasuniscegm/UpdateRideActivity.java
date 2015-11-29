@@ -37,6 +37,7 @@ import br.unisc.caronasuniscegm.model.RideAvailability;
 import br.unisc.caronasuniscegm.rest.ApiEndpoints;
 import br.unisc.caronasuniscegm.rest.RideIntention;
 import br.unisc.caronasuniscegm.utils.CalendarUtils;
+import br.unisc.caronasuniscegm.utils.LocaleUtils;
 import br.unisc.caronasuniscegm.utils.TokenUtils;
 
 /**
@@ -290,21 +291,7 @@ public class UpdateRideActivity extends AppCompatActivity {
         }
 
         String dayOfWeek = CalendarUtils.dateToDayOfTheWeek(this, rideIntention.getDate());
-        String period = rideIntention.getPeriod();
-
-        switch (period) {
-            case "morning":
-                period = getString(R.string.field_morning);
-                break;
-
-            case "afternoon":
-                period = getString(R.string.field_afternoon);
-                break;
-
-            case "night":
-                period = getString(R.string.field_night);
-                break;
-        }
+        String period = LocaleUtils.periodToLocalizedString(this, rideIntention.getPeriod());
 
         String dateAndPeriod = getString(R.string.date_and_period, dayOfWeek, period.toLowerCase());
         setTitle(dateAndPeriod);

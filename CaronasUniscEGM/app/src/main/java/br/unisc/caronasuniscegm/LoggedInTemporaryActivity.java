@@ -52,6 +52,7 @@ import br.unisc.caronasuniscegm.rest.ApiEndpoints;
 import br.unisc.caronasuniscegm.rest.RideIntention;
 import br.unisc.caronasuniscegm.rest.User;
 import br.unisc.caronasuniscegm.utils.CalendarUtils;
+import br.unisc.caronasuniscegm.utils.LocaleUtils;
 import br.unisc.caronasuniscegm.utils.TokenUtils;
 
 public class LoggedInTemporaryActivity extends ActionBarActivity {
@@ -611,7 +612,8 @@ public class LoggedInTemporaryActivity extends ActionBarActivity {
                 int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
 
                 String dayOfWeekText = getDayOfWeek(dayOfWeek);
-                String periodText = getStringByPeriod(rideAvailability.getPeriod()).toLowerCase();
+                String periodText = LocaleUtils.periodToLocalizedString(this,
+                        rideAvailability.getPeriod()).toLowerCase();
                 String dayPeriod = getString(R.string.date_and_period, dayOfWeekText, periodText);
                 showAtLeastOneRide = true;
 
@@ -786,18 +788,6 @@ public class LoggedInTemporaryActivity extends ActionBarActivity {
                 return getString(R.string.field_friday);
             default: return "";
 
-        }
-    }
-
-    private String getStringByPeriod(String period){
-        switch (period){
-            case "morning":
-                return getString(R.string.field_morning);
-            case "afternoon":
-                return getString(R.string.field_afternoon);
-            case "night":
-                return getString(R.string.field_night);
-            default: return period;
         }
     }
 

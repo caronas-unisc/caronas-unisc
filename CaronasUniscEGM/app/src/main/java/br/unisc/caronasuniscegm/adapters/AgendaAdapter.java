@@ -21,6 +21,7 @@ import br.unisc.caronasuniscegm.R;
 import br.unisc.caronasuniscegm.UpdateRideActivity;
 import br.unisc.caronasuniscegm.rest.RideIntention;
 import br.unisc.caronasuniscegm.utils.CalendarUtils;
+import br.unisc.caronasuniscegm.utils.LocaleUtils;
 
 /**
  * Created by MateusFelipe on 17/10/2015.
@@ -96,22 +97,7 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.ViewHolder
         RideIntention rideIntention = getData().get(position);
 
         String dayOfWeek = CalendarUtils.dateToDayOfTheWeek(mContext, rideIntention.getDate());
-        String period = rideIntention.getPeriod();
-
-        switch (period) {
-            case "morning":
-                period = mContext.getString(R.string.field_morning);
-                break;
-
-            case "afternoon":
-                period = mContext.getString(R.string.field_afternoon);
-                break;
-
-            case "night":
-                period = mContext.getString(R.string.field_night);
-                break;
-        }
-
+        String period = LocaleUtils.periodToLocalizedString(mContext, rideIntention.getPeriod());
         String dateAndPeriod = mContext.getString(R.string.date_and_period, dayOfWeek,
                 period.toLowerCase());
 
