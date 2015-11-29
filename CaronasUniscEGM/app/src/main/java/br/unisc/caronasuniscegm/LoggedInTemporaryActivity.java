@@ -428,6 +428,7 @@ public class LoggedInTemporaryActivity extends ActionBarActivity {
             intent.putExtra(ChatActivity.EXTRA_AVAILABILITY_TYPE, ChatActivity.AVAILABILITY_TYPE_RECEIVE);
         }
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         Log.v(String.valueOf(Log.INFO), "chatRide: " + rideAvailability.getAvailabilityId());
     }
 
