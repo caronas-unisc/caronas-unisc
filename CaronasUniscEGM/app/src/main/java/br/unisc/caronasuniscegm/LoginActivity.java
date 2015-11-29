@@ -153,6 +153,11 @@ public class LoginActivity extends AppCompatActivity {
             JSONObject userJson = json.getJSONObject("user");
             editor.putString(getString(R.string.preference_user_object), userJson.toString());
 
+            // Guarda ID da última notificação nas Shared Preferences
+            int lastNotificationId = json.getInt("last_notification_id");
+            editor.putString(getString(R.string.preference_last_notification_id),
+                    Integer.toString(lastNotificationId));
+
             editor.commit();
 
             // Vai para a activity de usuário logado

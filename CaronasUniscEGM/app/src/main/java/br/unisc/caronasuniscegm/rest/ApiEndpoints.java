@@ -11,7 +11,6 @@ public class ApiEndpoints {
     public static final String RIDE_AVAIABILITIES = "https://caronas-unisc.herokuapp.com/api/v1/ride_availabilities";
     public static final String RIDES = "https://caronas-unisc.herokuapp.com/api/v1/rides";
     public static final String MATCHES = "https://caronas-unisc.herokuapp.com/api/v1/rides/matches";
-
-
+    public static final String NOTIFICATIONS = "https://caronas-unisc.herokuapp.com/api/v1/notifications";
 
 }

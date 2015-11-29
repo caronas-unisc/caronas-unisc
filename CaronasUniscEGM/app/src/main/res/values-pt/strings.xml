@@ -95,5 +95,7 @@
     <string name="title_delete_availability">Excluir disponibilidade</string>
     <string name="msg_delete_availability">Tem certeza que deseja excluir esta disponibilidade?</string>
     <string name="empty_agenda">Nenhuma disponibilidade de carona definida para esta semana.</string>
+    <string name="title_notification_accepted_ride">Pedido de carona aceito</string>
+    <string name="notification_accepted_ride">%1$s aceitou o seu pedido de carona para %2$s</string>
 
 </resources>

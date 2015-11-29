@@ -43,6 +43,7 @@ import br.unisc.caronasuniscegm.model.Message;
 import br.unisc.caronasuniscegm.rest.ApiEndpoints;
 import br.unisc.caronasuniscegm.rest.User;
 import br.unisc.caronasuniscegm.utils.CalendarUtils;
+import br.unisc.caronasuniscegm.utils.LocaleUtils;
 import br.unisc.caronasuniscegm.utils.TokenUtils;
 
 public class ChatActivity extends AppCompatActivity {
@@ -317,21 +318,7 @@ public class ChatActivity extends AppCompatActivity {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date date = format.parse(availability.getString("date"));
         String dayOfWeek = CalendarUtils.dateToDayOfTheWeek(this, date);
-        String period = availability.getString("period");
-
-        switch (period) {
-            case "morning":
-                period = getString(R.string.field_morning);
-                break;
-
-            case "afternoon":
-                period = getString(R.string.field_afternoon);
-                break;
-
-            case "night":
-                period = getString(R.string.field_night);
-                break;
-        }
+        String period = LocaleUtils.periodToLocalizedString(this, availability.getString("period"));
 
         StringBuilder sb = new StringBuilder();
         sb.append(getString(R.string.date_and_period, dayOfWeek, period.toLowerCase()));

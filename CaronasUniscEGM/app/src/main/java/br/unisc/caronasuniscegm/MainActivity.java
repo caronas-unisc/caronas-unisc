@@ -1,5 +1,7 @@
 package br.unisc.caronasuniscegm;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +27,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import br.unisc.caronasuniscegm.receivers.NotificationCheckBroadcastReceiver;
 import br.unisc.caronasuniscegm.rest.ApiEndpoints;
 
 public class MainActivity extends AppCompatActivity {
@@ -36,7 +39,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setAlarm();
         checkSession();
+    }
+
+    public void setAlarm() {
+        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, NotificationCheckBroadcastReceiver.class);
+        PendingIntent pi = PendingIntent.getBroadcast(this, 0, intent, 0);
+        am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 20, pi);
     }
 
     public void checkSession() {

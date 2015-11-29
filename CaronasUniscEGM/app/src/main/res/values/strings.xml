@@ -2,6 +2,7 @@
 
     <!-- Preferences -->
     <string name="preference_file_key" translatable="false">br.unisc.caronasuniscegm.PREFS</string>
+    <string name="preference_last_notification_id" translatable="false">last_notification_id</string>
     <string name="preference_session_token" translatable="false">session_token</string>
     <string name="preference_user_object" translatable="false">user_object</string>
 
@@ -119,5 +120,7 @@
     <string name="title_delete_availability">Delete availability</string>
     <string name="msg_delete_availability">Are you sure you want to delete this availability?</string>
     <string name="empty_agenda">The agenda is empty for this week.</string>
+    <string name="title_notification_accepted_ride">Ride request accepted</string>
+    <string name="notification_accepted_ride">%1$s accepted your ride request for %2$s</string>
 
 </resources>

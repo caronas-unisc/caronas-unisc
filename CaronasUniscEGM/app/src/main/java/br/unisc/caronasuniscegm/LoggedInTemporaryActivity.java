@@ -731,6 +731,7 @@ public class LoggedInTemporaryActivity extends ActionBarActivity {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.remove(getString(R.string.preference_session_token));
         editor.remove(getString(R.string.preference_user_object));
+        editor.remove(getString(R.string.preference_last_notification_id));
         editor.commit();
 
         // Destrói a sessão no servidor
