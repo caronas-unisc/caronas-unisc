@@ -1,6 +1,8 @@
 package br.unisc.caronasuniscegm;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -101,7 +103,18 @@ public class UpdateRideActivity extends AppCompatActivity {
         });
         mButtonDeleteRide.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                deleteRide();
+                new AlertDialog.Builder(v.getContext())
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle(R.string.title_delete_availability)
+                        .setMessage(R.string.msg_delete_availability)
+                        .setPositiveButton(R.string.lbl_yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                deleteRide();
+                            }
+                        })
+                        .setNegativeButton(R.string.lbl_no, null)
+                        .show();
             }
         });
         mButtonChangeAddress.setOnClickListener(new View.OnClickListener() {

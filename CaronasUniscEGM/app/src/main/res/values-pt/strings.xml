@@ -91,5 +91,8 @@
     <string name="msg_waiting_confirmation">Esperando confirmação do motorista</string>
     <string name="msg_ride_confirmed">Carona confirmada</string>
     <string name="msg_asking_ride">Está pedindo carona</string>
-    <string name="msg_available_places">lugar(es) disponíveis"</string>
+    <string name="msg_available_places">lugar(es) disponíveis</string>
+    <string name="title_delete_availability">Excluir disponibilidade</string>
+    <string name="msg_delete_availability">Tem certeza que deseja excluir esta disponibilidade?</string>
+
 </resources>

@@ -114,5 +114,8 @@
     <string name="msg_waiting_confirmation">Waiting driver confirmation</string>
     <string name="msg_ride_confirmed">Ride confirmed</string>
     <string name="msg_asking_ride">Is asking a ride</string>
-    <string name="msg_available_places"> available place(s)"</string>
+    <string name="msg_available_places"> available place(s)</string>
+    <string name="title_delete_availability">Delete availability</string>
+    <string name="msg_delete_availability">Are you sure you want to delete this availability?</string>
+
 </resources>
