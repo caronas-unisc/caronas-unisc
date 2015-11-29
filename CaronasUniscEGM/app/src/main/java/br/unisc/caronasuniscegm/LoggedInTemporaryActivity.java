@@ -440,6 +440,10 @@ public class LoggedInTemporaryActivity extends ActionBarActivity {
             @Override
             public void onResponse(JSONObject jsonObjectResponse) {
                 hideProgressDialog();
+
+                Log.d(LOG_TAG, "Response: ");
+                Log.d(LOG_TAG, jsonObjectResponse.toString());
+
                 try {
                     formatMatchList(jsonObjectResponse);
                 } catch (JSONException e) {

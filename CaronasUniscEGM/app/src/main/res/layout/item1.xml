@@ -7,15 +7,28 @@
     android:paddingBottom="4dp"
     android:paddingLeft="10dp"
     android:paddingRight="10dp">
+
     <TextView
         android:id="@+id/text"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:text="text"
         android:visibility="visible"
-        android:layout_width="171dp"
+        android:layout_marginTop="6dp"
+        android:layout_width="wrap_content"
         android:textColor="#FF000000"
         android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Small Text"
+        android:id="@+id/msg_infoRide"
+        android:layout_below="@+id/text"
+        android:layout_marginTop="0dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -33,9 +46,10 @@
         android:layout_height="wrap_content"
         android:text="@string/btn_chat"
         android:id="@+id/btn_chat"
+        android:layout_toLeftOf="@+id/map_button2"
+        android:layout_toStartOf="@+id/map_button2"
         android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignWithParentIfMissing="true"  />
 
     <Button
         android:layout_width="wrap_content"
@@ -43,8 +57,8 @@
         android:text="@string/btn_accept_ride"
         android:id="@+id/btn_accept"
         android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_toLeftOf="@+id/map_button2"
+        android:layout_toStartOf="@+id/map_button2" />
 
     <Button
         android:layout_width="wrap_content"
@@ -53,16 +67,7 @@
         android:id="@+id/map_button2"
         android:visibility="visible"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Small Text"
-        android:id="@+id/msg_infoRide"
-        android:layout_alignBottom="@+id/text"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
