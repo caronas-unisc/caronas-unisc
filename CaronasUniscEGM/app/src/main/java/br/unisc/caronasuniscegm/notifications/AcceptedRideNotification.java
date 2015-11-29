@@ -49,7 +49,8 @@ public class AcceptedRideNotification extends Notification {
             e.printStackTrace();
         }
 
-        String dateAndPeriod = context.getString(R.string.date_and_period, dayOfWeek, period);
+        String dateAndPeriod = context.getString(R.string.date_and_period, dayOfWeek, period)
+                .toLowerCase();
         String notificationTitle = context.getString(R.string.title_accept_ride_confirmation);
         String notificationText = context.getString(R.string.notification_accepted_ride, infoUser,
                 dateAndPeriod);
@@ -67,6 +68,7 @@ public class AcceptedRideNotification extends Notification {
         mBuilder.setContentIntent(resultPendingIntent);
         mBuilder.setAutoCancel(true);
         mBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
+        mBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(notificationText));
         mBuilder.setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
 
         NotificationManager manager = (NotificationManager)

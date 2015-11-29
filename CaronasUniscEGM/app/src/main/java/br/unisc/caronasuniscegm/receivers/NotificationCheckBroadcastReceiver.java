@@ -21,12 +21,14 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 import br.unisc.caronasuniscegm.R;
+import br.unisc.caronasuniscegm.notifications.Notification;
 import br.unisc.caronasuniscegm.notifications.NotificationFactory;
 import br.unisc.caronasuniscegm.rest.ApiEndpoints;
 
 public class NotificationCheckBroadcastReceiver extends BroadcastReceiver {
 
     private final String LOG_TAG = "CaronasUNISC-Notif";
+    private int notificationId = 0;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -61,8 +63,14 @@ public class NotificationCheckBroadcastReceiver extends BroadcastReceiver {
                         JSONObject info = notification.getJSONObject("info");
                         String type = notification.getString("type");
 
-                        NotificationFactory.getNotification(context, type, info)
-                                .startNotification(9);
+                        Notification template = NotificationFactory.getNotification(context,
+                                type, info);
+
+                        if (template != null) {
+                            template.startNotification(++notificationId);
+                        } else {
+                            Log.d(LOG_TAG, "Notificação " + type + " não implementada");
+                        }
 
                         int id = notification.getInt("id");
                         if (id > maxId)
