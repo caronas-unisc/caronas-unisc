@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import br.unisc.caronasuniscegm.model.RideAvailability;
 import br.unisc.caronasuniscegm.rest.ApiEndpoints;
 import br.unisc.caronasuniscegm.rest.RideIntention;
 import br.unisc.caronasuniscegm.utils.CalendarUtils;
@@ -52,6 +53,8 @@ public class UpdateRideActivity extends AppCompatActivity {
     private Button mButtonChangeAddress;
     private ProgressDialog pd;
 
+    private String giveRideString;
+    private String receiveRideString;
 
     private List<String> mAvailabilityTypeList;
     private RideIntention rideIntention;
@@ -61,6 +64,9 @@ public class UpdateRideActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_ride);
+
+        giveRideString = getString(R.string.give_ride);
+        receiveRideString = getString(R.string.receive_ride);
 
         mLayoutPlacesInCar = (LinearLayout) findViewById(R.id.layout_places_in_car);
         mButtonSaveRide = (Button) findViewById(R.id.btn_save);
@@ -74,7 +80,7 @@ public class UpdateRideActivity extends AppCompatActivity {
         mSpinnerAvailabilityType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                if (parentView.getItemAtPosition(position).toString() == RideIntention.AVAILABILITY_TYPE_GIVE) {
+                if (parentView.getItemAtPosition(position).toString().equals(giveRideString)) {
                     mLayoutPlacesInCar.setVisibility(View.VISIBLE);
                 } else {
                     mLayoutPlacesInCar.setVisibility(View.GONE);
@@ -118,10 +124,17 @@ public class UpdateRideActivity extends AppCompatActivity {
         JSONObject rideIntentionJson = new JSONObject();
 
         try {
-            rideIntentionJson.put("availability_type", mSpinnerAvailabilityType.getSelectedItem().toString() );
-            if( mSpinnerAvailabilityType.getSelectedItem().toString().equals(RideIntention.AVAILABILITY_TYPE_GIVE) ){
+            String availabilityType =
+                    (mSpinnerAvailabilityType.getSelectedItem().equals(giveRideString))
+                            ? RideIntention.AVAILABILITY_TYPE_GIVE
+                            : RideIntention.AVAILABILITY_TYPE_RECEIVE;
+
+            rideIntentionJson.put("availability_type", availabilityType);
+
+            if (availabilityType.equals(RideIntention.AVAILABILITY_TYPE_GIVE)) {
                 rideIntentionJson.put("available_places_in_car", mTextPlacesInCar.getText());
             }
+
             rideIntentionJson.put("starting_location_address", rideIntention.getStartingLocationAddress());
             rideIntentionJson.put("starting_location_latitude", rideIntention.getStartingLocationLatitude());
             rideIntentionJson.put("starting_location_longitude", rideIntention.getStartingLocationLongitude());
@@ -250,10 +263,16 @@ public class UpdateRideActivity extends AppCompatActivity {
         mSpinnerAvailabilityType.setAdapter(arrayAdapterAvailabilityType);
 
         // Set selected
-        int selectedPosition = arrayAdapterAvailabilityType.getPosition(rideIntention.getAvailabilityType());
+
+        String availabilityType = rideIntention.getAvailabilityType();
+        String availabilityTypeText = (availabilityType.equals(RideIntention.AVAILABILITY_TYPE_GIVE))
+                ? giveRideString
+                : receiveRideString;
+
+        int selectedPosition = arrayAdapterAvailabilityType.getPosition(availabilityTypeText);
         mSpinnerAvailabilityType.setSelection(selectedPosition);
 
-        if( rideIntention.getAvailabilityType() == RideIntention.AVAILABILITY_TYPE_RECEIVE ){
+        if (rideIntention.getAvailabilityType() == RideIntention.AVAILABILITY_TYPE_RECEIVE) {
             mLayoutPlacesInCar.setVisibility(View.GONE);
         }
 
@@ -286,8 +305,8 @@ public class UpdateRideActivity extends AppCompatActivity {
 
     private void initializeSupportLists() {
         mAvailabilityTypeList = new ArrayList<String>();
-        mAvailabilityTypeList.add(RideIntention.AVAILABILITY_TYPE_GIVE);
-        mAvailabilityTypeList.add(RideIntention.AVAILABILITY_TYPE_RECEIVE);
+        mAvailabilityTypeList.add(getString(R.string.give_ride));
+        mAvailabilityTypeList.add(getString(R.string.receive_ride));
     }
 
     private void extractExtrasToRideIntention() {
