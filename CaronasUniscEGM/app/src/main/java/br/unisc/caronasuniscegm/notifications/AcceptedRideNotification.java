@@ -70,9 +70,6 @@ public class AcceptedRideNotification extends Notification {
         mBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
         mBuilder.setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
 
-        /*mBuilder.setPriority()
-                .setVibrate(new long[0]);*/
-
         NotificationManager manager = (NotificationManager)
                 context.getSystemService(context.NOTIFICATION_SERVICE);
         manager.notify(notificationId, mBuilder.build());
