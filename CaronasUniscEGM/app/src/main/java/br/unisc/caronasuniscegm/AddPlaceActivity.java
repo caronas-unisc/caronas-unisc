@@ -296,8 +296,14 @@ public class AddPlaceActivity extends ActionBarActivity {
         protected String doInBackground(String... params) {
 
             this.addresses = null;
+            // Latitude e longitude do quadrado de pesquisa no mapa que compreende a localizacao de SCS.
+            double lowerLeftLatitude = -29.782910;
+            double lowerLeftLongitude =  -52.471997;
+            double upperRightLatitude = -29.683785;
+            double upperRightLongitude =  -52.391660;
+
             try {
-                this.addresses = mGeocoder.getFromLocationName(this.text, 5);
+                this.addresses = mGeocoder.getFromLocationName(this.text, 5, lowerLeftLatitude, lowerLeftLongitude, upperRightLatitude, upperRightLongitude);
             } catch (IOException e) {
                 e.printStackTrace();
             }
