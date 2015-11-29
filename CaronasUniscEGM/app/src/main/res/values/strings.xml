@@ -1,4 +1,5 @@
 <resources>
+
     <!-- Preferences -->
     <string name="preference_file_key" translatable="false">br.unisc.caronasuniscegm.PREFS</string>
     <string name="preference_session_token" translatable="false">session_token</string>
@@ -117,5 +118,6 @@
     <string name="msg_available_places"> available place(s)</string>
     <string name="title_delete_availability">Delete availability</string>
     <string name="msg_delete_availability">Are you sure you want to delete this availability?</string>
+    <string name="empty_agenda">The agenda is empty for this week.</string>
 
 </resources>

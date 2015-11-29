@@ -16,6 +16,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -132,6 +133,9 @@ public class AgendaActivity extends AppCompatActivity {
 
                 ((AgendaAdapter) mAdapter).updateDataList(mRideIntentionList);
                 mButtonCopyLastWeekAgenda.setVisibility(View.GONE);
+
+                TextView emptyAgenda = (TextView)findViewById(R.id.txt_empty_agenda);
+                emptyAgenda.setVisibility(mRideIntentionList.isEmpty() ? View.VISIBLE : View.GONE);
             }
         };
 
@@ -195,9 +199,14 @@ public class AgendaActivity extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                if( mRideIntentionList.size() == 0 ){
+
+                if (mRideIntentionList.isEmpty()) {
                     mButtonCopyLastWeekAgenda.setVisibility(View.VISIBLE);
                 }
+
+                TextView emptyAgenda = (TextView)findViewById(R.id.txt_empty_agenda);
+                emptyAgenda.setVisibility(mRideIntentionList.isEmpty() ? View.VISIBLE : View.GONE);
+
                 ((AgendaAdapter) mAdapter).updateDataList(mRideIntentionList);
             }
         };

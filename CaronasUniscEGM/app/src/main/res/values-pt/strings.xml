@@ -94,5 +94,6 @@
     <string name="msg_available_places">lugar(es) disponíveis</string>
     <string name="title_delete_availability">Excluir disponibilidade</string>
     <string name="msg_delete_availability">Tem certeza que deseja excluir esta disponibilidade?</string>
+    <string name="empty_agenda">Nenhuma disponibilidade de carona definida para esta semana.</string>
 
 </resources>
