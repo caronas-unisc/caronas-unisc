@@ -13,9 +13,6 @@ import java.util.List;
 
 import br.unisc.caronasuniscegm.R;
 
-/**
- * Created by MateusFelipe on 21/11/2015.
- */
 public class SuggestionsCursosAdapter extends CursorAdapter {
     private List<Address> items;
 

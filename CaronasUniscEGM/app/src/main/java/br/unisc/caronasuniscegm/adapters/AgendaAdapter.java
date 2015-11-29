@@ -23,9 +23,6 @@ import br.unisc.caronasuniscegm.rest.RideIntention;
 import br.unisc.caronasuniscegm.utils.CalendarUtils;
 import br.unisc.caronasuniscegm.utils.LocaleUtils;
 
-/**
- * Created by MateusFelipe on 17/10/2015.
- */
 public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.ViewHolder> {
 
     private List<RideIntention> data = null;

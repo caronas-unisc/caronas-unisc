@@ -1,7 +1,6 @@
 package br.unisc.caronasuniscegm;
 
 import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
@@ -13,7 +12,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,7 +29,6 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -42,16 +39,12 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.TreeSet;
 
-import br.unisc.caronasuniscegm.adapters.AgendaAdapter;
 import br.unisc.caronasuniscegm.model.Ride;
 import br.unisc.caronasuniscegm.model.RideAvailability;
 import br.unisc.caronasuniscegm.rest.ApiEndpoints;
-import br.unisc.caronasuniscegm.rest.RideIntention;
 import br.unisc.caronasuniscegm.rest.User;
-import br.unisc.caronasuniscegm.utils.CalendarUtils;
 import br.unisc.caronasuniscegm.utils.LocaleUtils;
 import br.unisc.caronasuniscegm.utils.TokenUtils;
 

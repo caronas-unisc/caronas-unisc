@@ -33,16 +33,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import br.unisc.caronasuniscegm.model.RideAvailability;
 import br.unisc.caronasuniscegm.rest.ApiEndpoints;
 import br.unisc.caronasuniscegm.rest.RideIntention;
 import br.unisc.caronasuniscegm.utils.CalendarUtils;
 import br.unisc.caronasuniscegm.utils.LocaleUtils;
 import br.unisc.caronasuniscegm.utils.TokenUtils;
 
-/**
- * Created by mfelipe on 03/11/2015.
- */
 public class UpdateRideActivity extends AppCompatActivity {
 
     private TextView mTextDate;

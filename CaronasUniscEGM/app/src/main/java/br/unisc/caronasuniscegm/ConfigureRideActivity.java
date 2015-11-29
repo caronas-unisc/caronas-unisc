@@ -33,9 +33,6 @@ import br.unisc.caronasuniscegm.utils.TokenUtils;
 import br.unisc.caronasuniscegm.rest.ApiEndpoints;
 import br.unisc.caronasuniscegm.rest.RideIntention;
 
-/**
- * Created by MateusFelipe on 11/10/2015.
- */
 public class ConfigureRideActivity extends AppCompatActivity {
     /**
      * The number of pages (wizard steps) to show in this demo.

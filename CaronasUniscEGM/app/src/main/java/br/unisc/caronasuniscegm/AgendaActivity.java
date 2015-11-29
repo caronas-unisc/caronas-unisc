@@ -43,9 +43,6 @@ import br.unisc.caronasuniscegm.adapters.AgendaAdapter;
 import br.unisc.caronasuniscegm.rest.ApiEndpoints;
 import br.unisc.caronasuniscegm.rest.RideIntention;
 
-/**
- * Created by MateusFelipe on 11/10/2015.
- */
 public class AgendaActivity extends AppCompatActivity {
 
     private FloatingActionButton mButtonConfigureRide;

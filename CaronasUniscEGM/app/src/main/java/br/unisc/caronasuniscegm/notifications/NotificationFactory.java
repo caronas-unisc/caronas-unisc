@@ -11,6 +11,9 @@ public class NotificationFactory {
         switch (name) {
             case "accepted_ride":
                 return new AcceptedRideNotification(context, info);
+
+            case "asked_ride":
+                return new RideRequestNotification(context, info);
         }
 
         return null;

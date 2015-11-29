@@ -1,8 +1,5 @@
 package br.unisc.caronasuniscegm.model;
 
-/**
- * Created by henrique on 11/27/15.
- */
 public class Ride {
     private Integer idRide;
     private String status;

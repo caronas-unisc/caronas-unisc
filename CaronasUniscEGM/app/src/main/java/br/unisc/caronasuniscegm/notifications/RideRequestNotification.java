@@ -18,13 +18,13 @@ import br.unisc.caronasuniscegm.R;
 import br.unisc.caronasuniscegm.utils.CalendarUtils;
 import br.unisc.caronasuniscegm.utils.LocaleUtils;
 
-public class AcceptedRideNotification extends Notification {
+public class RideRequestNotification extends Notification {
 
     private String infoUser;
     private String infoDate;
     private String infoPeriod;
 
-    public AcceptedRideNotification(Context context, JSONObject info) {
+    public RideRequestNotification(Context context, JSONObject info) {
         super(context, info);
 
         try {
@@ -50,8 +50,8 @@ public class AcceptedRideNotification extends Notification {
         }
 
         String dateAndPeriod = context.getString(R.string.date_and_period, dayOfWeek, period);
-        String notificationTitle = context.getString(R.string.title_accept_ride_confirmation);
-        String notificationText = context.getString(R.string.notification_accepted_ride, infoUser,
+        String notificationTitle = context.getString(R.string.title_notification_ride_request);
+        String notificationText = context.getString(R.string.notification_ride_request, infoUser,
                 dateAndPeriod);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)

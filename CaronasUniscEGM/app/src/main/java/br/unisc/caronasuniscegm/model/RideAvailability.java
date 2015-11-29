@@ -2,9 +2,6 @@ package br.unisc.caronasuniscegm.model;
 
 import java.util.Date;
 
-/**
- * Created by henrique on 11/6/15.
- */
 public class RideAvailability {
     private Integer availabilityId;
     private String nmUserRequest;

@@ -10,9 +10,6 @@ import java.util.List;
 
 import br.unisc.caronasuniscegm.R;
 
-/**
- * Created by mfelipe on 19/10/2015.
- */
 public class CalendarUtils {
 
     public static String dateToString( Date date ){

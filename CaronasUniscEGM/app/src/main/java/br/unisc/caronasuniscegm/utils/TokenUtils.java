@@ -5,9 +5,6 @@ import android.content.SharedPreferences;
 
 import br.unisc.caronasuniscegm.R;
 
-/**
- * Created by MateusFelipe on 17/10/2015.
- */
 public class TokenUtils {
 
     public static String getToken(Context context) {

@@ -2,9 +2,6 @@ package br.unisc.caronasuniscegm.model;
 
 import java.util.HashMap;
 
-/**
- * Created by mfelipe on 04/11/2015.
- */
 public class Location {
     private Long mId;
     private String mName;

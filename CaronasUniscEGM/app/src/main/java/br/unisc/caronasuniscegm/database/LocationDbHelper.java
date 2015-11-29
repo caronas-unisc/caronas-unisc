@@ -4,9 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-/**
- * Created by mfelipe on 04/11/2015.
- */
 public class LocationDbHelper extends SQLiteOpenHelper {
 
     private static final String TEXT_TYPE = " TEXT";
