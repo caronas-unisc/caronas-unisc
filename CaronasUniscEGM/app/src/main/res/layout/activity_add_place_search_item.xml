@@ -1,7 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:background="#555">
 
     <TextView
         android:id="@+id/search_item"

@@ -25,30 +25,11 @@ public class CalendarUtils {
         now.setTime(date);
         calendar.setTime(date);
 
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
-        if( true || now.getTimeInMillis() < calendar.getTimeInMillis() ){
-            listUpcommingDays.add(context.getResources().getString(R.string.field_monday));
-        }
-
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
-        if( true || now.getTimeInMillis() < calendar.getTimeInMillis() ){
-            listUpcommingDays.add(context.getResources().getString(R.string.field_tuesday));
-        }
-
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
-        if( true || now.getTimeInMillis() < calendar.getTimeInMillis() ){
-            listUpcommingDays.add(context.getResources().getString(R.string.field_wednesday));
-        }
-
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
-        if( true || now.getTimeInMillis() < calendar.getTimeInMillis() ){
-            listUpcommingDays.add(context.getResources().getString(R.string.field_thursday));
-        }
-
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
-        if( true || now.getTimeInMillis() < calendar.getTimeInMillis() ){
-            listUpcommingDays.add(context.getResources().getString(R.string.field_friday));
-        }
+        listUpcommingDays.add(context.getResources().getString(R.string.field_monday));
+        listUpcommingDays.add(context.getResources().getString(R.string.field_tuesday));
+        listUpcommingDays.add(context.getResources().getString(R.string.field_wednesday));
+        listUpcommingDays.add(context.getResources().getString(R.string.field_thursday));
+        listUpcommingDays.add(context.getResources().getString(R.string.field_friday));
 
         return listUpcommingDays;
     }
