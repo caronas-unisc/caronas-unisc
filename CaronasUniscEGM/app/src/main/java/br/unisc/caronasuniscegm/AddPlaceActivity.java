@@ -83,6 +83,7 @@ public class AddPlaceActivity extends ActionBarActivity {
     private Button mBtnAddPin;
     private Button mBtnResetPin;
     private Spinner mSpinnerSavedLocations;
+    private LoadSugestionAddressesAsync loadSugestionAddressesAsync;
 
     private SearchView mSearchView;
 
@@ -138,7 +139,12 @@ public class AddPlaceActivity extends ActionBarActivity {
              */
             @Override
             public boolean onQueryTextChange(String newText) {
-                new LoadSugestionAddressesAsync(newText,getApplicationContext()).execute();
+
+                if( loadSugestionAddressesAsync != null ){
+                    loadSugestionAddressesAsync.cancel(true);
+                }
+                loadSugestionAddressesAsync = new LoadSugestionAddressesAsync(newText,getApplicationContext());
+                loadSugestionAddressesAsync.execute();
                 return true;
             }
         });
@@ -151,6 +157,7 @@ public class AddPlaceActivity extends ActionBarActivity {
 
             @Override
             public boolean onSuggestionClick(int position) {
+                mSearchView.clearFocus();
                 onSuggestionItemClick(position);
                 return true;
             }
