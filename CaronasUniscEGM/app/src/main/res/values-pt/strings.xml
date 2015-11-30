@@ -25,7 +25,7 @@
     <string name="title_activity_reset_password">Redefinir senha do Caronas UNISC</string>
     <string name="reset_password_email_sent">Um e-mail de redefinição de senha foi enviado para %1$s</string>
     <string name="title_activity_add_place">Selecionar local</string>
-    <string name="title_activity_agenda">Agenda</string>
+    <string name="title_activity_agenda">Agenda de disponibilidades</string>
     <string name="title_activity_configure_ride">Adicionar dias</string>
     <string name="finding_your_location">Procurando sua localização...</string>
     <string name="set_your_location">Definir local aqui</string>
@@ -86,7 +86,7 @@
     <string name="lbl_save_new_place">Salvar nos locais preferidos?</string>
     <string name="hint_place_name">Nome do local</string>
     <string name="help_chat">Use o chat para se comunicar e combinar detalhes com a pessoa que está dando/recebendo carona.</string>
-    <string name="msg_copy_last_week_agenda">Tem certeza que deseja repetir caronas da semana anterior?</string>
+    <string name="msg_copy_last_week_agenda">Tem certeza que deseja repetir as disponibilidades de carona da semana anterior?</string>
     <string name="msg_no_rides">\nEsta tela mostrará outras pessoas que podem dar e receber carona para a UNISC. Até o momento, ninguém foi encontrado com as mesmas preferências que você.\n\nCaso não tenha cadastrado suas disponibilidades de carona, selecione a opção Agenda no menu superior direito.</string>
     <string name="msg_waiting_confirmation">Esperando confirmação do motorista</string>
     <string name="msg_ride_confirmed">Carona confirmada</string>
@@ -94,11 +94,12 @@
     <string name="msg_available_places">lugar(es) disponíveis</string>
     <string name="title_delete_availability">Excluir disponibilidade</string>
     <string name="msg_delete_availability">Tem certeza que deseja excluir esta disponibilidade?</string>
-    <string name="empty_agenda">Nenhuma disponibilidade de carona definida para esta semana.</string>
+    <string name="empty_agenda">Nenhuma disponibilidade de carona definida para esta semana.\n\nUse os botões abaixo para configurar a sua agenda de disponibilidades.</string>
     <string name="title_notification_accepted_ride">Pedido de carona aceito</string>
     <string name="notification_accepted_ride">%1$s aceitou o seu pedido de carona para %2$s</string>
     <string name="title_notification_ride_request">Pedido de carona</string>
     <string name="notification_ride_request">%1$s está pedindo carona para %2$s</string>
     <string name="select_address">Selecione o endereço tocando no ícone do canto inferior direito.</string>
+    <string name="title_copy_last_week_agenda">Repetir agenda</string>
 
 </resources>
