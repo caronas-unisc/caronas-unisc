@@ -99,5 +99,6 @@
     <string name="notification_accepted_ride">%1$s aceitou o seu pedido de carona para %2$s</string>
     <string name="title_notification_ride_request">Pedido de carona</string>
     <string name="notification_ride_request">%1$s está pedindo carona para %2$s</string>
+    <string name="select_address">Selecione o endereço tocando no ícone do canto inferior direito.</string>
 
 </resources>

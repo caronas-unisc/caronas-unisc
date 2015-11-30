@@ -18,8 +18,8 @@
             android:id="@+id/info_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/lbl_address"
-            android:textSize="20sp" />
+            android:text="@string/select_address"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/vl_address"
@@ -39,7 +39,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_save_new_place"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
             <EditText
                 android:layout_width="match_parent"

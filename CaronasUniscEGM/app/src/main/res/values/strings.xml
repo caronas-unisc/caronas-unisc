@@ -124,5 +124,6 @@
     <string name="notification_accepted_ride">%1$s accepted your ride request for %2$s</string>
     <string name="title_notification_ride_request">Ride request</string>
     <string name="notification_ride_request">%1$s is asking a ride for %2$s</string>
+    <string name="select_address">Select the place by touching on the lower right icon.</string>
 
 </resources>

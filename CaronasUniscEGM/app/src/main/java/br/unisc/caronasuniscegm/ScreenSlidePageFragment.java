@@ -42,6 +42,7 @@ public class ScreenSlidePageFragment extends Fragment {
 
     // Select Place
     private TextView mVlAddress;
+    private TextView mInfoText;
     private Double latitude;
     private Double longitude;
     private String address;
@@ -190,6 +191,7 @@ public class ScreenSlidePageFragment extends Fragment {
         mLayoutSaveNewPlace = (LinearLayout) rootView.findViewById( R.id.layout_save_new_place );
         setVisibilityLayoutAddPlace(View.GONE);
 
+        mInfoText = (TextView) rootView.findViewById(R.id.info_text);
         mVlAddress = (TextView) rootView.findViewById(R.id.vl_address);
         mTextNewPlaceName = (EditText) rootView.findViewById(R.id.txt_new_place_name);
 
@@ -236,6 +238,7 @@ public class ScreenSlidePageFragment extends Fragment {
                     setVisibilityLayoutAddPlace(View.VISIBLE);
                 }
 
+                mInfoText.setText(getString(R.string.lbl_address));
                 mVlAddress.setText(address);
             }
         }
