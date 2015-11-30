@@ -48,8 +48,8 @@
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".LoggedInTemporaryActivity"
-            android:label="@string/title_activity_logged_in_temporary" >
+            android:name=".DashboardActivity"
+            android:label="@string/title_activity_dashboard" >
         </activity>
         <activity
             android:name=".LoginActivity"
@@ -76,7 +76,7 @@
             android:label="@string/title_activity_agenda" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".LoggedInTemporaryActivity" />
+                android:value=".DashboardActivity" />
         </activity>
         <activity
             android:name=".ConfigureRideActivity"
@@ -99,7 +99,7 @@
             android:label="@string/title_activity_chat" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".LoggedInTemporaryActivity" />
+                android:value=".DashboardActivity" />
         </activity>
         <activity android:name=".ViewMapActivity"
             android:label="@string/title_activity_view_map" >

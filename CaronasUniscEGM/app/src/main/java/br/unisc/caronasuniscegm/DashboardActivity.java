@@ -21,7 +21,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -48,7 +47,7 @@ import br.unisc.caronasuniscegm.rest.User;
 import br.unisc.caronasuniscegm.utils.LocaleUtils;
 import br.unisc.caronasuniscegm.utils.TokenUtils;
 
-public class LoggedInTemporaryActivity extends ActionBarActivity {
+public class DashboardActivity extends ActionBarActivity {
 
     private User currentUser;
     private final String LOG_TAG = "CaronasUNISC-LoggedIn";
@@ -57,15 +56,12 @@ public class LoggedInTemporaryActivity extends ActionBarActivity {
     private ArrayList<RideAvailability> mData;
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     private RideAvailability rideAvailabilityClicked;
-
-
-    ListView listView;
-
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_logged_in_temporary);
+        setContentView(R.layout.activity_dashboard);
 
         listView = (ListView) findViewById(R.id.listView);
 
@@ -76,14 +72,12 @@ public class LoggedInTemporaryActivity extends ActionBarActivity {
         mAdapter = new MyCustomAdapter();
 
         listView.setAdapter(mAdapter);
-
     }
 
     @Override
     public void onResume(){
         super.onResume();
         updateThisWeekMatchList();
-
     }
 
     //Adapter Class
