@@ -1,6 +1,8 @@
 <resources>
+
     <!-- Preferences -->
     <string name="preference_file_key" translatable="false">br.unisc.caronasuniscegm.PREFS</string>
+    <string name="preference_last_notification_id" translatable="false">last_notification_id</string>
     <string name="preference_session_token" translatable="false">session_token</string>
     <string name="preference_user_object" translatable="false">user_object</string>
 
@@ -13,10 +15,11 @@
     <string name="field_name">Name</string>
     <string name="field_email">E-mail</string>
     <string name="field_password">Password</string>
+    <string name="loading">Loading...</string>
     <string name="please_wait">Please wait</string>
     <string name="service_unavailable">Server unavailable. Verify your internet connection.</string>
     <string name="ok">OK</string>
-    <string name="title_activity_logged_in_temporary">Welcome</string>
+    <string name="title_activity_dashboard">Welcome</string>
     <string name="welcome_with_name">Welcome %1$s</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_login">Login</string>
@@ -28,9 +31,9 @@
     <string name="reset_password">Reset password</string>
     <string name="title_activity_reset_password">Reset password</string>
     <string name="reset_password_email_sent">A password reset email was sent to %1$s</string>
-    <string name="title_activity_add_place">AddPlaceActivity</string>
+    <string name="title_activity_add_place">Select place</string>
     <string name="title_activity_agenda">Agenda</string>
-    <string name="title_activity_configure_ride">Configure a Ride</string>
+    <string name="title_activity_configure_ride">Add availability</string>
     <string name="action_previous">Previous</string>
     <string name="action_next">Next</string>
     <string name="action_finish">Finish</string>
@@ -44,16 +47,16 @@
     <string name="field_thursday">Thursday</string>
     <string name="field_friday">Friday</string>
     <string name="btn_add_place">Add place</string>
-    <string name="lbl_address">Address:</string>
+    <string name="lbl_address">Address</string>
     <string name="lbl_latitude">Latitude:</string>
     <string name="lbl_longitude">Longitude:</string>
     <string name="lbl_ride_intention">Ride Intention:</string>
-    <string name="lbl_give_ride">Give</string>
-    <string name="lbl_receive_ride">Receive</string>
+    <string name="lbl_give_ride">I want to give ride</string>
+    <string name="lbl_receive_ride">I want to receive ride</string>
     <string name="lbl_places_in_car">Places in Car</string>
     <string name="txt_no_ride_intentions">No ride intentions recorded for this week.</string>
     <string name="text_title_agenda_list">Agenda for this week:</string>
-    <string name="lbl_availability_type">Availability Type</string>
+    <string name="lbl_availability_type">Availability type:</string>
     <string name="finding_your_location">Finding your location...</string>
     <string name="set_your_location">Set location here</string>
     <string name="selected_location">Selected location</string>
@@ -64,7 +67,7 @@
     <string name="lbl_change">Change</string>
     <string name="lbl_save">Save</string>
     <string name="lbl_delete">Delete</string>
-    <string name="title_activity_update_ride">Update Ride</string>
+    <string name="title_activity_update_ride">Update availability</string>
     <string name="msg_action_success">The action was executed successfully.</string>
     <string name="lbl_your_saved_locations">Your saved locations</string>
     <string name="lbl_finish">Finish</string>
@@ -76,8 +79,51 @@
     <string name="lbl_save_new_place">Save in your favorite places?</string>
     <string name="lbl_name">Name</string>
     <string name="msg_last_week_empty_agenda">Last week, your agenda was empty.</string>
-    <string name="msg_select_between_custom_location">Select between your custom locations</string>
+    <string name="msg_select_between_custom_location">Select from saved locations</string>
     <string name="btn_select_location">Select Location</string>
     <string name="search_hint">Search Places</string>
     <string name="action_search">Search Places</string>
+    <string name="title_activity_chat">Loading...</string>
+    <string name="view_map">View map</string>
+    <string name="send">Send</string>
+    <string name="title_copy_last_week_agenda">Copy agenda</string>
+    <string name="msg_copy_last_week_agenda">Do you really wish to copy your agenda from last week?</string>
+    <string name="lbl_yes">Yes</string>
+    <string name="lbl_no">No</string>
+    <string name="date_and_period">%1$s at %2$s</string>
+    <string name="you">You</string>
+    <string name="title_activity_view_map">Map view</string>
+    <string name="title_accept_ride_confirmation">Confirmation</string>
+    <string name="msg_accept_ride_confirmation">Are you sure you want to accept the ride?</string>
+    <string name="title_ask_ride_confirmation">Confirmation</string>
+    <string name="msg_ask_ride_confirmation">Are you sure you want to ask the ride?</string>
+    <string name="btn_ask_ride">Ask Ride</string>
+    <string name="btn_ride_pending">Ride Pending</string>
+    <string name="btn_chat">Chat</string>
+    <string name="btn_accept_ride">Accept Ride</string>
+    <string name="lbl_agenda">Agenda</string>
+    <string name="lbl_atualizar">Refresh</string>
+    <string name="last_week_agenda_empty">Last week your agenda was empty.</string>
+    <string name="error_select_place">Select a place before moving on.</string>
+    <string name="error_select_places_car">Select a valid amount of places in your car before moving on.</string>
+    <string name="error_availability_type">Select one availability type before moving on.</string>
+    <string name="error_select_day">Select at least one day before moving on.</string>
+    <string name="error_select_period">Select at least one period before moving on.</string>
+    <string name="search_address">Search address...</string>
+    <string name="hint_place_name">Place name</string>
+    <string name="help_chat">Use the chat to communicate with the person that you will give/receive ride.</string>
+    <string name="msg_no_rides">\nThis interface will show people that can give and receive rides to UNISC. Until now, no one was found with the same preferences as you.\n\nIf you have not configured your preferences, select the option Agenda in the upper right menu.</string>
+    <string name="msg_waiting_confirmation">Waiting driver confirmation</string>
+    <string name="msg_ride_confirmed">Ride confirmed</string>
+    <string name="msg_asking_ride">Is asking a ride</string>
+    <string name="msg_available_places"> available place(s)</string>
+    <string name="title_delete_availability">Delete availability</string>
+    <string name="msg_delete_availability">Are you sure you want to delete this availability?</string>
+    <string name="empty_agenda">The agenda is empty for this week.</string>
+    <string name="title_notification_accepted_ride">Ride request accepted</string>
+    <string name="notification_accepted_ride">%1$s accepted your ride request for %2$s</string>
+    <string name="title_notification_ride_request">Ride request</string>
+    <string name="notification_ride_request">%1$s is asking a ride for %2$s</string>
+    <string name="select_address">Select the place by touching on the lower right icon.</string>
+
 </resources>

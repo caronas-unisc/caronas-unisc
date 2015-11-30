@@ -1,11 +1,8 @@
 package br.unisc.caronasuniscegm;
 
-/**
- * Created by MateusFelipe on 11/10/2015.
- */
-
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,18 +42,15 @@ public class ScreenSlidePageFragment extends Fragment {
 
     // Select Place
     private TextView mVlAddress;
-    private TextView mVlLatitude;
-    private TextView mVlLongitude;
+    private TextView mInfoText;
     private Double latitude;
     private Double longitude;
     private String address;
     private String waypoints;
-    private LinearLayout mLayoutLblSaveNewPlace;
-    private LinearLayout mLayoutLblPlaceName;
-    private LinearLayout mLayoutBtnSavePlace;
+    private LinearLayout mLayoutSaveNewPlace;
     private LinearLayout mLayoutPlaceInCar;
     private EditText mTextNewPlaceName;
-    private Button mBtnAddPlace;
+    private FloatingActionButton mBtnAddPlace;
     private Button mBtnSaveNewPlace;
     private LocationDataSource mLocationDataSource;
 
@@ -191,18 +185,14 @@ public class ScreenSlidePageFragment extends Fragment {
 
     private void configureChoosePlace(ViewGroup rootView) {
 
-        mBtnAddPlace = (Button) rootView.findViewById( R.id.btnAddPlace );
+        mBtnAddPlace = (FloatingActionButton) rootView.findViewById( R.id.btnAddPlace );
         mBtnSaveNewPlace = (Button) rootView.findViewById( R.id.btn_save );
 
-        mLayoutLblSaveNewPlace = (LinearLayout) rootView.findViewById( R.id.layout_lbl_save_new_place );
-        mLayoutLblPlaceName = (LinearLayout) rootView.findViewById( R.id.layout_lbl_place_name );
-        mLayoutBtnSavePlace = (LinearLayout) rootView.findViewById( R.id.layout_btn_save_place );
-
+        mLayoutSaveNewPlace = (LinearLayout) rootView.findViewById( R.id.layout_save_new_place );
         setVisibilityLayoutAddPlace(View.GONE);
 
+        mInfoText = (TextView) rootView.findViewById(R.id.info_text);
         mVlAddress = (TextView) rootView.findViewById(R.id.vl_address);
-        mVlLatitude = (TextView) rootView.findViewById(R.id.vl_latitude);
-        mVlLongitude = (TextView) rootView.findViewById(R.id.vl_longitude);
         mTextNewPlaceName = (EditText) rootView.findViewById(R.id.txt_new_place_name);
 
         mLocationDataSource = new LocationDataSource(getActivity().getApplicationContext());
@@ -230,9 +220,7 @@ public class ScreenSlidePageFragment extends Fragment {
     }
 
     private void setVisibilityLayoutAddPlace(int gone) {
-        mLayoutLblSaveNewPlace.setVisibility(gone);
-        mLayoutLblPlaceName.setVisibility(gone);
-        mLayoutBtnSavePlace.setVisibility(gone);
+        mLayoutSaveNewPlace.setVisibility(gone);
     }
 
     @Override
@@ -250,9 +238,8 @@ public class ScreenSlidePageFragment extends Fragment {
                     setVisibilityLayoutAddPlace(View.VISIBLE);
                 }
 
+                mInfoText.setText(getString(R.string.lbl_address));
                 mVlAddress.setText(address);
-                mVlLatitude.setText(latitude + "");
-                mVlLongitude.setText(longitude + "");
             }
         }
     }

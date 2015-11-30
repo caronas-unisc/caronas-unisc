@@ -1,6 +1,9 @@
 package br.unisc.caronasuniscegm;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,6 +16,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -39,13 +43,10 @@ import br.unisc.caronasuniscegm.adapters.AgendaAdapter;
 import br.unisc.caronasuniscegm.rest.ApiEndpoints;
 import br.unisc.caronasuniscegm.rest.RideIntention;
 
-/**
- * Created by MateusFelipe on 11/10/2015.
- */
 public class AgendaActivity extends AppCompatActivity {
 
     private FloatingActionButton mButtonConfigureRide;
-    private Button mButtonCopyLastWeekAgenda;
+    private FloatingActionButton mButtonCopyLastWeekAgenda;
     private List<RideIntention> mRideIntentionList;
     private List<RideIntention> thisWeekRideIntentionList;
     private ProgressDialog pd;
@@ -54,12 +55,15 @@ public class AgendaActivity extends AppCompatActivity {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
+    private Context mContext;
+
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_agenda);
+       super.onCreate(savedInstanceState);
+       setContentView(R.layout.activity_agenda);
+        this.mContext = getApplicationContext();
 
        mButtonConfigureRide = (FloatingActionButton) findViewById( R.id.add_ride );
-       mButtonCopyLastWeekAgenda = (Button) findViewById( R.id.btn_copy_last_week_ride );
+       mButtonCopyLastWeekAgenda = (FloatingActionButton) findViewById( R.id.btn_copy_last_week_ride );
 
        mButtonConfigureRide.setOnClickListener(new View.OnClickListener() {
            public void onClick(View v) {
@@ -70,10 +74,22 @@ public class AgendaActivity extends AppCompatActivity {
 
         mButtonCopyLastWeekAgenda.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                copyLastWeekAgenda();
+
+                new AlertDialog.Builder(v.getContext())
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle(R.string.title_copy_last_week_agenda)
+                        .setMessage(R.string.msg_copy_last_week_agenda)
+                        .setPositiveButton(R.string.lbl_yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                copyLastWeekAgenda();
+                            }
+                        })
+                        .setNegativeButton(R.string.lbl_no, null)
+                        .show();
             }
         });
-       mButtonCopyLastWeekAgenda.setVisibility(View.INVISIBLE);
+       mButtonCopyLastWeekAgenda.setVisibility(View.GONE);
 
        mRideIntentionList = new ArrayList<RideIntention>();
 
@@ -109,10 +125,14 @@ public class AgendaActivity extends AppCompatActivity {
                 }
                 if( mRideIntentionList.size() == 0 ){
                     Toast.makeText(getApplicationContext(),
-                            "Last week, your agenda was empty." , Toast.LENGTH_SHORT).show();
+                            getString(R.string.last_week_agenda_empty), Toast.LENGTH_SHORT).show();
                 }
 
                 ((AgendaAdapter) mAdapter).updateDataList(mRideIntentionList);
+                mButtonCopyLastWeekAgenda.setVisibility(View.GONE);
+
+                TextView emptyAgenda = (TextView)findViewById(R.id.txt_empty_agenda);
+                emptyAgenda.setVisibility(mRideIntentionList.isEmpty() ? View.VISIBLE : View.GONE);
             }
         };
 
@@ -130,7 +150,7 @@ public class AgendaActivity extends AppCompatActivity {
         Date date = new Date();
 
         String url = ApiEndpoints.RIDE_AVAIABILITIES + "/week/repeat";
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.PATCH, url,
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.PUT, url,
                 successListener, errorListener){
             @Override
             public HashMap<String, String> getHeaders() {
@@ -176,9 +196,14 @@ public class AgendaActivity extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                if( mRideIntentionList.size() == 0 ){
+
+                if (mRideIntentionList.isEmpty()) {
                     mButtonCopyLastWeekAgenda.setVisibility(View.VISIBLE);
                 }
+
+                TextView emptyAgenda = (TextView)findViewById(R.id.txt_empty_agenda);
+                emptyAgenda.setVisibility(mRideIntentionList.isEmpty() ? View.VISIBLE : View.GONE);
+
                 ((AgendaAdapter) mAdapter).updateDataList(mRideIntentionList);
             }
         };
@@ -261,6 +286,8 @@ public class AgendaActivity extends AppCompatActivity {
         intent.putExtra("startingLocationLatitude", rideIntention.getStartingLocationLatitude());
         intent.putExtra("startingLocationLongitude", rideIntention.getStartingLocationLongitude());
         intent.putExtra("availablePlacesInCar", rideIntention.getAvailablePlacesInCar());
+
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 }

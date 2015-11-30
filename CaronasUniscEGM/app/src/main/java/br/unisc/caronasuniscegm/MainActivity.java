@@ -1,18 +1,19 @@
 package br.unisc.caronasuniscegm;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
+import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -25,6 +26,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import br.unisc.caronasuniscegm.receivers.NotificationCheckBroadcastReceiver;
 import br.unisc.caronasuniscegm.rest.ApiEndpoints;
 
 public class MainActivity extends AppCompatActivity {
@@ -36,7 +38,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        TextView txt = (TextView) findViewById(R.id.caronas_unisc_title);
+        Typeface font = Typeface.createFromAsset(getAssets(), "Lato-Regular.ttf");
+        txt.setTypeface(font);
+
+        setAlarm();
         checkSession();
+    }
+
+    public void setAlarm() {
+        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, NotificationCheckBroadcastReceiver.class);
+        PendingIntent pi = PendingIntent.getBroadcast(this, 0, intent, 0);
+        am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 20, pi);
     }
 
     public void checkSession() {
@@ -61,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                         responseJson.toString());
                 editor.commit();
 
-                Intent intent = new Intent(MainActivity.this, LoggedInTemporaryActivity.class);
+                Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
                 startActivity(intent);
                 finish();
             }

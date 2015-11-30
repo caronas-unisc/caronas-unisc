@@ -9,14 +9,11 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -153,10 +150,15 @@ public class LoginActivity extends AppCompatActivity {
             JSONObject userJson = json.getJSONObject("user");
             editor.putString(getString(R.string.preference_user_object), userJson.toString());
 
+            // Guarda ID da última notificação nas Shared Preferences
+            int lastNotificationId = json.getInt("last_notification_id");
+            editor.putString(getString(R.string.preference_last_notification_id),
+                    Integer.toString(lastNotificationId));
+
             editor.commit();
 
             // Vai para a activity de usuário logado
-            Intent intent = new Intent(this, LoggedInTemporaryActivity.class);
+            Intent intent = new Intent(this, DashboardActivity.class);
             startActivity(intent);
             finish();
         } catch (JSONException e) {

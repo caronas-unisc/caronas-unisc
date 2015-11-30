@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.util.Calendar;
 import java.util.List;
 
 import br.unisc.caronasuniscegm.AgendaActivity;
@@ -18,10 +21,8 @@ import br.unisc.caronasuniscegm.R;
 import br.unisc.caronasuniscegm.UpdateRideActivity;
 import br.unisc.caronasuniscegm.rest.RideIntention;
 import br.unisc.caronasuniscegm.utils.CalendarUtils;
+import br.unisc.caronasuniscegm.utils.LocaleUtils;
 
-/**
- * Created by MateusFelipe on 17/10/2015.
- */
 public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.ViewHolder> {
 
     private List<RideIntention> data = null;
@@ -31,10 +32,7 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.ViewHolder
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         // each data item is just a string in this case
         public TextView txtDate;
-        public TextView txtPeriod;
         public TextView txtAvailabilityType;
-        public TextView txtPlacesInCar;
-        public TextView txtStartingLocationAddress;
         public TextView txtDataPosition;
 
         public ImageView iconGiveReceiveRide;
@@ -46,13 +44,8 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.ViewHolder
         public ViewHolder(View v, IMyViewHolderClicks listener) {
             super(v);
             txtDate = (TextView) v.findViewById(R.id.txt_date);
-            txtPeriod = (TextView) v.findViewById(R.id.txt_period);
             txtAvailabilityType = (TextView) v.findViewById(R.id.txt_availability_type);
-            txtPlacesInCar = (TextView) v.findViewById(R.id.txt_places_in_car);
-            txtStartingLocationAddress = (TextView) v.findViewById(R.id.txt_starting_location_address);
             txtDataPosition = (TextView) v.findViewById(R.id.txt_data_position);
-            iconGiveReceiveRide = (ImageView) v.findViewById(R.id.icon_give_receive_ride);
-            //layoutAvaiablePlacesInCar = (LinearLayout) v.findViewById(R.id.layout_places_in_car);
 
             mListener = listener;
             v.setOnClickListener(this);
@@ -77,7 +70,7 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.ViewHolder
     // Create new views (invoked by the layout manager)
     @Override
     public AgendaAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-    int viewType) {
+                                                       int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.activity_agenda_item_row, parent, false);
@@ -98,27 +91,20 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.ViewHolder
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-
         RideIntention rideIntention = getData().get(position);
-        holder.txtDataPosition.setText(position + "");
-        holder.txtDate.setText( CalendarUtils.dateToString(rideIntention.getDate()) );
-        holder.txtPeriod.setText(rideIntention.getPeriod());
-        holder.txtAvailabilityType.setText(rideIntention.getAvailabilityType());
-        if( rideIntention.getAvailabilityType().equals(RideIntention.AVAILABILITY_TYPE_GIVE)){
-            holder.txtPlacesInCar.setText( rideIntention.getAvailablePlacesInCar() + "" );
-            holder.txtStartingLocationAddress.setText(rideIntention.getStartingLocationAddress());
-            Drawable drawable = mContext.getResources().getDrawable(android.R.mipmap.sym_def_app_icon);
-            holder.iconGiveReceiveRide.setImageDrawable(drawable);
 
-            //holder.layoutAddress.setVisibility(View.GONE);
-            //holder.layoutAvaiablePlacesInCar.setVisibility(View.VISIBLE);
-        }else{
-            holder.txtStartingLocationAddress.setText(rideIntention.getStartingLocationAddress());
-            Drawable drawable = mContext.getResources().getDrawable(android.R.mipmap.sym_def_app_icon);
-            holder.iconGiveReceiveRide.setImageDrawable(drawable);
-            //holder.layoutAvaiablePlacesInCar.setVisibility(View.GONE);
-            //holder.layoutAddress.setVisibility(View.VISIBLE);
-        }
+        String dayOfWeek = CalendarUtils.dateToDayOfTheWeek(mContext, rideIntention.getDate());
+        String period = LocaleUtils.periodToLocalizedString(mContext, rideIntention.getPeriod());
+        String dateAndPeriod = mContext.getString(R.string.date_and_period, dayOfWeek,
+                period.toLowerCase());
+
+        holder.txtDataPosition.setText(position + "");
+        holder.txtDate.setText(dateAndPeriod);
+
+        String type = rideIntention.getAvailabilityType();
+        int typeStringId = (type.equals("receive")) ? R.string.receive_ride : R.string.give_ride;
+
+        holder.txtAvailabilityType.setText(mContext.getString(typeStringId).toLowerCase());
     }
 
     // Return the size of your dataset (invoked by the layout manager)

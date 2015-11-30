@@ -13,9 +13,6 @@ import java.util.List;
 
 import br.unisc.caronasuniscegm.R;
 
-/**
- * Created by MateusFelipe on 21/11/2015.
- */
 public class SuggestionsCursosAdapter extends CursorAdapter {
     private List<Address> items;
 
@@ -35,6 +32,9 @@ public class SuggestionsCursosAdapter extends CursorAdapter {
         String fullAddress = "";
         for(int i = 0; i < items.get(cursor.getPosition()).getMaxAddressLineIndex(); i++) {
             fullAddress += (items.get(cursor.getPosition()).getAddressLine(i));
+            if( i + 1 <  items.get(cursor.getPosition()).getMaxAddressLineIndex() ){
+                fullAddress += " - ";
+            }
         }
 
         text.setText(fullAddress);

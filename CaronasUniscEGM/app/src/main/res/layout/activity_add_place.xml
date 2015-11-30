@@ -45,6 +45,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:background="@android:color/white"
             android:orientation="vertical" >
 
@@ -52,7 +56,6 @@
                 android:id="@+id/text_view_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
                 android:text="@string/selected_location"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="#28b54c" />
@@ -61,7 +64,6 @@
                 android:id="@+id/adress_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="@string/getting_location"
@@ -70,26 +72,20 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="124dp"
+            android:layout_height="108dp"
             android:layout_margin="8dp"
             android:background="@android:color/white"
             android:orientation="vertical"
             android:layout_gravity="center_horizontal|bottom"
             android:weightSum="1">
 
-            <TextView
-                android:id="@+id/text_saved_locations"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="@string/lbl_your_saved_locations"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="#28b54c" />
-
             <Spinner
                 android:id="@+id/spinner_saved_locations"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="46dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginTop="4dp"
                 android:layout_marginBottom="10dp" />
 
             <LinearLayout

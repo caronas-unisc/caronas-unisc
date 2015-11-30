@@ -7,12 +7,16 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +24,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Spinner;
@@ -49,6 +54,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -97,14 +104,20 @@ public class AddPlaceActivity extends ActionBarActivity {
 
         mSearchView =
                 new SearchView(getSupportActionBar().getThemedContext());
-        mSearchView.setQueryHint("Search for Places…");
+        mSearchView.setQueryHint(getString(R.string.search_address));
         mSearchView.clearFocus();
         mSearchView.setIconified(true);
 
         menu.add("Search")
-                .setIcon(R.drawable.maps_marker_icon)
+                .setIcon(R.drawable.abc_ic_search_api_mtrl_alpha)
                 .setActionView(mSearchView)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+        try {
+            changeSearchViewIcons();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
@@ -142,6 +155,42 @@ public class AddPlaceActivity extends ActionBarActivity {
         });
 
         return true;
+    }
+
+    private void changeSearchViewIcons() throws ClassNotFoundException, NoSuchMethodException,
+            InvocationTargetException, IllegalAccessException {
+        // Troca ícone da busca para branco
+        int searchImgId = getResources().getIdentifier("android:id/search_button", null, null);
+        ImageView v = (ImageView) mSearchView.findViewById(searchImgId);
+        if (v != null)
+            v.setImageResource(R.drawable.abc_ic_search_api_mtrl_alpha);
+
+        // Troca ícone de fechar busca para branco
+        int closeButtonId = getResources().getIdentifier("android:id/search_close_btn", null, null);
+        ImageView closeButtonImage = (ImageView) mSearchView.findViewById(closeButtonId);
+        if (closeButtonImage != null)
+            closeButtonImage.setImageResource(R.drawable.abc_ic_clear_mtrl_alpha);
+
+        // Accessing the SearchAutoComplete
+        int queryTextViewId = getResources().getIdentifier("android:id/search_src_text", null, null);
+        View autoComplete = mSearchView.findViewById(queryTextViewId);
+
+        Class<?> clazz = Class.forName("android.widget.SearchView$SearchAutoComplete");
+
+        SpannableStringBuilder stopHint = new SpannableStringBuilder("   ");
+        stopHint.append(getString(R.string.search_address));
+
+        // Add the icon as an spannable
+        Drawable searchIcon = getResources().getDrawable(R.drawable.abc_ic_search_api_mtrl_alpha);
+        Method textSizeMethod = clazz.getMethod("getTextSize");
+        Float rawTextSize = (Float)textSizeMethod.invoke(autoComplete);
+        int textSize = (int) (rawTextSize * 1.25);
+        searchIcon.setBounds(0, 0, textSize, textSize);
+        stopHint.setSpan(new ImageSpan(searchIcon), 1, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        // Set the new hint text
+        Method setHintMethod = clazz.getMethod("setHint", CharSequence.class);
+        setHintMethod.invoke(autoComplete, stopHint);
     }
 
     private void onSuggestionItemClick(int position) {
@@ -247,8 +296,14 @@ public class AddPlaceActivity extends ActionBarActivity {
         protected String doInBackground(String... params) {
 
             this.addresses = null;
+            // Latitude e longitude do quadrado de pesquisa no mapa que compreende a localizacao de SCS.
+            double lowerLeftLatitude = -29.782910;
+            double lowerLeftLongitude =  -52.471997;
+            double upperRightLatitude = -29.683785;
+            double upperRightLongitude =  -52.391660;
+
             try {
-                this.addresses = mGeocoder.getFromLocationName(this.text, 5);
+                this.addresses = mGeocoder.getFromLocationName(this.text, 5, lowerLeftLatitude, lowerLeftLongitude, upperRightLatitude, upperRightLongitude);
             } catch (IOException e) {
                 e.printStackTrace();
             }

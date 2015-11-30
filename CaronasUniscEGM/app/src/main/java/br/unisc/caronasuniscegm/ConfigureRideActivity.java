@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
@@ -33,9 +35,6 @@ import br.unisc.caronasuniscegm.utils.TokenUtils;
 import br.unisc.caronasuniscegm.rest.ApiEndpoints;
 import br.unisc.caronasuniscegm.rest.RideIntention;
 
-/**
- * Created by MateusFelipe on 11/10/2015.
- */
 public class ConfigureRideActivity extends AppCompatActivity {
     /**
      * The number of pages (wizard steps) to show in this demo.
@@ -50,6 +49,8 @@ public class ConfigureRideActivity extends AppCompatActivity {
 
     private List<String> selectedPeriodList;
     private List<String> selectedDayList;
+
+    private int numberOfPendingRequests = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +72,13 @@ public class ConfigureRideActivity extends AppCompatActivity {
                 // fragment expose actions itself (rather than the activity exposing actions),
                 // but for simplicity, the activity provides the actions in this sample.
                 invalidateOptionsMenu();
+            }
+        });
+
+        mPager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
             }
         });
 
@@ -134,7 +142,8 @@ public class ConfigureRideActivity extends AppCompatActivity {
     private boolean validateSelectedPeriods() {
         ScreenSlidePageFragment page3 = (ScreenSlidePageFragment) mPagerAdapter.getRegisteredFragment(3);
         if( page3.getSelectedPeriods() == null || page3.getSelectedPeriods().size() == 0 ){
-            Toast.makeText(getApplicationContext(),"Select at least one period before moving on.",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.error_select_period),
+                    Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -144,7 +153,8 @@ public class ConfigureRideActivity extends AppCompatActivity {
     private boolean validateSelectedDays() {
         ScreenSlidePageFragment page2 = (ScreenSlidePageFragment) mPagerAdapter.getRegisteredFragment(2);
         if( page2.getSelectedDays() == null || page2.getSelectedDays().size() == 0 ){
-            Toast.makeText(getApplicationContext(),"Select at least one day before moving on.",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.error_select_day),
+                    Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -154,12 +164,14 @@ public class ConfigureRideActivity extends AppCompatActivity {
     private boolean validateAvailabilityType() {
         ScreenSlidePageFragment page1 = (ScreenSlidePageFragment) mPagerAdapter.getRegisteredFragment(1);
         if( page1.getAvailabilityType() == null ){
-            Toast.makeText(getApplicationContext(),"Select one availability type before moving on.",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.error_availability_type),
+                    Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if( page1.getAvailabilityType().equals(RideIntention.AVAILABILITY_TYPE_GIVE) && page1.getPlacesInCar() == 0 ){
-            Toast.makeText(getApplicationContext(),"Select a valid amount of places in your car before moving on.",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.error_select_places_car),
+                    Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -168,8 +180,9 @@ public class ConfigureRideActivity extends AppCompatActivity {
 
     private boolean validateChoosePlace() {
         ScreenSlidePageFragment page0 = (ScreenSlidePageFragment) mPagerAdapter.getRegisteredFragment(0);
-        if( page0.getLatitude() == null ){
-            Toast.makeText(getApplicationContext(),"Select a place before moving on.",Toast.LENGTH_SHORT).show();
+        if (page0.getLatitude() == null) {
+            Toast.makeText(getApplicationContext(),
+                    getString(R.string.error_select_place), Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -214,12 +227,14 @@ public class ConfigureRideActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         // Resposta de sucesso
         Response.Listener<JSONObject> successListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject responseJson) {
-                finish();
+                numberOfPendingRequests--;
+                if (numberOfPendingRequests == 0) {
+                    finish();
+                }
             }
         };
 
@@ -229,20 +244,23 @@ public class ConfigureRideActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError volleyError) {
                 hideProgressDialog();
                 volleyError.printStackTrace();
-
             }
         };
 
-        for( String date : selectedDayList ){
+        showProgressDialog();
 
-            for( String period : selectedPeriodList ){
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        for (String date : selectedDayList) {
+            for (String period : selectedPeriodList) {
+                numberOfPendingRequests++;
+
+                String periodUrlSegment = getPeriodUrlSegment(period);
 
                 // Envia requisição
-                showProgressDialog();
-
-                String url = ApiEndpoints.RIDE_AVAIABILITIES + "/" + date + "/" + period.toLowerCase();
-                JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, requestJson,
-                        successListener, errorListener){
+                String url = ApiEndpoints.RIDE_AVAIABILITIES + "/" + date + "/" + periodUrlSegment;
+                JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url,
+                        requestJson, successListener, errorListener){
                     @Override
                     public HashMap<String, String> getHeaders() {
                         HashMap<String, String> params = new HashMap<String, String>();
@@ -252,16 +270,29 @@ public class ConfigureRideActivity extends AppCompatActivity {
                 };
 
                 request.setRetryPolicy(new DefaultRetryPolicy(ApiEndpoints.TIMEOUT,
-                        DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                        DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                        DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-                RequestQueue queue = Volley.newRequestQueue(this);
                 queue.add(request);
-
             }
         }
     }
 
+    private String getPeriodUrlSegment(String periodLabel) {
+        if (periodLabel.equalsIgnoreCase(getString(R.string.field_morning))) {
+            return "morning";
+        }
 
+        if (periodLabel.equalsIgnoreCase(getString(R.string.field_afternoon))) {
+            return "afternoon";
+        }
+
+        if (periodLabel.equalsIgnoreCase(getString(R.string.field_night))) {
+            return "night";
+        }
+
+        return null;
+    }
 
     /**
      * A simple pager adapter that represents 5 {@link ScreenSlidePageFragment} objects, in
@@ -305,12 +336,16 @@ public class ConfigureRideActivity extends AppCompatActivity {
     }
 
     private void showProgressDialog() {
+        hideProgressDialog();
+
         String message = getResources().getString(R.string.please_wait);
         pd = ProgressDialog.show(this, "", message, false);
     }
 
     private void hideProgressDialog() {
-        pd.dismiss();
-        pd = null;
+        if (pd != null) {
+            pd.dismiss();
+            pd = null;
+        }
     }
 }

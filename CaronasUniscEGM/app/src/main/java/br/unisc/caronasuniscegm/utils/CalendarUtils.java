@@ -10,9 +10,6 @@ import java.util.List;
 
 import br.unisc.caronasuniscegm.R;
 
-/**
- * Created by mfelipe on 19/10/2015.
- */
 public class CalendarUtils {
 
     public static String dateToString( Date date ){
@@ -29,29 +26,30 @@ public class CalendarUtils {
         calendar.setTime(date);
 
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
-        if( now.getTimeInMillis() < calendar.getTimeInMillis() ){
+        if( true || now.getTimeInMillis() < calendar.getTimeInMillis() ){
             listUpcommingDays.add(context.getResources().getString(R.string.field_monday));
         }
 
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
-        if( now.getTimeInMillis() < calendar.getTimeInMillis() ){
+        if( true || now.getTimeInMillis() < calendar.getTimeInMillis() ){
             listUpcommingDays.add(context.getResources().getString(R.string.field_tuesday));
         }
 
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
-        if( now.getTimeInMillis() < calendar.getTimeInMillis() ){
+        if( true || now.getTimeInMillis() < calendar.getTimeInMillis() ){
             listUpcommingDays.add(context.getResources().getString(R.string.field_wednesday));
         }
 
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
-        if( now.getTimeInMillis() < calendar.getTimeInMillis() ){
+        if( true || now.getTimeInMillis() < calendar.getTimeInMillis() ){
             listUpcommingDays.add(context.getResources().getString(R.string.field_thursday));
         }
 
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
-        if( now.getTimeInMillis() < calendar.getTimeInMillis() ){
+        if( true || now.getTimeInMillis() < calendar.getTimeInMillis() ){
             listUpcommingDays.add(context.getResources().getString(R.string.field_friday));
         }
+
         return listUpcommingDays;
     }
 

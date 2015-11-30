@@ -1,121 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/btn_select_location"
-        android:id="@+id/btnAddPlace" />
+<android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        card_view:cardBackgroundColor="@android:color/white"
+        card_view:cardElevation="0dp"
+        card_view:cardUseCompatPadding="true">
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <TextView
-            android:layout_width="0dp"
+            android:id="@+id/info_text"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.25"
-            android:text="@string/lbl_address" />
+            android:text="@string/select_address"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/vl_address"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.75"
-            android:ems="10" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.25"
-            android:text="@string/lbl_latitude" />
-
-        <TextView
-            android:id="@+id/vl_latitude"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.75"
             android:ems="10" />
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-        <TextView
-            android:layout_width="0dp"
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.25"
-            android:text="@string/lbl_longitude" />
+            android:paddingTop="20dp"
+            android:id="@+id/layout_save_new_place">
 
-        <TextView
-            android:id="@+id/vl_longitude"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.75"
-            android:ems="10" />
+            <TextView
+                android:id="@+id/info_text1k"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_save_new_place"
+                android:textSize="18sp" />
 
-    </LinearLayout>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_place_name"
+                android:id="@+id/txt_new_place_name" />
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/layout_lbl_save_new_place">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_save"
+                android:text="@string/lbl_save"
+                android:layout_weight="0.1"
+                android:layout_gravity="right" />
 
-        <TextView
+        </LinearLayout>
+
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lbl_save_new_place"
-            android:id="@+id/textView4"
-            android:layout_marginTop="20dp" />
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/btnAddPlace"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_add_location_white_24dp"
+                android:layout_gravity="end|right"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+        </RelativeLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/layout_lbl_place_name">
+</android.support.v7.widget.CardView>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lbl_name"
-            android:layout_marginTop="20dp" />
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:weightSum="1"
-        android:id="@+id/layout_btn_save_place">
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/txt_new_place_name"
-            android:layout_weight="0.9" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btn_save"
-            android:text="@string/lbl_save"
-            android:layout_weight="0.1" />
-
-    </LinearLayout>
-
-</LinearLayout>

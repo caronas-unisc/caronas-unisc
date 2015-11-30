@@ -12,9 +12,6 @@ import br.unisc.caronasuniscegm.database.LocationContract;
 import br.unisc.caronasuniscegm.database.LocationDbHelper;
 import br.unisc.caronasuniscegm.model.Location;
 
-/**
- * Created by mfelipe on 04/11/2015.
- */
 public class LocationDataSource {
 
     private SQLiteDatabase database;

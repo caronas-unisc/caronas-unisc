@@ -1,9 +1,12 @@
 package br.unisc.caronasuniscegm;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -33,11 +36,9 @@ import java.util.List;
 import br.unisc.caronasuniscegm.rest.ApiEndpoints;
 import br.unisc.caronasuniscegm.rest.RideIntention;
 import br.unisc.caronasuniscegm.utils.CalendarUtils;
+import br.unisc.caronasuniscegm.utils.LocaleUtils;
 import br.unisc.caronasuniscegm.utils.TokenUtils;
 
-/**
- * Created by mfelipe on 03/11/2015.
- */
 public class UpdateRideActivity extends AppCompatActivity {
 
     private TextView mTextDate;
@@ -51,6 +52,8 @@ public class UpdateRideActivity extends AppCompatActivity {
     private Button mButtonChangeAddress;
     private ProgressDialog pd;
 
+    private String giveRideString;
+    private String receiveRideString;
 
     private List<String> mAvailabilityTypeList;
     private RideIntention rideIntention;
@@ -60,6 +63,9 @@ public class UpdateRideActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_ride);
+
+        giveRideString = getString(R.string.give_ride);
+        receiveRideString = getString(R.string.receive_ride);
 
         mLayoutPlacesInCar = (LinearLayout) findViewById(R.id.layout_places_in_car);
         mButtonSaveRide = (Button) findViewById(R.id.btn_save);
@@ -73,7 +79,7 @@ public class UpdateRideActivity extends AppCompatActivity {
         mSpinnerAvailabilityType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                if (parentView.getItemAtPosition(position).toString() == RideIntention.AVAILABILITY_TYPE_GIVE) {
+                if (parentView.getItemAtPosition(position).toString().equals(giveRideString)) {
                     mLayoutPlacesInCar.setVisibility(View.VISIBLE);
                 } else {
                     mLayoutPlacesInCar.setVisibility(View.GONE);
@@ -94,7 +100,18 @@ public class UpdateRideActivity extends AppCompatActivity {
         });
         mButtonDeleteRide.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                deleteRide();
+                new AlertDialog.Builder(v.getContext())
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle(R.string.title_delete_availability)
+                        .setMessage(R.string.msg_delete_availability)
+                        .setPositiveButton(R.string.lbl_yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                deleteRide();
+                            }
+                        })
+                        .setNegativeButton(R.string.lbl_no, null)
+                        .show();
             }
         });
         mButtonChangeAddress.setOnClickListener(new View.OnClickListener() {
@@ -117,10 +134,17 @@ public class UpdateRideActivity extends AppCompatActivity {
         JSONObject rideIntentionJson = new JSONObject();
 
         try {
-            rideIntentionJson.put("availability_type", mSpinnerAvailabilityType.getSelectedItem().toString() );
-            if( mSpinnerAvailabilityType.getSelectedItem().toString().equals(RideIntention.AVAILABILITY_TYPE_GIVE) ){
+            String availabilityType =
+                    (mSpinnerAvailabilityType.getSelectedItem().equals(giveRideString))
+                            ? RideIntention.AVAILABILITY_TYPE_GIVE
+                            : RideIntention.AVAILABILITY_TYPE_RECEIVE;
+
+            rideIntentionJson.put("availability_type", availabilityType);
+
+            if (availabilityType.equals(RideIntention.AVAILABILITY_TYPE_GIVE)) {
                 rideIntentionJson.put("available_places_in_car", mTextPlacesInCar.getText());
             }
+
             rideIntentionJson.put("starting_location_address", rideIntention.getStartingLocationAddress());
             rideIntentionJson.put("starting_location_latitude", rideIntention.getStartingLocationLatitude());
             rideIntentionJson.put("starting_location_longitude", rideIntention.getStartingLocationLongitude());
@@ -182,7 +206,7 @@ public class UpdateRideActivity extends AppCompatActivity {
                 hideProgressDialog();
 
                 Toast.makeText(getApplicationContext(),
-                        getResources().getString(R.string.msg_last_week_empty_agenda), Toast.LENGTH_SHORT).show();
+                        getResources().getString(R.string.msg_action_success), Toast.LENGTH_SHORT).show();
 
                 finish();
             }
@@ -249,18 +273,24 @@ public class UpdateRideActivity extends AppCompatActivity {
         mSpinnerAvailabilityType.setAdapter(arrayAdapterAvailabilityType);
 
         // Set selected
-        int selectedPosition = arrayAdapterAvailabilityType.getPosition(rideIntention.getAvailabilityType());
+
+        String availabilityType = rideIntention.getAvailabilityType();
+        String availabilityTypeText = (availabilityType.equals(RideIntention.AVAILABILITY_TYPE_GIVE))
+                ? giveRideString
+                : receiveRideString;
+
+        int selectedPosition = arrayAdapterAvailabilityType.getPosition(availabilityTypeText);
         mSpinnerAvailabilityType.setSelection(selectedPosition);
 
-        if( rideIntention.getAvailabilityType() == RideIntention.AVAILABILITY_TYPE_RECEIVE ){
+        if (rideIntention.getAvailabilityType() == RideIntention.AVAILABILITY_TYPE_RECEIVE) {
             mLayoutPlacesInCar.setVisibility(View.GONE);
         }
 
-        mTextDate = (TextView) findViewById(R.id.txt_date);
-        mTextDate.setText(CalendarUtils.dateToString(rideIntention.getDate()));
+        String dayOfWeek = CalendarUtils.dateToDayOfTheWeek(this, rideIntention.getDate());
+        String period = LocaleUtils.periodToLocalizedString(this, rideIntention.getPeriod());
 
-        mTextPeriod = (TextView) findViewById(R.id.txt_period);
-        mTextPeriod.setText( capitalizeFirstLetter(rideIntention.getPeriod()));
+        String dateAndPeriod = getString(R.string.date_and_period, dayOfWeek, period.toLowerCase());
+        setTitle(dateAndPeriod);
 
         mTextPlacesInCar = (EditText) findViewById(R.id.txt_places_in_car);
         mTextPlacesInCar.setText(rideIntention.getAvailablePlacesInCar() + "");
@@ -271,8 +301,8 @@ public class UpdateRideActivity extends AppCompatActivity {
 
     private void initializeSupportLists() {
         mAvailabilityTypeList = new ArrayList<String>();
-        mAvailabilityTypeList.add(RideIntention.AVAILABILITY_TYPE_GIVE);
-        mAvailabilityTypeList.add(RideIntention.AVAILABILITY_TYPE_RECEIVE);
+        mAvailabilityTypeList.add(getString(R.string.give_ride));
+        mAvailabilityTypeList.add(getString(R.string.receive_ride));
     }
 
     private void extractExtrasToRideIntention() {
@@ -304,4 +334,22 @@ public class UpdateRideActivity extends AppCompatActivity {
         pd.dismiss();
         pd = null;
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 }

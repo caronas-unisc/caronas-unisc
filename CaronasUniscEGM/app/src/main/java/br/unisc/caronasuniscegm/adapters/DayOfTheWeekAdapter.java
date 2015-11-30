@@ -14,9 +14,6 @@ import java.util.List;
 
 import br.unisc.caronasuniscegm.R;
 
-/**
- * Created by MateusFelipe on 11/10/2015.
- */
 public class DayOfTheWeekAdapter extends ArrayAdapter<String> {
 
     Context context;

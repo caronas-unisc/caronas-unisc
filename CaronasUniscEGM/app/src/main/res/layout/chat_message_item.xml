@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:padding="10dp">
+
+    <TextView
+        android:layout_width="276dp"
+        android:layout_height="wrap_content"
+        android:text="Author"
+        android:textStyle="bold"
+        android:textColor="#000"
+        android:id="@+id/message_author" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="04:20"
+        android:id="@+id/message_time"
+        android:layout_alignBottom="@+id/message_author"
+        android:layout_toRightOf="@+id/message_author"
+        android:layout_alignTop="@+id/message_author"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:textAlignment="textEnd"
+        android:textColor="#888"
+        android:gravity="end" />
+
+    <TextView
+        android:paddingTop="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#444"
+        android:text="Message"
+        android:id="@+id/message_body"
+        android:layout_below="@+id/message_author"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/message_time"
+        android:layout_alignEnd="@+id/message_time" />
+
+</RelativeLayout>

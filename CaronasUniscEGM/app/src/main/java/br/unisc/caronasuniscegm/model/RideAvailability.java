@@ -2,20 +2,33 @@ package br.unisc.caronasuniscegm.model;
 
 import java.util.Date;
 
-/**
- * Created by henrique on 11/6/15.
- */
 public class RideAvailability {
+    private Integer availabilityId;
     private String nmUserRequest;
     private String nmUserResponse;
+    private Integer remainingPlacesInCar;
 
     private Date date;
-    private Integer period;
+    private String period;
+    private String type; //give or receive
 
-    private Integer status;
+
+    private double startingLocationLatitude;
+    private double startingLocationLongitude;
+
+    private Ride ride;
     // 0 - Carona não requisitada
     // 1 - Carona pendente
     // 2 - Carona confirmada
+
+
+    public Integer getAvailabilityId() {
+        return availabilityId;
+    }
+
+    public void setAvailabilityId(Integer availabilityId) {
+        this.availabilityId = availabilityId;
+    }
 
     public String getNmUserRequest() {
         return nmUserRequest;
@@ -33,6 +46,14 @@ public class RideAvailability {
         this.nmUserResponse = nmUserResponse;
     }
 
+    public Integer getRemainingPlacesInCar() {
+        return remainingPlacesInCar;
+    }
+
+    public void setRemainingPlacesInCar(Integer remainingPlacesInCar) {
+        this.remainingPlacesInCar = remainingPlacesInCar;
+    }
+
     public Date getDate() {
         return date;
     }
@@ -41,19 +62,51 @@ public class RideAvailability {
         this.date = date;
     }
 
-    public Integer getPeriod() {
+    public String getPeriod() {
         return period;
     }
 
-    public void setPeriod(Integer period) {
+    public void setPeriod(String period) {
         this.period = period;
     }
 
-    public Integer getStatus() {
-        return status;
+    public Ride getRide() {
+        return ride;
     }
 
-    public void setStatus(Integer status) {
-        this.status = status;
+    public void setRide(Ride ride) {
+        this.ride = ride;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getName(){
+        if (type.equals("give")){
+            return nmUserRequest;
+        } else {
+            return nmUserResponse;
+        }
+    }
+
+    public double getStartingLocationLatitude() {
+        return startingLocationLatitude;
+    }
+
+    public void setStartingLocationLatitude(double startingLocationLatitude) {
+        this.startingLocationLatitude = startingLocationLatitude;
+    }
+
+    public double getStartingLocationLongitude() {
+        return startingLocationLongitude;
+    }
+
+    public void setStartingLocationLongitude(double startingLocationLongitude) {
+        this.startingLocationLongitude = startingLocationLongitude;
     }
 }

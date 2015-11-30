@@ -32,7 +32,6 @@ import java.util.Map;
 import br.unisc.caronasuniscegm.rest.ApiEndpoints;
 import br.unisc.caronasuniscegm.rest.RestErrorHandler;
 import br.unisc.caronasuniscegm.rest.RideIntention;
-import br.unisc.caronasuniscegm.rest.User;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -214,7 +213,7 @@ public class RegisterActivity extends AppCompatActivity {
             editor.commit();
 
             // Vai para a activity de usuário logado
-            Intent intent = new Intent(this, LoggedInTemporaryActivity.class);
+            Intent intent = new Intent(this, DashboardActivity.class);
             startActivity(intent);
             finish();
         } catch (JSONException e) {

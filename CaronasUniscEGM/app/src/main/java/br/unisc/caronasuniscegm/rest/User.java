@@ -11,18 +11,29 @@ import br.unisc.caronasuniscegm.R;
 
 public class User {
 
+    private int id;
     private String name;
     private String email;
     private String rideIntention;
 
     public User(JSONObject userJsonObject) {
-        try {
+        try
+        {
+            id = userJsonObject.getInt("id");
             name = userJsonObject.getString("name");
             email = userJsonObject.getString("email");
             rideIntention = userJsonObject.getString("ride_intention");
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

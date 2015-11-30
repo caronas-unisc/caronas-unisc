@@ -2,9 +2,6 @@ package br.unisc.caronasuniscegm.database;
 
 import android.provider.BaseColumns;
 
-/**
- * Created by mfelipe on 04/11/2015.
- */
 public class LocationContract {
 
     public LocationContract(){}
